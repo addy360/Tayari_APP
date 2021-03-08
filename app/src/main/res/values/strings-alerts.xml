@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="please_wait">Please wait</string>
+    <string name="success">Success!</string>
+    <string name="error">Error!</string>
+    <string name="error_try_again">Error! try again</string>
+    <string name="wrong_credentials">Invalid account details</string>
+    <string name="email_exists">An account with this email already exists</string>
+    <string name="reset_password_title">Reset your password</string>
+    <string name="input_email">Please enter email address</string>
+    <string name="input_phonenumber">Please enter phone number</string>
+    <string name="input_password">Please enter password</string>
+    <string name="input_language">Please enter language</string>
+    <string name="choose_language">Please choose language</string>
+    <string name="recovery_instructions_sent">An email with recovery instructions has been sent to your email</string>
+    <string name="email_account_does_not_exist">Account with this does not exist in our database</string>
+</resources>

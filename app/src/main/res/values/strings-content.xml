@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="welcome_agripoa">Welcome to Agripoa</string>
+
+    <!-- Share contents -->
+    <string name="find_group_title">Find Groups</string>
+    <string name="find_group_desc">Invite family and friends to use Agripoa App for amazing farming experience</string>
+
+    <string name="find_expert_title">Find Experts</string>
+    <string name="find_expert_desc">Invite family and friends to use Agripoa App for amazing farming experience</string>
+
+    <string name="find_friend_title">Find Friends</string>
+    <string name="find_friend_desc">Invite family and friends to use Agripoa App for amazing farming experience</string>
+
+    <!-- Titles -->
+    <string name="my_projects">Projects</string>
+    <string name="my_tasks">Tasks</string>
+    <string name="share">Share</string>
+    <string name="my_groups">My Groups</string>
+    <string name="groups">Groups</string>
+    <string name="search_my_groups">Search My Groups</string>
+    <string name="group_chats">Group Chats</string>
+    <string name="all_groups">All Groups</string>
+    <string name="search_my_experts">Search My Experts</string>
+    <string name="my_experts">My Experts</string>
+    <string name="experts">Experts</string>
+    <string name="expert_chats">Expert Chats</string>
+    <string name="all_experts">All Experts</string>
+    <string name="my_friends">My Friends</string>
+    <string name="search_my_friends">Search My Friends</string>
+    <string name="friends">Friends</string>
+    <string name="friend_chats">Friend Chats</string>
+    <string name="friend_requests">Friends Requests</string>
+    <string name="all_friends">All Friends</string>
+    <string name="communicate">Communicate</string>
+    <string name="messages">Messages</string>
+    <string name="new_messages">New Messages</string>
+    <string name="o_messages">0 Messages</string>
+    <string name="requests">Requests</string>
+    <string name="o_requests">0 Requests</string>
+    <string name="conversations">Chats</string>
+    <string name="group_details">Group Details</string>
+
+    <string name="default_password">Agripoa2020</string>
+
+    <string name="reply">Reply</string>
+    <string name="write_message_">Write message ...</string>
+
+</resources>

@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="follow_expert">Follow Expert</string>
+    <string name="view_chats">View Chats</string>
+    <string name="follow">Follow</string>
+    <string name="agripoa_farmers">Tayari</string>
+    <string name="AGREE">AGREE</string>
+    <string name="DISAGREE">DISAGREE</string>
+    <string name="app_name">Tayari</string>
+    <string name="signed_in">Signed In successfully</string>
+    <string name="signed_in_failed">Sign In Failed</string>
+    <string name="location">Location</string>
+    <string name="started">Started</string>
+    <string name="category">Category</string>
+    <string name="report_death">Report Death</string>
+    <string name="batch_options">Batch Options</string>
+    <string name="expenditure">Expenditure</string>
+    <string name="sale">Sale</string>
+    <string name="calender">Calender</string>
+    <string name="tasks">Tasks</string>
+    <string name="activities">Activities</string>
+    <string name="capital">Capital</string>
+    <string name="batch_name">Batch Name</string>
+    <string name="batch_number">Batch Number</string>
+    <string name="batch_items">Batch Items</string>
+    <string name="batch_date_created">Batch Date Created</string>
+    <string name="expenses">Expenses</string>
+    <string name="batch">Batch</string>
+    <string name="sales">Sales</string>
+    <string name="items">Items</string>
+    <string name="orders">Orders</string>
+    <string name="description">Description</string>
+    <string name="batch_list">Batch List</string>
+    <string name="data">Data</string>
+    <string name="networth">NetWorth</string>
+    <string name="item_childrens">Item Childrens</string>
+    <string name="news">News</string>
+    <string name="login">login</string>
+    <string name="register">register</string>
+    <string name="update_profile">Update Profile</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="last_name">Last Name</string>
+    <string name="first_name">First Name</string>
+    <string name="nickname">Nickname</string>
+    <string name="profile_updated">Profile Updated</string>
+    <string name="change_password">Change Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
+    <string name="new_password">New Password</string>
+    <string name="password_not_match">password combination does\'nt match</string>
+    <string name="set_new_password">set new password</string>
+    <string name="set_confirm_password">set confirm password</string>
+    <string name="old_password">Old Password</string>
+    <string name="fail_to_change_password">please use your old password in old password field</string>
+    <string name="password_updated">Password updated</string>
+    <string name="email_address">Email Address</string>
+
+
+    <!--    Wizard-->
+    <string name="wizard_1_title">Communication</string>
+    <string name="wizard_1_description">The App allows a farmer to chat with other farmers or chat with Extension Masters within a network</string>
+    <string name="wizard_2_title">Farm Management</string>
+    <string name="wizard_2_description">Manage your crops and animals easily by keeping farm records and expenses</string>
+    <string name="wizard_3_title">Unlimited Services</string>
+    <string name="wizard_3_description">Create a Farmer Profile and Unlimited Farmer Groups, Ask Questions and get answers from Farmers and Experts.</string>
+
+
+    <string name="title_auth_activity">Auth UI Demo</string>
+    <string name="title_firestore_activity">Cloud Firestore Demo</string>
+    <string name="title_firestore_paging_activity">Cloud Firestore Paging Demo</string>
+    <string name="title_realtime_database_activity">Realtime Database Demo</string>
+    <string name="title_realtime_database_paging_activity">Realtime Database Paging Demo</string>
+    <string name="title_storage_activity">Storage Image Demo</string>
+
+    <string name="desc_auth">Demonstrates the Firebase Auth UI flow, with customization options.</string>
+    <string name="desc_anonymous_upgrade">Demonstrates upgrading an anonymous account using FirebaseUI.</string>
+    <string name="desc_firestore">Demonstrates using a FirestoreRecyclerAdapter to load data from Cloud Firestore into a RecyclerView for a basic chat app.</string>
+    <string name="desc_firestore_paging">Demonstrates using a FirestorePagingAdapter to load/infinite scroll paged data from Cloud Firestore.</string>
+    <string name="desc_realtime_database">Demonstrates using a FirebaseRecyclerAdapter to load data from Firebase Database into a RecyclerView for a basic chat app.</string>
+    <string name="desc_realtime_database_paging">Demonstrates using a FirebaseRecyclerPagingAdapter to load/infinite scroll paged data from Firebase Realtime Database.</string>
+    <string name="desc_storage">Demonstrates displaying an image from Cloud Storage using Glide.</string>
+
+    <!-- Auth UI -->
+    <string name="launch_title">FirebaseUI Auth Demo</string>
+    <string name="sign_in_start">Start</string>
+    <string name="sign_in_silent">Sign in silently</string>
+
+    <string name="providers_header">Auth providers</string>
+    <string name="providers_google">Google</string>
+    <string name="providers_facebook">Facebook</string>
+    <string name="providers_twitter">Twitter</string>
+    <string name="providers_email">Email</string>
+    <string name="providers_email_link">Email link</string>
+    <string name="providers_phone">Phone</string>
+    <string name="providers_anonymous">Anonymous</string>
+    <string name="providers_apple">Apple</string>
+    <string name="providers_microsoft">Microsoft</string>
+    <string name="providers_yahoo">Yahoo</string>
+    <string name="providers_github">GitHub</string>
+
+    <string name="layout_header">Layout</string>
+    <string name="layout_default">Default</string>
+    <string name="layout_custom">Custom</string>
+
+    <string name="theme_header">Theme</string>
+    <string name="theme_default">Default theme</string>
+    <string name="theme_purple">Purple Theme</string>
+    <string name="theme_green">Green Theme</string>
+    <string name="theme_dark">Dark Theme</string>
+
+    <string name="logo_header">Logo</string>
+    <string name="logo_firebase">Firebase Auth</string>
+    <string name="logo_google">Google</string>
+    <string name="logo_none">None</string>
+
+    <string name="tos_pp_header">Terms of Service and Privacy Policy</string>
+    <string name="tos_pp_google">Google</string>
+    <string name="tos_pp_firebase">Firebase</string>
+    <string name="tos_pp_none">None</string>
+
+    <string name="google_scopes_header">Example extra Google scopes</string>
+    <string name="google_scope_drive_file">Drive File</string>
+    <string name="google_scope_youtube_data">Youtube data</string>
+
+    <string name="facebook_permissions_header">Example extra Facebook permissions</string>
+    <string name="facebook_permission_friends">Friends</string>
+    <string name="facebook_permission_photos">Photos</string>
+
+    <string name="options_header">Other Options</string>
+    <string name="options_enable_credential_selector">Enable Smart Lock\'s credential selector</string>
+    <string name="options_enable_hint_selector">Enable Smart Lock\'s hint selector</string>
+    <string name="options_allow_new_email_acccount">Allow new account creation</string>
+    <string name="options_require_name">Require first/last name with email accounts.</string>
+
+    <string name="configuration_required">Configuration required - see README.md</string>
+    <string name="google_label_missing_config">Google configuration missing</string>
+    <string name="facebook_label_missing_config">Facebook configuration missing</string>
+
+    <string name="sign_in_cancelled">Sign in cancelled</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="account_disabled">Account is disabled by the administrator</string>
+    <string name="unknown_error">An unknown error occurred</string>
+
+    <string name="title_anonymous_upgrade">FirebaseUI Anonymous Account Linking</string>
+    <string name="anonymous_sign_in">Anonymous Sign In</string>
+    <string name="launch_auth_ui">Launch Auth UI</string>
+    <string name="resolve_merge_conflict">Resolve Merge Conflict</string>
+
+    <!-- Auth UI - Signed in -->
+    <string name="signed_in_header">You are signed in!</string>
+    <string name="sign_out">Sign out</string>
+    <string name="delete_account_label">Delete account</string>
+
+    <string name="sign_in_failed">Sign in failed</string>
+    <string name="sign_out_failed">Sign out failed</string>
+    <string name="delete_account_failed">Delete account failed</string>
+
+    <string name="user_profile_header">User profile:</string>
+    <string name="profile_picture_content_desc">Profile picture</string>
+    <string name="used_providers">Providers used: %s</string>
+    <string name="idp_token">IDP Token</string>
+    <string name="idp_secret">IDP Secret</string>
+
+    <!-- Auth UI - Custom AuthMethodPickerLayout -->
+    <string name="custom_layout_subheader">Sign in using this nice custom layout!</string>
+    <string name="custom_layout_idp_header">Choose a provider</string>
+    <string name="custom_layout_email_header">Use your email</string>
+    <string name="custom_layout_email_click_text">Continue with Email</string>
+
+
+    <!-- Storage -->
+    <string name="choose_image">Choose Image</string>
+    <string name="upload">Upload</string>
+    <string name="download">Download</string>
+    <string name="send">Send</string>
+    <string name="accessibility_downloaded_image">Downloaded image</string>
+
+    <string name="rational_image_perm">This sample will read an image from local storage to upload to Cloud Storage.</string>
+
+    <!-- Database -->
+    <string name="start_chatting">No messages. Start chatting at the bottom!</string>
+    <string name="signing_in">Signing in…</string>
+    <string name="anonymous_auth_failed_msg">
+        Anonymous authentication failed, various components of the demo will not work.
+        Make sure your device is online and that Anonymous Auth is configured in your Firebase project
+        (https://console.firebase.google.com/project/_/authentication/providers)
+    </string>
+
+    <string name="menu_add_data">Add Data</string>
+    <string name="hint_message">Say something…</string>
+    <string name="paging_finished_message">Reached End of List</string>
+
+
+    <string name="sign_in_to_continue">Sign in to continue</string>
+    <string name="welcome_to_agripoa">Welcome to AgriPoa</string>
+    <string name="password" translatable="false">Password</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="search_my_expert">Search My Expert</string>
+    <string name="start_agripoa">Start Agripoa</string>
+    <string name="enter_your_firstname">Enter your first name</string>
+    <string name="enter_your_lastname">Enter your last name</string>
+    <string name="menu_update_profile">Update Profile</string>
+    <string name="farm_management">Farm Manager</string>
+    <string name="expense_manager">Expense Manager</string>
+    <string name="market_place">Market Place</string>
+    <string name="title_groups">Groups</string>
+    <string name="title_activity_groups">Group</string>
+    <string name="title_experts">Experts</string>
+    <string name="title_friends">Friends</string>
+    <string name="friends_notifications">Friends notifications</string>
+    <string name="friends_notifications_id">friends_notifications</string>
+    <string name="task_notifications_id">task_notifications_is\\</string>
+    <string name="experts_notifications">Experts ntifications</string>
+    <string name="experts_notifications_id">experts_notifications_id</string>
+    <string name="experts_notifications_desc">Notification from expert messages</string>
+    <string name="group_notifications_id">group_notifications_id</string>
+    <string name="o_sms_expert">0 SMS (experts)</string>
+    <string name="o_sms_friends">0 SMS (friends)</string>
+    <string name="sms_experts">SMS (experts)</string>
+    <string name="sms_friends">SMS (friends)</string>
+    <string name="title_activity_firebase_u_i">FirebaseUIActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="title_activity_generic_idp">GenericIdpActivity</string>
+    <string name="title_activity_google_sign_in">GoogleSignInActivity</string>
+    <string name="settings">Settings</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="edit_profile">Edit Profile</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="save">Save</string>
+    <string name="your_name">Your name</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="title_activity_launcher">Agripoa Farmers</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="welcome_text">Welcome to Tayari</string>
+    <string name="restaurants">Restaurants</string>
+    <string name="profile">Profile</string>
+    <string name="categories">Categories</string>
+    <string name="order_now">Order Now</string>
+    <string name="buy">Buy</string>
+    <string name="our_menu">Our Menus</string>
+    <string name="our_products">Our Products</string>
+    <string name="our_categories">Our Categories</string>
+    <string name="menus">Menus</string>
+    <string name="products">Products</string>
+    <string name="order">Order</string>
+    <string name="menu">Menu</string>
+    <string name="name">Name</string>
+</resources>

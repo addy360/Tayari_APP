@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "875397523898",
+    "project_id": "tayari-systems",
+    "storage_bucket": "tayari-systems.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:875397523898:android:7550cf8afc476a3bae1583",
+        "android_client_info": {
+          "package_name": "com.lockminds.tayari"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "875397523898-fqsukv2nd5h2bi1vq2n1ajqd1los0dft.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLCAOikD6mH44zJEiirPheG21R02QLZO8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "875397523898-fqsukv2nd5h2bi1vq2n1ajqd1los0dft.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

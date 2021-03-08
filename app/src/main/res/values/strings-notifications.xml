@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_notification_channel_id">App Notifications</string>
+    <string name="default_notification_channel_id_desc">All notifications</string>
+
+    <string name="task_notifications">Task Notifications</string>
+    <string name="task_notifications_desc">Notifications for tasks you set</string>
+
+    <string name="chat_notifications">Chat Notifications</string>
+    <string name="chat_notifications_desc">Notifications for chats of friends and experts</string>
+
+    <string name="group_notifications">Group Notifications</string>
+    <string name="group_notifications_desc">Notifications comes from group chats</string>
+</resources>
