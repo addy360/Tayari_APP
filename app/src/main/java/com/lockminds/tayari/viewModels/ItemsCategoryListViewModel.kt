@@ -1,34 +1,27 @@
 package com.lockminds.tayari.viewModels
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.lockminds.tayari.data.ItemCategory
-import com.lockminds.tayari.datasource.ItemsCategoryDataSource
+import androidx.lifecycle.asLiveData
+import com.lockminds.tayari.datasource.RestaurantDataSource
+import com.lockminds.tayari.datasource.repository.AppRepository
 
 
-class ItemsCategoryListViewModel(val ItemsCategoryDataSource: ItemsCategoryDataSource) : ViewModel() {
+class ItemsCategoryListViewModel(private val appRepository: AppRepository, val dataSource: RestaurantDataSource) : ViewModel() {
 
-    val ItemsCategoryLiveData = ItemsCategoryDataSource.getItemCategoryList()
-
-    /* If the name and description are present, create new Service and add it to the datasource */
-    fun insertBusiness(ItemsCategory: ItemCategory) {
-         ItemsCategoryDataSource.addItemCategory(ItemsCategory)
-    }
-
-    fun insertBusinessList(ItemsCategory: List<ItemCategory>) {
-        ItemsCategoryDataSource.addItemCategoryList(ItemsCategory)
-    }
+    private val repository = appRepository
+    val itemsCategoryLiveData = repository.allRestaurants.asLiveData()
 
 }
 
-class ItemsCategoryListViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
+class ItemsCategoryListViewModelFactory(private val appRepository: AppRepository) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ItemsCategoryListViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return ItemsCategoryListViewModel(
-                    ItemsCategoryDataSource = ItemsCategoryDataSource.getDataSource()
+                    appRepository = appRepository,
+                    dataSource = RestaurantDataSource.getDataSource()
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

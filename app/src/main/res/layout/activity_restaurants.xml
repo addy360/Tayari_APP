@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/lyt_parent"
+    android:background="@color/colorPrimaryDark">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/world_map"
+        app:tint="@color/red_100" />
+
+
+    <LinearLayout
+        android:id="@+id/nested_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:clipToPadding="false"
+        android:scrollbars="none"
+        android:scrollingCache="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.Toolbar
+                app:navigationIcon="@drawable/ic_back"
+                android:id="@+id/toolbar"
+                app:titleTextAppearance="@style/TextAppearance.Subhead.Bold"
+                app:titleTextColor="@color/colorPrimaryVariant"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:padding="@dimen/spacing_large">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/search_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.mancj.materialsearchbar.MaterialSearchBar
+                        android:id="@+id/search_bar"
+                        style="@style/MaterialSearchBarLight"
+                        app:mt_searchIconTint="@color/colorPrimary"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/action_bar_height"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:mt_hint="@string/eg_restaurant"
+                        app:mt_placeholder="@string/search_restaurant"
+                        app:mt_roundedSearchBarEnabled="true"
+                        app:mt_clearIconTint="@color/colorPrimary"
+                        app:mt_backIconUseTint="true"
+                        app:mt_backIconTint="@color/colorPrimary"
+                        app:mt_placeholderColor="@color/colorPrimary"
+                        app:mt_menuDividerEnabled="true"
+                        app:mt_menuIconTint="@color/colorPrimary"
+                        app:mt_searchIconUseTint="true"
+                        app:mt_textColor="@color/colorPrimary"
+                        app:mt_hintColor="@color/colorPrimary"
+                        app:mt_menuIconDrawable="@drawable/ic_search"
+                        app:mt_menuIconUseTint="true"
+                        app:mt_maxSuggestionsCount="10"
+                        app:mt_speechMode="false"
+                        app:mt_searchBarColor="@color/colorPrimaryVariant"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swiperefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/spacing_middle"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="16dp">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/spacing_medium"
+                    android:fillViewport="true"
+                    android:scrollbars="none"
+                    android:scrollingCache="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.github.ybq.android.spinkit.SpinKitView
+                    android:id="@+id/spin_kit"
+                    style="@style/SpinKitView.Large.Circle"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:visibility="visible"
+                    app:SpinKit_Color="@color/colorOnPrimary"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </LinearLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:id="@+id/parent1">
+
+    <FrameLayout
+        android:id="@+id/parent2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="64dp"
+        android:background="@android:color/holo_blue_bright">
+
+        <View
+            android:id="@+id/This_is_the_view_I_want_to_overlap_parent2"
+            android:layout_width="160dp"
+            android:layout_height="80dp"
+            android:layout_gravity="top|start"
+            android:layout_marginTop="-40dp"
+            android:background="#000000" />
+
+    </FrameLayout>
+
+
+</FrameLayout>

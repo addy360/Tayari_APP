@@ -1,25 +1,45 @@
 package com.lockminds.tayari.datasource.repository
 
 
+import android.util.Log
 import androidx.annotation.WorkerThread
+import androidx.paging.PagingSource
+import androidx.room.Query
+import com.lockminds.tayari.model.Restaurant
+import com.lockminds.tayari.datasource.AppDatabase
 import com.lockminds.tayari.datasource.daos.AppDao
-import com.lockminds.tayari.datasource.tables.Users
 import kotlinx.coroutines.flow.Flow
 
-class AppRepository(private val appDao: AppDao) {
+class AppRepository(
+        private val appDao: AppDao,
+        private val database: AppDatabase) {
 
-    val user: Flow<Users> = appDao.getUser()
+    // Start Restaurants
 
-    @Suppress("RedundantSuspendModifier")
-    @WorkerThread
-    suspend fun insertUser(user: Users) {
-        appDao.insertUser(user)
-    }
+    val allRestaurants: Flow<List<Restaurant>> = appDao.getAllRestaurants()
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun deleteAllUsers() {
-        appDao.deleteAllUsers()
+    suspend fun restaurants(): List<Restaurant> = appDao.restaurants()
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun getRestaurant(query: String): Restaurant = appDao.getRestaurant(query)
+
+
+    fun searchRestaurant(query: String) : List<Restaurant>{
+        return appDao.searchRestaurant(query)
     }
+
+    // End Restaurants
+
+
+//    Start Syncs
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun syncRestaurants(restaurant: List<Restaurant>){
+        appDao.syncRestaurants(restaurant)
+    }
+//    End Syncs
 
 }

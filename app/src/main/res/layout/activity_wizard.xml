@@ -40,7 +40,6 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorOnPrimary"
-            android:onClick="startAgripoa"
             android:clickable="true"
             android:textColor="@color/colorPrimary"
             android:layout_margin="@dimen/spacing_middle"

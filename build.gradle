@@ -38,6 +38,11 @@ ext {
     coroutines = '1.4.2'
     lifecycleVersion = '2.2.0'
     materialVersion = '1.2.1'
-    roomVersion = '2.2.6'
+    roomVersion = '2.3.0-alpha02'
     work_version = "2.4.0"
+    pagingVersion = '3.0.0-alpha11'
+    retrofitVersion = '2.7.2'
+    okhttpLoggingInterceptorVersion = '4.0.0'
+    materialSearchBarVersion = '0.8.5'
+    imageCroperVersion = '2.8.0'
 }

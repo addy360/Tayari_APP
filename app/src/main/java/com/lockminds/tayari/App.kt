@@ -8,6 +8,8 @@ import com.lockminds.tayari.datasource.repository.AppRepository
 import com.androidnetworking.AndroidNetworking
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.lockminds.tayari.api.RetrofitService
+import com.lockminds.tayari.constants.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import okhttp3.OkHttpClient
@@ -21,9 +23,9 @@ class App: Application() {
 
     // No need to cancel this scope as it'll be torn down with the process
     private val applicationScope = CoroutineScope(SupervisorJob())
-
+    lateinit var retrofitService: RetrofitService
     private val database by lazy { AppDatabase.getDatabase(this,applicationScope) }
-    val repository by lazy { AppRepository(database.agripoaDao()) }
+    val repository by lazy { AppRepository(database.appDao(),database) }
 
     override fun attachBaseContext(context: Context?) {
         super.attachBaseContext(context)
@@ -39,5 +41,14 @@ class App: Application() {
             .writeTimeout(120, TimeUnit.SECONDS)
             .build()
         AndroidNetworking.initialize(applicationContext, okHttpClient)
+        appContext = applicationContext
     }
+
+    companion object {
+
+        lateinit  var appContext: Context
+
+
+    }
+
 }

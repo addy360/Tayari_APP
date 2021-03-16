@@ -8,12 +8,12 @@
 
     <item
         android:id="@+id/navigation_orders"
-        android:icon="@drawable/ic_baseline_receipt_24"
+        android:icon="@drawable/ic_shopping_cart"
         android:title="@string/orders" />
 
     <item
         android:id="@+id/navigation_settings"
-        android:icon="@drawable/ic_baseline_settings_24"
+        android:icon="@drawable/ic_person_outline"
         android:title="@string/settings" />
 
 </menu>

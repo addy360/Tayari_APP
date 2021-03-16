@@ -1,6 +1,8 @@
 package com.lockminds.tayari.data
 
+import androidx.room.Entity
 
+@Entity(tableName = "restaurants")
 data class Business(
     var business_id: String = "",
     var business_key: String = "",

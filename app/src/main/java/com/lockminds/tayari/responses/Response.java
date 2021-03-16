@@ -29,11 +29,5 @@ public class Response {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return "Response{" +
-                "status=" + status +
-                ", uid='" + uid + '\'' +
-                '}';
-    }
+
 }

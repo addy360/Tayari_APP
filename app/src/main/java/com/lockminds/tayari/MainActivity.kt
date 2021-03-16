@@ -1,127 +1,161 @@
 package com.lockminds.tayari
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.lifecycle.observe
+import androidx.paging.ExperimentalPagingApi
 import androidx.recyclerview.widget.GridLayoutManager
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.ParsedRequestListener
-import com.google.firebase.auth.FirebaseAuth
-import com.lockminds.tayari.adapter.BusinessAdapter
-import com.lockminds.tayari.adapter.ItemsCategoriesAdapter
-import com.lockminds.tayari.constants.Constants.Companion.BUSINESS_KEY
-import com.lockminds.tayari.data.Business
-import com.lockminds.tayari.data.ItemCategory
+import com.lockminds.tayari.adapter.*
+import com.lockminds.tayari.constants.APIURLs
+import com.lockminds.tayari.constants.Constants
+import com.lockminds.tayari.constants.Constants.Companion.DATA_KEY
+import com.lockminds.tayari.constants.Constants.Companion.IMAGE_URL
 import com.lockminds.tayari.databinding.ActivityMainBinding
-import com.lockminds.tayari.firebase.ui.auth.AuthUiActivity
+import com.lockminds.tayari.model.Restaurant
+import com.lockminds.tayari.utils.ItemAnimation
 import com.lockminds.tayari.viewModels.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class MainActivity : BaseActivity() {
 
-    private val userViewModel: UsersViewModel by viewModels {
-        UsersViewModelFactory((application as App).repository)
+
+    private val offersViewModel by viewModels<OffersViewModel>{
+        OffersViewModelFactory( (application as App).repository)
     }
 
-    val businessListViewModel by viewModels<BusinessListViewModel>{
-        BusinessListViewModelFactory(this)
+    private val nearByViewModel by viewModels<NearByViewModel>{
+        NearByViewModelFactory( (application as App).repository)
     }
 
-    val itemsCategoryListViewModel by viewModels<ItemsCategoryListViewModel> {
-        ItemsCategoryListViewModelFactory(this)
+    private val itemsCategoryListViewModel by viewModels<ItemsCategoryListViewModel> {
+        ItemsCategoryListViewModelFactory((application as App).repository)
     }
 
-        private lateinit var binding: ActivityMainBinding
-        override fun onCreate(savedInstanceState: Bundle?) {
+    private var restaurantAdapter: RestaurantAdapter? = null
+    private val animation_type: Int = ItemAnimation.FADE_IN
+
+     private lateinit var binding: ActivityMainBinding
+
+
+     @ExperimentalPagingApi
+     override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             binding = ActivityMainBinding.inflate(layoutInflater)
             val view: View =  binding.root
             setContentView(view)
             Tools.setSystemBarLight(this)
-
-//        setSupportActionBar(binding.toolbar)
-//        initNavigation(binding.navigation)
-//        binding.toolbar.title = getString(R.string.app_name)
-//        userViewModel.user.observe(this, Observer { user ->
-//            user?.let {
-//                binding.toolbar.title = user.first_name
-//            }
-//        })
-
             initComponents()
-
+            setAdapter()
+            syncDatabase()
         }
 
         private fun initComponents() {
 
-            val businessAdapter = BusinessAdapter(this) { business -> adapterOnClick(business) }
-            val itemsCategoriesAdapter = ItemsCategoriesAdapter(this) { business -> adapterCategoryOnClick(business) }
-
-            binding.recyclerView.layoutManager = GridLayoutManager(this, 1, GridLayoutManager.HORIZONTAL, false)
-            binding.recyclerView.adapter = businessAdapter
-
             binding.recyclerCategories.layoutManager = GridLayoutManager(this, 1, GridLayoutManager.HORIZONTAL, false)
-            binding.recyclerCategories.adapter = itemsCategoriesAdapter
+            binding.recyclerViewOffers.layoutManager = GridLayoutManager(this, 1, GridLayoutManager.HORIZONTAL, false)
+            binding.recyclerNearBy.layoutManager = GridLayoutManager(this, 2, GridLayoutManager.HORIZONTAL, false)
+            binding.recyclerRestaurants.layoutManager = GridLayoutManager(this, 2, GridLayoutManager.HORIZONTAL, false)
 
-            businessListViewModel.businessLiveData.observe(this, {
-                it?.let {
-                    businessAdapter.submitList(it as MutableList<Business>)
-                }
-            })
-
-            itemsCategoryListViewModel.ItemsCategoryLiveData.observe(this,{
-                it?.let {
-                    itemsCategoriesAdapter.submitList(it as MutableList<ItemCategory>)
-                }
-            })
-
-        }
-
-        override fun onResume() {
-            super.onResume()
-            val auth = FirebaseAuth.getInstance()
-
-            if (auth.currentUser == null) {
-                val intent = Intent(applicationContext, AuthUiActivity::class.java)
-                startActivity(intent)
-                finish()
+            binding.swiperefresh.setOnRefreshListener {
+                binding.swiperefresh.isRefreshing = false
             }
 
-            fetchBusiness();
+            binding.restaurantsRight.setOnClickListener {
+                val intent = Intent(applicationContext, RestaurantsActivity::class.java)
+                startActivity(intent)
+            }
+
         }
 
-        private fun fetchBusiness() {
-            AndroidNetworking.get("https://api.tayari.co.tz/api/business/get_business")
-                .setTag(this)
-                .setPriority(Priority.LOW)
-                .build()
-                .getAsObjectList(Business::class.java, object : ParsedRequestListener<List<Business>> {
-                    override fun onResponse(business: List<Business>) {
-                        val items: List<Business> = business
-                        if (items.size > 0) {
-                            businessListViewModel.insertBusinessList(items)
-                            binding.recyclerView.bringToFront()
-                        }
+
+        private fun setAdapter(){
+            val offersAdapter = OffersAdapter(this) { business -> adapterOnClick(business) }
+            val nearByAdapter = NearByAdapter(this) { business -> adapterOnClick(business) }
+            val itemsCategoriesAdapter = ItemsCategoriesAdapter(this) { business -> adapterCategoryOnClick(business) }
+            binding.recyclerCategories.adapter = itemsCategoriesAdapter
+            binding.recyclerViewOffers.adapter = offersAdapter
+            binding.recyclerNearBy.adapter = nearByAdapter
+
+            offersViewModel.allRestaurants.observe(this) {
+                it?.let {
+                    offersAdapter.submitList(it)
+                }
+            }
+
+            nearByViewModel.allNearBy.observe(this) {
+                it?.let {
+                    nearByAdapter.submitList(it)
+                }
+            }
+
+            itemsCategoryListViewModel.itemsCategoryLiveData.observe(this) {
+                it?.let {
+                    itemsCategoriesAdapter.submitList(it)
+                }
+            }
+
+
+            GlobalScope.launch {
+                val  restaurants = (application as App).repository.restaurants()
+                if(restaurants.isNotEmpty()){
+                    restaurantAdapter = RestaurantAdapter(applicationContext, restaurants, animation_type)
+                    binding.recyclerRestaurants.adapter = restaurantAdapter
+                    restaurantAdapter!!.setOnItemClickListener { view, obj, position ->
+                        val intent = Intent(applicationContext, RestaurantActivity::class.java)
+                        intent.putExtra(DATA_KEY, obj.business_key)
+                        intent.putExtra(IMAGE_URL, obj.business_banner)
+                        startActivity(intent)
                     }
-
-                    override fun onError(anError: ANError) {
-                    }
-                })
+                }
+            }
+            
+            binding.swiperefresh.isRefreshing = false
         }
 
-        private fun adapterOnClick(business: Business) {
-            val intent = Intent(this, ServicesActivity::class.java)
-            intent.putExtra(BUSINESS_KEY, business.business_key)
-            startActivity(intent)
+
+        private fun adapterOnClick(business: Restaurant) {
+
         }
 
-    private fun adapterCategoryOnClick(business: ItemCategory) {
-        val intent = Intent(this, ServicesActivity::class.java)
-        intent.putExtra(BUSINESS_KEY, business.business_key)
-        startActivity(intent)
-    }
+        private fun adapterCategoryOnClick(business: Restaurant) {
+
+        }
+
+        private fun syncDatabase(){
+
+                val preference = application?.getSharedPreferences(Constants.PREFERENCE_KEY, Context.MODE_PRIVATE)
+                if (preference != null) {
+                    AndroidNetworking.get(APIURLs.BASE_URL + "restaurants/get_all")
+                        .setTag("lots")
+                        .addHeaders("accept", "application/json")
+                        .addHeaders("Authorization", "Bearer " + preference.getString(Constants.LOGIN_TOKEN, "false"))
+                        .setPriority(Priority.HIGH)
+                        .setPriority(Priority.LOW)
+                        .build()
+                        .getAsObjectList(Restaurant::class.java, object : ParsedRequestListener<List<Restaurant>> {
+                            override fun onResponse(business: List<Restaurant>) {
+                                val items: List<Restaurant> = business
+                                if (items.isNotEmpty()) {
+                                    GlobalScope.launch {
+                                        (application as App).repository.syncRestaurants(items)
+                                    }
+                                }
+                            }
+
+                            override fun onError(anError: ANError) {}
+                        })
+
+            }
+        }
+
 
     }

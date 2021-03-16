@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="titleColor">#1F75FE</color>
+    <color name="titleColorAlpha">#551F75FE</color>
+    <color name="greyAlpha">#55999999</color>
+    <color name="separatorBackground">#AAAAAA</color>
+    <color name="separatorText">#FFFFFF</color>
+
     <color name="colorPrimary">#FFFFFF</color>
     <color name="colorPrimaryDark">#FFFFFF</color>
-    <color name="colorOnPrimary">#66000000</color>
+    <color name="colorOnPrimary">#EE000000</color>
     <color name="colorPrimaryVariant">#EE4E2E</color>
 
     <color name="colorSecondary">#f2f2f2</color>
@@ -27,6 +33,8 @@
 
     <color name="chat_row_color">#BDBDBD</color>
 
+    <color name="overlay_dark_0">@android:color/transparent</color>
+    <color name="overlay_dark_5">#0D000000</color>
     <color name="overlay_dark_10">#1A000000</color>
     <color name="overlay_dark_20">#33000000</color>
 
@@ -39,7 +47,6 @@
     <color name="grey_90">#263238</color>
 
 
-    <!--Material color list from https://material.io/guidelines/style/color.html-->
 
     <color name="red_500">#F44336</color>
     <color name="red_600">#E53935</color>

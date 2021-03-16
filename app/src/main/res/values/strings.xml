@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="loading">Loading</string>
+    <string name="language">Language: %s</string>
+    <string name="search_hint">GitHub Repository</string>
+    <string name="no_results">No results 😓</string>
+    <string name="unknown">\?</string>
+    <string name="retry">Retry</string>
+
     <string name="follow_expert">Follow Expert</string>
     <string name="view_chats">View Chats</string>
     <string name="follow">Follow</string>
@@ -267,4 +274,13 @@
     <string name="order">Order</string>
     <string name="menu">Menu</string>
     <string name="name">Name</string>
+    <string name="offers_for_your">Offers for you</string>
+    <string name="see_all">See all</string>
+    <string name="scan_n_connect"><![CDATA[Scan & Connect]]></string>
+    <string name="place_order">Place order</string>
+    <string name="near_you">Near you</string>
+    <string name="tayari_restaurant">tayari restaurant</string>
+    <string name="search_restaurant">Search restaurant</string>
+    <string name="eg_restaurant">e.g. Tayari</string>
+    <string name="buy_now">Buy Now</string>
 </resources>

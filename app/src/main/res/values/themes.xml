@@ -6,7 +6,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
         <item name="colorOnPrimary">@color/colorOnPrimary</item>
-        <item name="android:textColorPrimary">@color/colorPrimaryText</item>
+        <item name="android:textColorPrimary">@color/colorOnPrimary</item>
         <!-- Secondary brand color. -->
 
         <item name="colorSecondary">@color/colorPrimary</item>
@@ -20,6 +20,8 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryDark</item>
         <!-- Customize your theme here. -->
+
+        <item name="android:windowActionBarOverlay">true</item>
     </style>
 
     <style name="AppTheme" parent="Theme.Tayari" />

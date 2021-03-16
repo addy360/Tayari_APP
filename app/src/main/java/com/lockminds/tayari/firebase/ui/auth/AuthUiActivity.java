@@ -60,6 +60,7 @@ public class AuthUiActivity extends AppCompatActivity {
         Tools.setSystemBarLight(this);
         setContentView(R.layout.auth_ui_layout);
         ButterKnife.bind(this);
+        Tools.setSystemBarTransparent(this);
         Tools.setSystemBarLight(this);
     }
 
