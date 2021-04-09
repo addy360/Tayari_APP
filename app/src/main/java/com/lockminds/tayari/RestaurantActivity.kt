@@ -2,22 +2,30 @@ package com.lockminds.tayari
 
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.core.view.isVisible
 import androidx.viewpager.widget.ViewPager
+import com.androidnetworking.AndroidNetworking
+import com.androidnetworking.common.Priority
+import com.androidnetworking.error.ANError
+import com.androidnetworking.interfaces.ParsedRequestListener
+import com.lockminds.tayari.adapter.OffersAdapter
+import com.lockminds.tayari.adapter.SectionPagerAdapter
+import com.lockminds.tayari.constants.APIURLs
+import com.lockminds.tayari.constants.Constants
 import com.lockminds.tayari.constants.Constants.Companion.DATA_KEY
-import com.lockminds.tayari.constants.Constants.Companion.IMAGE_URL
+import com.lockminds.tayari.constants.Constants.Companion.INTENT_PARAM_1
 import com.lockminds.tayari.databinding.ActivityRestaurantBinding
 import com.lockminds.tayari.fragments.RestaurantTabsFragment
-import com.lockminds.tayari.model.Restaurant
+import com.lockminds.tayari.model.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.*
 
 class RestaurantActivity : BaseActivity() {
 
@@ -30,9 +38,15 @@ class RestaurantActivity : BaseActivity() {
         binding = ActivityRestaurantBinding.inflate(layoutInflater)
         val view: View = binding.root
         setContentView(view)
+        restaurant = intent.getParcelableExtra(INTENT_PARAM_1)!!
+        initStatusBar()
         initComponents()
-        initRestaurant()
         loadImage()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        syncDatabase()
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -41,62 +55,98 @@ class RestaurantActivity : BaseActivity() {
         binding.toolbar.navigationIcon = getDrawable(R.drawable.ic_back)
         setSupportActionBar(binding.toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.title = null
-        Tools.setSystemBarLight(this)
-        Tools.setSystemBarTransparent(this)
+        supportActionBar!!.title = restaurant.name
+        initStatusBar()
         setupViewPager(binding.viewPager)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
-        binding.spinKit.bringToFront()
-    }
-
-    private fun initRestaurant(){
-        val bundle: Bundle? = intent.extras
-        val key = bundle?.getString(DATA_KEY)
-        GlobalScope.launch {
-            restaurant = key?.let { (application as App).repository.getRestaurant(it) }!!
-            supportActionBar!!.title  = restaurant.business_name
-        }
     }
 
     private fun loadImage(){
-        val bundle: Bundle? = intent.extras
-        val url = bundle?.getString(IMAGE_URL)
-        Tools.displayImageBusiness(applicationContext, binding.businessBanner, url)
+        Tools.displayImageBusiness(applicationContext, binding.businessBanner, restaurant.banner)
     }
-
 
     private fun setupViewPager(viewPager: ViewPager) {
-        val bundle: Bundle? = intent.extras
-        val adapter = SectionsPagerAdapter(supportFragmentManager)
-        adapter.addFragment(RestaurantTabsFragment.newInstance(bundle?.getString(DATA_KEY).toString(),binding.spinKit), "African")
-        adapter.addFragment(RestaurantTabsFragment.newInstance(bundle?.getString(DATA_KEY).toString(),binding.spinKit), "Asian")
-        adapter.addFragment(RestaurantTabsFragment.newInstance(bundle?.getString(DATA_KEY).toString(),binding.spinKit), "American")
-        adapter.addFragment(RestaurantTabsFragment.newInstance(bundle?.getString(DATA_KEY).toString(),binding.spinKit), "Brazilian")
-        adapter.addFragment(RestaurantTabsFragment.newInstance(bundle?.getString(DATA_KEY).toString(),binding.spinKit), "Kisamvu")
-        viewPager.adapter = adapter
+        val adapter = SectionPagerAdapter(supportFragmentManager)
+        var list = listOf<Cousin>()
+        GlobalScope.launch {
+             list = (application as App).repository.restaurantCousins(restaurant.id.toString())
+            if(list.isNotEmpty()){
+                list.forEach {
+                    adapter.addFragment(RestaurantTabsFragment.newInstance(it.id.toString()), it.name.toString())
+                }
+                runOnUiThread {
+                    viewPager.adapter = adapter
+                }
+
+            }
+        }
+
     }
 
-
-    private class SectionsPagerAdapter(manager: FragmentManager?) :
-        FragmentPagerAdapter(manager!!) {
-        private val mFragmentList: MutableList<Fragment> = ArrayList()
-        private val mFragmentTitleList: MutableList<String> = ArrayList()
-        override fun getItem(position: Int): Fragment {
-            return mFragmentList[position]
+    companion object {
+        @JvmStatic
+        fun createRestaurantIntent(context: Context, restaurant: Restaurant?): Intent {
+            return Intent().setClass(context, RestaurantActivity::class.java)
+                    .putExtra(INTENT_PARAM_1, restaurant)
         }
 
-        override fun getCount(): Int {
-            return mFragmentList.size
+    }
+
+    private fun syncDatabase(){
+
+        val preference = application?.getSharedPreferences(Constants.PREFERENCE_KEY, Context.MODE_PRIVATE)
+        if (preference != null) {
+
+            AndroidNetworking.get(APIURLs.BASE_URL + "menu/get_all")
+                    .setTag("lots")
+                    .addHeaders("accept", "application/json")
+                    .addHeaders("Authorization", "Bearer " + preference.getString(Constants.LOGIN_TOKEN, "false"))
+                    .setPriority(Priority.HIGH)
+                    .setPriority(Priority.LOW)
+                    .addQueryParameter("team",restaurant.id.toString())
+                    .build()
+                    .getAsObjectList(Menu::class.java, object : ParsedRequestListener<List<Menu>> {
+                        override fun onResponse(menu: List<Menu>) {
+                            val items: List<Menu> = menu
+                            if (items.isNotEmpty()) {
+                                GlobalScope.launch {
+                                    (application as App).repository.syncMenu(items)
+                                }
+                            }
+                        }
+
+                        override fun onError(anError: ANError) {}
+                    })
+
+
+            AndroidNetworking.get(APIURLs.BASE_URL + "menu/get_items_restaurant")
+                    .setTag("menu")
+                    .addQueryParameter("team",restaurant.id.toString())
+                    .addHeaders("accept", "application/json")
+                    .addHeaders(
+                            "Authorization",
+                            "Bearer " + preference.getString(Constants.LOGIN_TOKEN, "false")
+                    )
+                    .setPriority(Priority.HIGH)
+                    .setPriority(Priority.LOW)
+                    .build()
+                    .getAsObjectList(MenuItem::class.java, object : ParsedRequestListener<List<MenuItem>> {
+                        override fun onResponse(menuItem: List<MenuItem>) {
+                            val items: List<MenuItem> = menuItem
+                            if (items.isNotEmpty()) {
+                                if (items.isNotEmpty()) {
+                                    GlobalScope.launch {
+                                        (application as App).repository.syncMenuItems(items)
+                                    }
+                                }
+                            }
+                        }
+
+                        override fun onError(anError: ANError) {}
+                    })
+
         }
 
-        fun addFragment(fragment: Fragment, title: String) {
-            mFragmentList.add(fragment)
-            mFragmentTitleList.add(title)
-        }
-
-        override fun getPageTitle(position: Int): CharSequence? {
-            return mFragmentTitleList[position]
-        }
     }
 
 }

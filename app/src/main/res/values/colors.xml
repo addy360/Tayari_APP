@@ -9,14 +9,17 @@
 
     <color name="colorPrimary">#FFFFFF</color>
     <color name="colorPrimaryDark">#FFFFFF</color>
-    <color name="colorOnPrimary">#EE000000</color>
+    <color name="colorOnPrimary">#EE151414</color>
     <color name="colorPrimaryVariant">#EE4E2E</color>
+    <color name="colorOnPrimaryVariant">#FFFFFF</color>
 
     <color name="colorSecondary">#f2f2f2</color>
     <color name="colorOnSecondary">@color/red_A100</color>
     <color name="colorSecondaryVariant">@color/red_A100</color>
 
-    <color name="colorBackground">#f2f2f2</color>
+    <color name="colorBackground">#FFFFFF</color>
+    <color name="colorOnBackground">#191818</color>
+    <color name="colorBackgroundSlidup">#FFFFFF</color>
     <color name="colorPrimaryText">@color/colorOnPrimary</color>
 
     <color name="transparent">@android:color/transparent</color>

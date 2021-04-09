@@ -4,37 +4,35 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.lockminds.tayari.R
 import com.lockminds.tayari.Tools
-import com.lockminds.tayari.model.Restaurant
+import com.lockminds.tayari.model.Menu
 
-class OffersAdapter(context: Context,private val onClick: (Restaurant) -> Unit) :
-    ListAdapter<Restaurant, OffersAdapter.OffersViewHolder>(OffersDiffCallback) {
+class OffersAdapter(context: Context,private val onClick: (Menu) -> Unit) :
+    ListAdapter<Menu, OffersAdapter.OffersViewHolder>(OffersDiffCallback) {
     private val context: Context? = context
     
-    
-    /* ViewHolder for Restaurant, takes in the inflated view and the onClick behavior. */
-    class OffersViewHolder(itemView: View, val onClick: (Restaurant) -> Unit) :
+
+    class OffersViewHolder(itemView: View, val onClick: (Menu) -> Unit) :
         RecyclerView.ViewHolder(itemView) {
-        private val businessImage: ImageView = itemView.findViewById(R.id.business_logo)
-        private var currentRestaurant: Restaurant? = null
+        private val image: ImageView = itemView.findViewById(R.id.image)
+        private var currentOffer: Menu? = null
 
         init {
             itemView.setOnClickListener {
-                currentRestaurant?.let {
+                currentOffer?.let {
                     onClick(it)
                 }
             }
         }
 
         /* Bind business name and image. */
-        fun bind(business: Restaurant, context: Context?) {
-            currentRestaurant = business
-            Tools.displayImageBusiness(context, businessImage, business.business_banner)
+        fun bind(offer: Menu, context: Context?) {
+            currentOffer = offer
+            Tools.displayImageBusiness(context, image, offer.sale_image)
         }
 
 
@@ -54,12 +52,12 @@ class OffersAdapter(context: Context,private val onClick: (Restaurant) -> Unit) 
     }
 }
 
-object OffersDiffCallback : DiffUtil.ItemCallback<Restaurant>() {
-    override fun areItemsTheSame(oldItem: Restaurant, newItem: Restaurant): Boolean {
+object OffersDiffCallback : DiffUtil.ItemCallback<Menu>() {
+    override fun areItemsTheSame(oldItem: Menu, newItem: Menu): Boolean {
         return oldItem == newItem
     }
 
-    override fun areContentsTheSame(oldItem: Restaurant, newItem: Restaurant): Boolean {
-        return oldItem.business_key == newItem.business_key
+    override fun areContentsTheSame(oldItem: Menu, newItem: Menu): Boolean {
+        return oldItem.id == newItem.id
     }
 }

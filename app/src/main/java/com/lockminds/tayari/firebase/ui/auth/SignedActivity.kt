@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
@@ -16,6 +17,8 @@ import com.firebase.ui.auth.IdpResponse
 import com.firebase.ui.auth.util.ExtraConstants
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.google.gson.reflect.TypeToken
 import com.lockminds.tayari.MainActivity
 import com.lockminds.tayari.R
@@ -42,7 +45,7 @@ class SignedActivity : AppCompatActivity() {
     }
 
 
-    fun initComponents(){
+    private fun initComponents(){
         val currentUser = FirebaseAuth.getInstance().currentUser
         if (currentUser == null) {
             startActivity(AuthUiActivity.createIntent(this))
@@ -54,17 +57,24 @@ class SignedActivity : AppCompatActivity() {
     }
 
     private fun populateProfile(response: IdpResponse?) {
+
         val user = FirebaseAuth.getInstance().currentUser
+
         user.getIdToken(true)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val idToken = task.result.token
-                    Log.e("KELLY", idToken!!)
+
+                    val idToken = task.result.token.toString()
+
+                    val name = user?.displayName
+                    val phone = user?.phoneNumber
+                    val email = user?.email
+
                     if (response != null) {
                         if (response.isNewUser) {
-                            createUser()
+                            createUser(idToken,name.toString(),email.toString(),phone.toString())
                         } else {
-                            loginUser(idToken,response)
+                            loginUser(idToken)
                         }
                     }
                     // Return user to login page because we didnt receive response
@@ -82,7 +92,7 @@ class SignedActivity : AppCompatActivity() {
 
 
     @SuppressLint("HardwareIds")
-    private fun loginUser(fb_token: String, response: IdpResponse) {
+    private fun loginUser(fb_token: String) {
             val deviceToken = Settings.Secure.getString(applicationContext?.contentResolver,Settings.Secure.ANDROID_ID)
             AndroidNetworking.post(APIURLs.BASE_URL + "login/token")
                 .addBodyParameter("fb_token", fb_token)
@@ -115,42 +125,86 @@ class SignedActivity : AppCompatActivity() {
                                     apply()
                                 }
 
-                                val mySnackbar = Snackbar.make(
-                                    binding.lytParent,
-                                    getString(R.string.success),
-                                    Snackbar.LENGTH_SHORT
-                                )
-                                mySnackbar.show()
+                                Toast.makeText(this@SignedActivity,  response.message, Toast.LENGTH_SHORT).show()
 
                                 val intent = Intent(this@SignedActivity, MainActivity::class.java)
                                 startActivity(intent)
 
                             } else {
-                                val mySnackbar = Snackbar.make(
-                                    binding.lytParent,
-                                    response.message,
-                                    Snackbar.LENGTH_LONG
-                                )
-                                mySnackbar.show()
+                                Toast.makeText(this@SignedActivity,  response.message, Toast.LENGTH_SHORT).show()
                             }
 
                         }
 
                         override fun onError(anError: ANError) {
                             binding.spinKit.visibility = View.GONE
-                            val mySnackbar = Snackbar.make(
-                                binding.lytParent,
-                                anError.errorDetail,
-                                Snackbar.LENGTH_SHORT
-                            )
-                            mySnackbar.show()
+                            Toast.makeText(this@SignedActivity, anError.errorDetail, Toast.LENGTH_SHORT).show()
                         }
 
                     })
 
     }
 
-    private fun createUser() {}
+
+    @SuppressLint("HardwareIds")
+    private fun createUser(fb_token: String, name: String, email: String, phone: String) {
+
+        val deviceToken = Settings.Secure.getString(applicationContext?.contentResolver,Settings.Secure.ANDROID_ID)
+
+        AndroidNetworking.post(APIURLs.BASE_URL + "register")
+                .addBodyParameter("device_name", deviceToken)
+                .addBodyParameter("fb_token", fb_token)
+                .addBodyParameter("name", name)
+                .addBodyParameter("phone", phone)
+                .addBodyParameter("email", email)
+                .addHeaders("accept", "application/json")
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsParsed(
+                        object : TypeToken<LoginResponse?>() {},
+                        object : ParsedRequestListener<LoginResponse> {
+
+                            override fun onResponse(response: LoginResponse) {
+                                binding.spinKit.visibility = View.GONE
+                                if (response.status) {
+
+                                    val preference = applicationContext?.getSharedPreferences(
+                                            PREFERENCE_KEY,
+                                            Context.MODE_PRIVATE
+                                    )
+                                            ?: return
+
+                                    with(preference.edit()) {
+                                        putString(LOGIN_STATUS, "true")
+                                        putString(LOGIN_TOKEN, response.token)
+                                        putString(NAME, response.name)
+                                        putString(PHONE_NUMBER, response.phone_number)
+                                        putString(PHOTO_URL, response.photo_url)
+                                        putString(USER_ID, response.id)
+                                        putString(EMAIL, response.email)
+                                        apply()
+                                    }
+
+                                    Toast.makeText(this@SignedActivity, response.message, Toast.LENGTH_SHORT).show()
+                                    val intent = Intent(this@SignedActivity, MainActivity::class.java)
+                                    startActivity(intent)
+
+                                } else {
+                                    Toast.makeText(this@SignedActivity, response.message, Toast.LENGTH_SHORT).show()
+                                    val user = FirebaseAuth.getInstance().currentUser
+                                    user?.delete()
+                                    Firebase.auth.signOut()
+                                }
+
+                            }
+
+                            override fun onError(anError: ANError) {
+                                binding.spinKit.visibility = View.GONE
+                                Toast.makeText(this@SignedActivity,anError.errorDetail, Toast.LENGTH_SHORT).show()
+                            }
+
+                        })
+    }
 
     companion object {
         @JvmStatic

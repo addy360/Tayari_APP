@@ -7,13 +7,14 @@ import androidx.lifecycle.asLiveData
 import com.lockminds.tayari.datasource.RestaurantDataSource
 import com.lockminds.tayari.datasource.repository.AppRepository
 import com.lockminds.tayari.model.Restaurant
+import com.lockminds.tayari.model.RestaurantNear
 
 
 class NearByViewModel(val businessDataSource: RestaurantDataSource, val appRepository: AppRepository) : ViewModel() {
 
     private val repository = appRepository
 
-    val allNearBy: LiveData<List<Restaurant>> = repository.allRestaurants.asLiveData()
+    val allNearBy: LiveData<List<RestaurantNear>> = repository.allRestaurantsNear.asLiveData()
 
 }
 

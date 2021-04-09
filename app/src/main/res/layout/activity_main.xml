@@ -48,7 +48,7 @@
                         android:layout_width="0dp"
                         android:layout_height="55dp"
                         android:layout_marginEnd="16dp"
-                        android:background="@drawable/btn_rectagle_primary_outline"
+                        android:background="@drawable/btn_rounded_primary_outline"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/scanner"
                         app:layout_constraintStart_toStartOf="parent"
@@ -76,7 +76,7 @@
                     android:gravity="left"
                     android:text="What would you like to eat today?"
                     android:textColor="@color/colorOnPrimary"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -117,6 +117,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:visibility="gone"
                         android:id="@+id/offers"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -131,19 +132,20 @@
                             android:layout_height="wrap_content"
                             android:text="@string/offers_for_your"
                             android:textColor="@color/colorOnPrimary"
-                            android:textSize="20sp"
+                            android:textSize="16sp"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
+                            android:visibility="gone"
                             android:id="@+id/offers_right"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/see_all"
                             android:textColor="@color/red_700"
-                            android:textSize="20sp"
+                            android:textSize="16sp"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -268,34 +270,52 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
+                    <TextView
+                        android:gravity="center"
+                        android:textAlignment="center"
+                        android:background="@drawable/btn_rectagle_primary_outline"
+                        android:layout_marginTop="@dimen/spacing_large"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/actions"
+                        android:id="@+id/display_near_by"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Tap to display near by restaurants"
+                        android:clickable="true"
+                        android:textColor="@color/colorPrimaryVariant"
+                        android:textStyle="bold" />
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/near_by"
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/actions">
+                        app:layout_constraintTop_toBottomOf="@+id/display_near_by">
 
                         <TextView
+                            android:visibility="gone"
                             android:id="@+id/near_by_left"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/near_you"
                             android:textColor="@color/colorOnPrimary"
-                            android:textSize="20sp"
+                            android:textSize="16sp"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
+                            android:visibility="gone"
                             android:id="@+id/near_by_right"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/see_all"
                             android:textColor="@color/red_700"
-                            android:textSize="20sp"
+                            android:textSize="16sp"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -303,6 +323,7 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
+                        android:visibility="gone"
                         android:id="@+id/recyclerNearBy"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -313,7 +334,6 @@
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/near_by" />
-
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/restaurants"
@@ -330,7 +350,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/restaurants"
                             android:textColor="@color/colorOnPrimary"
-                            android:textSize="20sp"
+                            android:textSize="16sp"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -342,7 +362,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/see_all"
                             android:textColor="@color/red_700"
-                            android:textSize="20sp"
+                            android:textSize="16sp"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -396,8 +416,31 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:menu="@menu/menu_bottom_navigation_home" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+    <FrameLayout
+        android:visibility="gone"
+        android:id="@+id/qr"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <com.budiyev.android.codescanner.CodeScannerView
+            android:id="@+id/scanner_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:autoFocusButtonColor="@android:color/white"
+            app:autoFocusButtonVisible="true"
+            app:flashButtonColor="@android:color/white"
+            app:flashButtonVisible="true"
+            app:frameColor="@android:color/white"
+            app:frameCornersSize="50dp"
+            app:frameCornersRadius="0dp"
+            app:frameAspectRatioWidth="1"
+            app:frameAspectRatioHeight="1"
+            app:frameSize="0.75"
+            app:frameThickness="2dp"
+            app:maskColor="#77000000"/>
+    </FrameLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

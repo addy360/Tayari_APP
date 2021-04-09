@@ -26,7 +26,7 @@ import com.mancj.materialsearchbar.MaterialSearchBar
 
 class RestaurantsActivity : BaseActivity(), MaterialSearchBar.OnSearchActionListener {
     lateinit var binding: ActivityRestaurantsBinding
-    private var restaurantAdapter: RestaurantAdapter? = null
+    private var restaurantAdapter: RestaurantAllAdapter? = null
     private val animation_type: Int = ItemAnimation.FADE_IN
     @ExperimentalPagingApi
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -45,8 +45,7 @@ class RestaurantsActivity : BaseActivity(), MaterialSearchBar.OnSearchActionList
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun initComponents(){
-        Tools.setSystemBarLight(this)
-        Tools.setSystemBarColor(this, R.color.colorPrimaryDark)
+        initStatusBar()
         binding.toolbar.navigationIcon = getDrawable(R.drawable.ic_back)
         setSupportActionBar(binding.toolbar)
         supportActionBar!!.title = getString(R.string.restaurants)
@@ -95,13 +94,10 @@ class RestaurantsActivity : BaseActivity(), MaterialSearchBar.OnSearchActionList
                     override fun onResponse(business: List<Restaurant>) {
                         val items: List<Restaurant> = business
                         if (items.isNotEmpty()) {
-                            restaurantAdapter = RestaurantAdapter(applicationContext,items, animation_type)
+                            restaurantAdapter = RestaurantAllAdapter(applicationContext,items, animation_type)
                             binding.recyclerView.adapter = restaurantAdapter
                             restaurantAdapter!!.setOnItemClickListener { view, obj, position ->
-                                val intent = Intent(applicationContext, ServiceDetailsActivity::class.java)
-                                intent.putExtra(Constants.DATA_KEY, obj.business_key)
-                                intent.putExtra(Constants.IMAGE_URL, obj.business_banner)
-                                startActivity(intent)
+                                startActivity(RestaurantActivity.createRestaurantIntent(this@RestaurantsActivity, obj))
                             }
                         }
                     }

@@ -283,4 +283,16 @@
     <string name="search_restaurant">Search restaurant</string>
     <string name="eg_restaurant">e.g. Tayari</string>
     <string name="buy_now">Buy Now</string>
+    <string name="confirm">Confirm</string>
+    <string name="coupon">Coupon</string>
+    <string name="how_many_do_you_want_to_buy">How many do you want to buy?</string>
+    <string name="cart_0_items">Cart (0 items)</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="menu_change_password">Change password</string>
+    <string name="close">Close</string>
+    <string name="menu_submit">submit</string>
+    <string name="enter_phone_number">Enter phone number</string>
+    <string name="content">Content</string>
+    <string name="recommended">Recommended</string>
+    <string name="cart">Cart</string>
 </resources>

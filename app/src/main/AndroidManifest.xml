@@ -2,6 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lockminds.tayari">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_SOCIAL_STREAM" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -10,8 +18,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Tayari">
-        <activity android:name=".ServiceDetailsActivity"></activity>
+        <activity android:name=".RestaurantNearActivity" />
+        <activity android:name=".MenuActivity" />
         <activity android:name=".RestaurantActivity" />
+        <activity android:name=".CousinRestaurantActivity" />
         <activity android:name=".RestaurantsActivity" />
         <activity android:name=".firebase.ui.auth.SignedActivity" />
         <!--
@@ -39,13 +49,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ProfileEditActivity" />
+        <activity android:name=".UpdateProfileActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".SearchRepositoriesActivity" />
         <activity android:name=".firebase.ui.auth.AuthUiActivity" />
         <activity android:name=".firebase.ui.auth.AnonymousUpgradeActivity" />
-
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
         <service
             android:name=".firebase.FCMService"
             android:exported="false">

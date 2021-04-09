@@ -1,6 +1,7 @@
 package com.lockminds.tayari.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,12 +14,19 @@ import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.ParsedRequestListener
 import com.github.ybq.android.spinkit.SpinKitView
-import com.lockminds.tayari.adapter.RestaurantAdapter
+import com.lockminds.tayari.App
+import com.lockminds.tayari.MenuActivity
+import com.lockminds.tayari.R
+import com.lockminds.tayari.RestaurantActivity
+import com.lockminds.tayari.adapter.MenuAdapter
 import com.lockminds.tayari.constants.APIURLs
 import com.lockminds.tayari.constants.Constants
 import com.lockminds.tayari.databinding.FragmentRestaurantTabsBinding
-import com.lockminds.tayari.model.Restaurant
+import com.lockminds.tayari.model.Cousin
+import com.lockminds.tayari.model.Menu
 import com.lockminds.tayari.utils.ItemAnimation
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,9 +42,6 @@ class RestaurantTabsFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var data_key: String? = null
     private var spinKitView: SpinKitView? = null
-    private var restaurantAdapter: RestaurantAdapter? = null
-    private val animation_type: Int = ItemAnimation.FADE_IN
-
     private var _binding: FragmentRestaurantTabsBinding? = null
     // This property is only valid between onCreateView and  onDestroyView.
     private val binding get() = _binding
@@ -47,7 +52,6 @@ class RestaurantTabsFragment : Fragment() {
             data_key = it.getString(DATE_KEY)
         }
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,6 +65,7 @@ class RestaurantTabsFragment : Fragment() {
         binding?.recyclerView?.layoutManager = LinearLayoutManager(activity)
         binding?.recyclerView?.setHasFixedSize(true)
         setAdapter()
+        spinKitView = view?.findViewById(R.id.spin_kit)
         return view
     }
 
@@ -70,43 +75,29 @@ class RestaurantTabsFragment : Fragment() {
     }
 
     private fun setAdapter() {
-        spinKitView?.isVisible = true
-        spinKitView?.bringToFront()
-        val preference = activity?.getSharedPreferences(Constants.PREFERENCE_KEY, Context.MODE_PRIVATE)
-        if (preference != null) {
-            AndroidNetworking.get(APIURLs.BASE_URL + "restaurants/get_all")
-                .setTag("lots")
-                .addHeaders("accept", "application/json")
-                .addHeaders("Authorization", "Bearer " + preference.getString(Constants.LOGIN_TOKEN, "false"))
-                .setPriority(Priority.HIGH)
-                .setPriority(Priority.LOW)
-                .build()
-                .getAsObjectList(Restaurant::class.java, object : ParsedRequestListener<List<Restaurant>> {
-                    override fun onResponse(business: List<Restaurant>) {
-                        val items: List<Restaurant> = business
-                        if (items.isNotEmpty()) {
-                            //set data and list adapter
-                            restaurantAdapter = RestaurantAdapter(activity, items, animation_type)
-                            binding?.recyclerView?.adapter = restaurantAdapter
-
-                        }
-                    }
-
-                    override fun onError(anError: ANError) {}
-                })
+//        binding?.spinKit?.isVisible = true
+        val adapter = MenuAdapter(requireContext()){ offer -> adapterOnClick(offer) }
+        GlobalScope.launch {
+            val list = (activity?.application as App).repository.cousinMenu(data_key.toString())
+            activity?.runOnUiThread(Runnable {
+                //on main thread
+                binding?.recyclerView?.adapter = adapter
+                adapter.submitList(list)
+            })
         }
-        spinKitView?.isVisible = false
+    }
+
+    private fun adapterOnClick(obj: Menu) {
+        startActivity(MenuActivity.createMenuIntent(requireContext(), obj))
     }
 
     companion object {
 
-        @JvmStatic fun newInstance(param1: String, spinKitView: SpinKitView) =
+        @JvmStatic fun newInstance(param1: String) =
                 RestaurantTabsFragment().apply {
                     arguments = Bundle().apply {
                         putString(DATE_KEY, param1)
                     }
-                    this.spinKitView = spinKitView
-                    this.spinKitView?.isVisible =  true
                 }
     }
 }

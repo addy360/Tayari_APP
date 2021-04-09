@@ -46,7 +46,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                         // name match condition. this might differ depending on your requirement
                         // here we are looking for name or phone number match
-                        if (row.getBusiness_name().toLowerCase().contains(charString.toLowerCase()) ) {
+                        if (row.getName().toLowerCase().contains(charString.toLowerCase()) ) {
                             filteredList.add(row);
                         }
                     }
@@ -98,10 +98,10 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             OriginalViewHolder view = (OriginalViewHolder) holder;
 
             Restaurant p = items.get(pos);
-            view.name.setText(p.getBusiness_name());
-            view.location.setText(p.getBusiness_location());
-            view.address.setText(p.getBusiness_address());
-            Tools.displayImageBusiness(ctx,view.logo,p.getBusiness_banner());
+            view.name.setText(p.getName());
+            view.location.setText(p.getAddress());
+            view.address.setText(p.getAddress());
+            Tools.displayImageBusiness(ctx,view.logo,p.getBanner());
             view.lyt_parent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -1,36 +1,39 @@
 package com.lockminds.tayari.model
 
+import android.os.Parcel
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "restaurant")
+@Entity(tableName = "restaurants")
 data class Restaurant(
-        @PrimaryKey(autoGenerate = false) var business_id: Long,
-        var business_key: String? = "",
-        var business_name: String? = "",
-        var business_address: String? = "",
-        var business_telephone: String? = "",
-        var business_fax: String? = "",
-        var business_tagline: String? = "",
-        var business_email: String? = "",
-        var business_location: String? = "",
-        var business_tin: String? = "",
-        var business_box: String? = "",
-        var business_backup_email: String? = "",
-        var business_website: String? = "",
-        var business_logo: String? = "",
-        var business_banner: String? = "",
-        var business_created_at: String? = "",
-        var business_created_by: String? = "",
-        var business_modified_on: String? = "",
-        var business_modified_by: String? = "",
-        var business_deleted: String? = "",
-        var business_deleted_by: String? = "",
-        var business_work_status: String? = "",
-        var business_welcome_note: String? = "",
-        var business_longitude: String? = "",
-        var business_latitude: String? = "",
- ){
+        @PrimaryKey(autoGenerate = false) var id: Long,
+        var name: String? = "",
+        var latitude: String? = "",
+        var longitude: String? = "",
+        var logo: String? = "",
+        var banner: String? = "",
+        var phone: String? = "",
+        var email: String? = "",
+        var address: String? = "",
+        var currency_code: String? = "",
+        var description: String? = "",
+ ) : Parcelable{
+
+    constructor(parcel: Parcel) : this(
+            parcel.readLong(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString()) {
+    }
+
     constructor(): this(
         1,
         "",
@@ -43,19 +46,33 @@ data class Restaurant(
         "",
         "",
         "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-            "",
-            ""
     )
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeLong(id)
+        parcel.writeString(name)
+        parcel.writeString(latitude)
+        parcel.writeString(longitude)
+        parcel.writeString(logo)
+        parcel.writeString(banner)
+        parcel.writeString(phone)
+        parcel.writeString(email)
+        parcel.writeString(address)
+        parcel.writeString(currency_code)
+        parcel.writeString(description)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Restaurant> {
+        override fun createFromParcel(parcel: Parcel): Restaurant {
+            return Restaurant(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Restaurant?> {
+            return arrayOfNulls(size)
+        }
+    }
 }

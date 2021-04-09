@@ -4,12 +4,22 @@ public class Response {
 
     Boolean status;
     String uid;
+    String message;
 
     public Response() {
     }
 
-    public Response(Boolean status, String uid) {
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Response(Boolean status, String uid, String message) {
         this.status = status;
+        this.message = message;
         this.uid = uid;
     }
 

@@ -33,8 +33,8 @@ class ItemsCategoriesAdapter(context: Context,private val onClick: (Restaurant) 
         /* Bind business name and image. */
         fun bind(business: Restaurant, context: Context?) {
             currentRestaurant = business
-            businessTitle.text = business.business_name
-            Tools.displayImageBusiness(context, businessImage, business.business_banner)
+            businessTitle.text = business.name
+            Tools.displayImageBusiness(context, businessImage, business.banner)
         }
 
 
@@ -60,6 +60,6 @@ object ItemsCategoriesDiffCallback : DiffUtil.ItemCallback<Restaurant>() {
     }
 
     override fun areContentsTheSame(oldItem: Restaurant, newItem: Restaurant): Boolean {
-        return oldItem.business_key == newItem.business_key
+        return oldItem.id == newItem.id
     }
 }

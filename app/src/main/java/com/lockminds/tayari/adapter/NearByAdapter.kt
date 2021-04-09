@@ -10,35 +10,35 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.lockminds.tayari.R
 import com.lockminds.tayari.Tools
-import com.lockminds.tayari.model.Restaurant
+import com.lockminds.tayari.model.RestaurantNear
 
-class NearByAdapter(context: Context,private val onClick: (Restaurant) -> Unit) :
-    ListAdapter<Restaurant, NearByAdapter.NearByViewHolder>(NearByDiffCallback) {
+class NearByAdapter(context: Context,private val onClick: (RestaurantNear) -> Unit) :
+    ListAdapter<RestaurantNear, NearByAdapter.NearByViewHolder>(NearByDiffCallback) {
     private val context: Context? = context
-    /* ViewHolder for Restaurant, takes in the inflated view and the onClick behavior. */
-    class NearByViewHolder(itemView: View, val onClick: (Restaurant) -> Unit) :
+    /* ViewHolder for RestaurantNear, takes in the inflated view and the onClick behavior. */
+    class NearByViewHolder(itemView: View, val onClick: (RestaurantNear) -> Unit) :
         RecyclerView.ViewHolder(itemView) {
         private val businessTitle: TextView = itemView.findViewById(R.id.business_name)
         private val businessImage: ImageView = itemView.findViewById(R.id.business_logo)
         private val businessLocation: TextView = itemView.findViewById(R.id.business_location)
         private val businessAddress: TextView = itemView.findViewById(R.id.business_address)
-        private var currentRestaurant: Restaurant? = null
+        private var currentRestaurantNear: RestaurantNear? = null
 
         init {
             itemView.setOnClickListener {
-                currentRestaurant?.let {
+                currentRestaurantNear?.let {
                     onClick(it)
                 }
             }
         }
 
         /* Bind business name and image. */
-        fun bind(business: Restaurant, context: Context?) {
-            currentRestaurant = business
-            businessTitle.text = business.business_name
-            businessAddress.text = business.business_address
-            businessLocation.text = "2.5 km "+business.business_location
-            Tools.displayImageBusiness(context, businessImage, business.business_banner)
+        fun bind(business: RestaurantNear, context: Context?) {
+            currentRestaurantNear = business
+            businessTitle.text = business.name
+            businessAddress.text = business.address
+            businessLocation.text = ""
+            Tools.displayImageBusiness(context, businessImage, business.logo)
         }
 
 
@@ -58,12 +58,12 @@ class NearByAdapter(context: Context,private val onClick: (Restaurant) -> Unit) 
     }
 }
 
-object NearByDiffCallback : DiffUtil.ItemCallback<Restaurant>() {
-    override fun areItemsTheSame(oldItem: Restaurant, newItem: Restaurant): Boolean {
+object NearByDiffCallback : DiffUtil.ItemCallback<RestaurantNear>() {
+    override fun areItemsTheSame(oldItem: RestaurantNear, newItem: RestaurantNear): Boolean {
         return oldItem == newItem
     }
 
-    override fun areContentsTheSame(oldItem: Restaurant, newItem: Restaurant): Boolean {
-        return oldItem.business_key == newItem.business_key
+    override fun areContentsTheSame(oldItem: RestaurantNear, newItem: RestaurantNear): Boolean {
+        return oldItem.id == newItem.id
     }
 }

@@ -17,6 +17,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.StrictMode;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.text.Html;
 import android.text.Spanned;
@@ -70,46 +71,11 @@ public class Tools {
         }
     }
 
-    public static void displayImageServices(Context ctx, ImageView img, String url) {
 
-        Glide.with(ctx)
-                .load(APIURLs.SERVICES_MEDIA_URL+url) // image url
-                .placeholder(R.drawable.placeholder) // any placeholder to load at start
-                .error(R.drawable.placeholder)  // any image in case of error
-                .override(200, 200)// resizing
-                .centerCrop()
-                .into(img);  // imageview object
-
-    }
     public static void displayImageBusiness(Context ctx, ImageView img, String url) {
 
         Glide.with(ctx)
-                .load(APIURLs.MEDIA_URL+url) // image url
-                .placeholder(R.drawable.placeholder) // any placeholder to load at start
-                .error(R.drawable.placeholder)  // any image in case of error
-                .override(200, 200)// resizing
-                .centerCrop()
-                .into(img);  // imageview object
-
-    }
-
-
-    public static void displayImageNews(Context ctx, ImageView img, String url) {
-
-            Glide.with(ctx)
-                .load(APIURLs.NEWS_MEDIA_URL+url) // image url
-                .placeholder(R.drawable.placeholder) // any placeholder to load at start
-                .error(R.drawable.placeholder)  // any image in case of error
-                .override(200, 200)// resizing
-                .centerCrop()
-                .into(img);  // imageview object
-
-    }
-
-    public static void displayImageProducts(Context ctx, ImageView img, String url) {
-
-        Glide.with(ctx)
-                .load(APIURLs.PRODUCTS_MEDIA_URL+url) // image url
+                .load(APIURLs.BUSINESS_MEDIA_URL+url) // image url
                 .placeholder(R.drawable.placeholder) // any placeholder to load at start
                 .error(R.drawable.placeholder)  // any image in case of error
                 .override(200, 200)// resizing
@@ -275,6 +241,13 @@ public class Tools {
     public static int dpToPx(Context c, int dp) {
         Resources r = c.getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    }
+
+    public static void vibrate(Context context) {
+        // Get instance of Vibrator from current Context and Vibrate for 400
+        // milliseconds
+        ((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE))
+                .vibrate(100);
     }
 
     public static void copyToClipboard(Context context, String data) {
@@ -478,6 +451,8 @@ public class Tools {
             return url;
         }
     }
+
+
 
 
     public static String getDataColumn(Context context, Uri uri, String selection,

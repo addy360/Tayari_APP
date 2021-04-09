@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.lockminds.tayari.datasource.RestaurantDataSource
 import com.lockminds.tayari.datasource.repository.AppRepository
 import com.lockminds.tayari.model.Restaurant
+import com.lockminds.tayari.model.RestaurantNear
 import kotlinx.coroutines.flow.Flow
 
 
@@ -14,6 +15,7 @@ class RestaurantsViewModel(val businessDataSource: RestaurantDataSource, val app
     private val query = MutableLiveData<String>()
 
     val allRestaurants: LiveData<List<Restaurant>> = repository.allRestaurants.asLiveData()
+    val allRestaurantsNear: LiveData<List<RestaurantNear>> = repository.allRestaurantsNear.asLiveData()
 
     val results: LiveData<List<Restaurant>> = Transformations.map(
             query,

@@ -18,7 +18,7 @@
         <item name="android:dialogTheme">@style/Dialog.Theme</item>
         <item name="fontFamily">@font/sans_regular</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryDark</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/colorPrimary</item>
         <!-- Customize your theme here. -->
 
         <item name="android:windowActionBarOverlay">true</item>
@@ -203,6 +203,12 @@
         <item name="colorControlActivated">@color/grey_60</item>
         <item name="colorControlHighlight">@color/grey_60</item>
         <item name="colorControlNormal">@color/grey_40</item>
+    </style>
+
+    <style name="EditText.Variant" parent="@style/AppTheme">
+        <item name="colorControlActivated">@color/colorPrimaryVariant</item>
+        <item name="colorControlHighlight">@color/colorPrimaryVariant</item>
+        <item name="colorControlNormal">@color/colorPrimaryVariant</item>
     </style>
 
     <style name="EditText.GreySoft" parent="@style/AppTheme">

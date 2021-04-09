@@ -1,10 +1,19 @@
 package com.lockminds.tayari
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.observe
 import androidx.paging.ExperimentalPagingApi
 import androidx.recyclerview.widget.GridLayoutManager
@@ -12,39 +21,56 @@ import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.ParsedRequestListener
+import com.budiyev.android.codescanner.*
+import com.eazypermissions.common.model.PermissionResult
+import com.eazypermissions.dsl.extension.requestPermissions
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.google.gson.Gson
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.lockminds.tayari.CousinRestaurantActivity.Companion.createCousinRestaurantIntent
+import com.lockminds.tayari.MenuActivity.Companion.createMenuIntent
+import com.lockminds.tayari.RestaurantActivity.Companion.createRestaurantIntent
+import com.lockminds.tayari.RestaurantNearActivity.Companion.createRestaurantNearIntent
 import com.lockminds.tayari.adapter.*
 import com.lockminds.tayari.constants.APIURLs
 import com.lockminds.tayari.constants.Constants
-import com.lockminds.tayari.constants.Constants.Companion.DATA_KEY
-import com.lockminds.tayari.constants.Constants.Companion.IMAGE_URL
+import com.lockminds.tayari.data.QrRestaurantResponse
 import com.lockminds.tayari.databinding.ActivityMainBinding
+import com.lockminds.tayari.model.Cousin
+import com.lockminds.tayari.model.Menu
 import com.lockminds.tayari.model.Restaurant
-import com.lockminds.tayari.utils.ItemAnimation
+import com.lockminds.tayari.model.RestaurantNear
 import com.lockminds.tayari.viewModels.*
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), LocationListener {
 
+    private lateinit var locationManager: LocationManager
 
-    private val offersViewModel by viewModels<OffersViewModel>{
-        OffersViewModelFactory( (application as App).repository)
+    private val restaurantsViewModel by viewModels<RestaurantsViewModel>{
+        RestaurantsViewModelFactory((application as App).repository)
     }
 
     private val nearByViewModel by viewModels<NearByViewModel>{
-        NearByViewModelFactory( (application as App).repository)
+        NearByViewModelFactory((application as App).repository)
     }
 
-    private val itemsCategoryListViewModel by viewModels<ItemsCategoryListViewModel> {
-        ItemsCategoryListViewModelFactory((application as App).repository)
+    private val cousinsViewModel by viewModels<CousinsViewModel> {
+        CousinsViewModelFactory((application as App).repository)
     }
 
-    private var restaurantAdapter: RestaurantAdapter? = null
-    private val animation_type: Int = ItemAnimation.FADE_IN
-
-     private lateinit var binding: ActivityMainBinding
-
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var codeScanner: CodeScanner
+    private val locationPermissionCode = 2
 
      @ExperimentalPagingApi
      override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,13 +78,108 @@ class MainActivity : BaseActivity() {
             binding = ActivityMainBinding.inflate(layoutInflater)
             val view: View =  binding.root
             setContentView(view)
-            Tools.setSystemBarLight(this)
+            database = Firebase.database.reference
+            initStatusBar()
             initComponents()
             setAdapter()
-            syncDatabase()
+            initQr()
+
+         binding.navigation.setOnNavigationItemReselectedListener {
+            when(it.itemId){
+                R.id.navigation_settings -> {
+                    // Return user to login page because task was not successfully
+                    val intent = Intent(this@MainActivity, ProfileActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+         }
+
         }
 
-        private fun initComponents() {
+    override fun onResume() {
+        super.onResume()
+        syncDatabase()
+        requestPermissions(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+        ) {
+            requestCode = 4
+            resultCallback = {
+                when(this) {
+                    is PermissionResult.PermissionGranted -> {
+                        binding.displayNearBy.isVisible = false
+                        getLocation()
+                    }
+                    is PermissionResult.PermissionDenied -> {
+                        //Add your logic to handle permission denial
+                    }
+                    is PermissionResult.PermissionDeniedPermanently -> {
+                        //Add your logic here if user denied permission(s) permanently.
+                        //Ideally you should ask user to manually go to settings and enable permission(s)
+                    }
+                    is PermissionResult.ShowRational -> {
+                        //If user denied permission frequently then she/he is not clear about why you are asking this permission.
+                        //This is your chance to explain them why you need permission.
+                    }
+                }
+            }
+        }
+    }
+
+    private fun initQr(){
+        codeScanner = CodeScanner(this, binding.scannerView)
+        // Parameters (default values)
+        codeScanner.camera = CodeScanner.CAMERA_BACK // or CAMERA_FRONT or specific camera id
+        codeScanner.formats = CodeScanner.ALL_FORMATS // list of type BarcodeFormat,
+        // ex. listOf(BarcodeFormat.QR_CODE)
+        codeScanner.autoFocusMode = AutoFocusMode.SAFE // or CONTINUOUS
+        codeScanner.scanMode = ScanMode.SINGLE // or CONTINUOUS or PREVIEW
+        codeScanner.isAutoFocusEnabled = true // Whether to enable auto focus or not
+        codeScanner.isFlashEnabled = false // Whether to enable flash or not
+
+        // Callbacks
+        codeScanner.decodeCallback = DecodeCallback {
+            runOnUiThread {
+                binding.qr.isVisible = false
+                val gson = Gson()
+                val qrRestaurantResponse = gson.fromJson(it.toString(), QrRestaurantResponse::class.java)
+                GlobalScope.launch {
+                    val restaurant = (application as App).repository.getRestaurant(qrRestaurantResponse.id)
+                        startActivity(createRestaurantIntent(this@MainActivity,restaurant))
+                    }
+                }
+            }
+
+
+        codeScanner.errorCallback = ErrorCallback { // or ErrorCallback.SUPPRESS
+            runOnUiThread {
+                binding.qr.isVisible = false
+                Toast.makeText(this, "Camera initialization error: ${it.message}",
+                    Toast.LENGTH_LONG).show()
+            }
+        }
+
+        binding.scanner.setOnClickListener {
+            binding.qr.isVisible = true
+        Dexter.withContext(this)
+            .withPermissions(
+                Manifest.permission.CAMERA,
+            ).withListener(object : MultiplePermissionsListener {
+
+                override fun onPermissionsChecked(report: MultiplePermissionsReport) {
+                    codeScanner.startPreview()
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permissions: List<PermissionRequest?>?,
+                    token: PermissionToken?
+                ) { /* ... */
+                }
+            }).check()
+
+        }
+    }
+
+    private fun initComponents() {
 
             binding.recyclerCategories.layoutManager = GridLayoutManager(this, 1, GridLayoutManager.HORIZONTAL, false)
             binding.recyclerViewOffers.layoutManager = GridLayoutManager(this, 1, GridLayoutManager.HORIZONTAL, false)
@@ -67,6 +188,7 @@ class MainActivity : BaseActivity() {
 
             binding.swiperefresh.setOnRefreshListener {
                 binding.swiperefresh.isRefreshing = false
+                syncDatabase()
             }
 
             binding.restaurantsRight.setOnClickListener {
@@ -74,20 +196,52 @@ class MainActivity : BaseActivity() {
                 startActivity(intent)
             }
 
+            binding.nearByRight.setOnClickListener {
+                val intent = Intent(applicationContext, RestaurantsActivity::class.java)
+                startActivity(intent)
+            }
+
+            binding.displayNearBy.setOnClickListener {
+
+                requestPermissions(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                ) {
+                    requestCode = 4
+                    resultCallback = {
+                        when(this) {
+                            is PermissionResult.PermissionGranted -> {
+                                binding.displayNearBy.isVisible = false
+                                getLocation()
+                            }
+                            is PermissionResult.PermissionDenied -> {
+                                //Add your logic to handle permission denial
+                            }
+                            is PermissionResult.PermissionDeniedPermanently -> {
+                                //Add your logic here if user denied permission(s) permanently.
+                                //Ideally you should ask user to manually go to settings and enable permission(s)
+                            }
+                            is PermissionResult.ShowRational -> {
+                                //If user denied permission frequently then she/he is not clear about why you are asking this permission.
+                                //This is your chance to explain them why you need permission.
+                            }
+                        }
+                    }
+                }
+            }
+
         }
 
-
-        private fun setAdapter(){
-            val offersAdapter = OffersAdapter(this) { business -> adapterOnClick(business) }
-            val nearByAdapter = NearByAdapter(this) { business -> adapterOnClick(business) }
-            val itemsCategoriesAdapter = ItemsCategoriesAdapter(this) { business -> adapterCategoryOnClick(business) }
-            binding.recyclerCategories.adapter = itemsCategoriesAdapter
-            binding.recyclerViewOffers.adapter = offersAdapter
+    private fun setAdapter(){
+            val restaurantsAdapter = RestaurantsAdapter(this) { business -> restaurantAdapterOnClick(business) }
+            val nearByAdapter = NearByAdapter(this) { business -> restaurantAdapterOnClickNear(business) }
+            val cousinAdapter = CousinsAdapter(this) { cousin -> cousinAdapterOnClick(cousin) }
+            binding.recyclerCategories.adapter = cousinAdapter
             binding.recyclerNearBy.adapter = nearByAdapter
+            binding.recyclerRestaurants.adapter = restaurantsAdapter
 
-            offersViewModel.allRestaurants.observe(this) {
+            restaurantsViewModel.allRestaurants.observe(this){
                 it?.let {
-                    offersAdapter.submitList(it)
+                    restaurantsAdapter.submitList(it)
                 }
             }
 
@@ -97,43 +251,55 @@ class MainActivity : BaseActivity() {
                 }
             }
 
-            itemsCategoryListViewModel.itemsCategoryLiveData.observe(this) {
+            cousinsViewModel.itemsLiveData.observe(this) {
                 it?.let {
-                    itemsCategoriesAdapter.submitList(it)
-                }
-            }
-
-
-            GlobalScope.launch {
-                val  restaurants = (application as App).repository.restaurants()
-                if(restaurants.isNotEmpty()){
-                    restaurantAdapter = RestaurantAdapter(applicationContext, restaurants, animation_type)
-                    binding.recyclerRestaurants.adapter = restaurantAdapter
-                    restaurantAdapter!!.setOnItemClickListener { view, obj, position ->
-                        val intent = Intent(applicationContext, RestaurantActivity::class.java)
-                        intent.putExtra(DATA_KEY, obj.business_key)
-                        intent.putExtra(IMAGE_URL, obj.business_banner)
-                        startActivity(intent)
-                    }
+                    cousinAdapter.submitList(it)
                 }
             }
             
             binding.swiperefresh.isRefreshing = false
         }
 
+    private fun restaurantAdapterOnClick(restaurant: Restaurant) {
+        startActivity(createRestaurantIntent(this, restaurant))
+    }
 
-        private fun adapterOnClick(business: Restaurant) {
-
+    private fun restaurantAdapterOnClickNear(restaurant: RestaurantNear) {
+        startActivity(createRestaurantNearIntent(this, restaurant))
+    }
+        private fun adapterOfferOnClick(obj: Menu) {
+            startActivity(createMenuIntent(this,obj))
         }
 
-        private fun adapterCategoryOnClick(business: Restaurant) {
-
+        private fun cousinAdapterOnClick(cousin: Cousin) {
+            startActivity(createCousinRestaurantIntent(this, cousin))
         }
 
         private fun syncDatabase(){
 
+            val offersAdapter = OffersAdapter(this) { offer -> adapterOfferOnClick(offer) }
                 val preference = application?.getSharedPreferences(Constants.PREFERENCE_KEY, Context.MODE_PRIVATE)
                 if (preference != null) {
+
+                    AndroidNetworking.get(APIURLs.BASE_URL + "offers/get_all")
+                            .setTag("lots")
+                            .addHeaders("accept", "application/json")
+                            .addHeaders("Authorization", "Bearer " + preference.getString(Constants.LOGIN_TOKEN, "false"))
+                            .setPriority(Priority.HIGH)
+                            .setPriority(Priority.LOW)
+                            .build()
+                            .getAsObjectList(Menu::class.java, object : ParsedRequestListener<List<Menu>> {
+                                override fun onResponse(menu: List<Menu>) {
+                                    val items: List<Menu> = menu
+                                    if (items.isNotEmpty()) {
+                                        binding.recyclerViewOffers.adapter = offersAdapter
+                                        offersAdapter.submitList(items)
+                                    }
+                                }
+
+                                override fun onError(anError: ANError) {}
+                            })
+
                     AndroidNetworking.get(APIURLs.BASE_URL + "restaurants/get_all")
                         .setTag("lots")
                         .addHeaders("accept", "application/json")
@@ -145,6 +311,7 @@ class MainActivity : BaseActivity() {
                             override fun onResponse(business: List<Restaurant>) {
                                 val items: List<Restaurant> = business
                                 if (items.isNotEmpty()) {
+
                                     GlobalScope.launch {
                                         (application as App).repository.syncRestaurants(items)
                                     }
@@ -154,8 +321,70 @@ class MainActivity : BaseActivity() {
                             override fun onError(anError: ANError) {}
                         })
 
+                    AndroidNetworking.get(APIURLs.BASE_URL + "cousins/get_all")
+                            .setTag("cousins")
+                            .addHeaders("accept", "application/json")
+                            .addHeaders("Authorization", "Bearer " + preference.getString(Constants.LOGIN_TOKEN, "false"))
+                            .setPriority(Priority.HIGH)
+                            .setPriority(Priority.LOW)
+                            .build()
+                            .getAsObjectList(Cousin::class.java, object : ParsedRequestListener<List<Cousin>> {
+                                override fun onResponse(cousin: List<Cousin>) {
+                                    val items: List<Cousin> = cousin
+                                    if (items.isNotEmpty()) {
+                                        GlobalScope.launch {
+                                            (application as App).repository.syncCousins(items)
+                                        }
+                                    }
+                                }
+
+                                override fun onError(anError: ANError) {}
+                            })
+
             }
+
         }
 
+    override fun onLocationChanged(location: Location) {
+        val preference = application?.getSharedPreferences(Constants.PREFERENCE_KEY, Context.MODE_PRIVATE)
+        if (preference != null) {
+            AndroidNetworking.get(APIURLs.BASE_URL + "restaurants/get_all_near")
+                    .setTag("lots")
+                    .addHeaders("accept", "application/json")
+                    .addHeaders("Authorization", "Bearer " + preference.getString(Constants.LOGIN_TOKEN, "false"))
+                    .addQueryParameter("latitude",location.latitude.toString())
+                    .addQueryParameter("longitude",location.longitude.toString())
+                    .setPriority(Priority.HIGH)
+                    .setPriority(Priority.LOW)
+                    .build()
+                    .getAsObjectList(RestaurantNear::class.java, object : ParsedRequestListener<List<RestaurantNear>> {
+                        override fun onResponse(business: List<RestaurantNear>) {
+                            val items: List<RestaurantNear> = business
+                            if (items.isNotEmpty()) {
+                                GlobalScope.launch {
+                                    (application as App).repository.syncRestaurantsNear(items)
+                                }
+                            }
+                        }
 
+                        override fun onError(anError: ANError) {}
+                    })
+        }
     }
+
+
+    private fun getLocation() {
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), locationPermissionCode)
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
+
+        binding.nearBy.isVisible = true
+        binding.nearByRight.isVisible = true
+        binding.nearByLeft.isVisible = true
+        binding.recyclerNearBy.isVisible = true
+        binding.displayNearBy.isVisible =  false
+    }
+
+ }

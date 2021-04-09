@@ -5,15 +5,16 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.lockminds.tayari.model.Restaurant
 import com.lockminds.tayari.datasource.daos.AppDao
 import com.lockminds.tayari.datasource.daos.RemoteKeysDao
 import com.lockminds.tayari.datasource.tables.RemoteKeys
 import com.lockminds.tayari.datasource.tables.Users
+import com.lockminds.tayari.model.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [Users::class,RemoteKeys::class, Restaurant::class], version = 2, exportSchema = false)
+@Database(entities = [Users::class,RemoteKeys::class, RestaurantNear::class, Restaurant::class,Cousin::class, CartMenu::class, CartItem::class,Menu::class, MenuItem::class], version = 1, exportSchema = false)
+
 public abstract class AppDatabase : RoomDatabase() {
 
     abstract fun appDao(): AppDao
@@ -50,6 +51,7 @@ public abstract class AppDatabase : RoomDatabase() {
         private fun buildDatabase(context: Context) =
                 Room.databaseBuilder(context.applicationContext,
                         AppDatabase::class.java, "com.lockminds.tayari_database")
+                    .fallbackToDestructiveMigration()
                         .build()
 
     }

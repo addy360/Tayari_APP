@@ -40,10 +40,10 @@ public class AuthUiActivity extends AppCompatActivity {
 
     private static final String TAG = "AuthUiActivity";
 
-    private static final String GOOGLE_TOS_URL = "https://agripoa.com/en/policy/";
-    private static final String FIREBASE_TOS_URL = "https://agripoa.com/en/policy/";
-    private static final String GOOGLE_PRIVACY_POLICY_URL = "https://agripoa.com/en/policy/";
-    private static final String FIREBASE_PRIVACY_POLICY_URL = "https://agripoa.com/en/policy/";
+    private static final String GOOGLE_TOS_URL = "https://tayari.co.tz/policy";
+    private static final String FIREBASE_TOS_URL = "https://tayari.co.tz/policy";
+    private static final String GOOGLE_PRIVACY_POLICY_URL = "https://tayari.co.tz/policy";
+    private static final String FIREBASE_PRIVACY_POLICY_URL = "https://tayari.co.tz/policy";
 
     private static final int RC_SIGN_IN = 100;
 
@@ -187,9 +187,9 @@ public class AuthUiActivity extends AppCompatActivity {
                 .build());
         selectedProviders.add( new AuthUI.IdpConfig.GoogleBuilder().setScopes(getGoogleScopes()).build());
 
-        selectedProviders.add(new AuthUI.IdpConfig.FacebookBuilder()
-                .setPermissions(getFacebookPermissions())
-                .build());
+//        selectedProviders.add(new AuthUI.IdpConfig.FacebookBuilder()
+//                .setPermissions(getFacebookPermissions())
+//                .build());
 
         return selectedProviders;
     }

@@ -1,26 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView android:id="@+id/bottomSheet"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clipChildren="false"
-    android:id="@+id/parent1">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:behavior_peekHeight="0dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <FrameLayout
-        android:id="@+id/parent2"
+    <androidx.cardview.widget.CardView
+        android:translationZ="10dp"
+        android:id="@+id/icon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:clipToPadding="true"
+        app:cardCornerRadius="8dp"
+        android:layout_marginStart="@dimen/spacing_large"
+        app:cardElevation="0dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:scaleType="centerCrop"
+            android:id="@+id/service_image"
+            android:translationZ="10dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/placeholder" />
+
+    </androidx.cardview.widget.CardView>
+
+
+    <LinearLayout
+        android:layout_marginTop="40dp"
+        android:padding="@dimen/spacing_large"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="64dp"
-        android:background="@android:color/holo_blue_bright">
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:backgroundTint="@color/overlay_dark_5"
+        android:background="@drawable/shape_rectagle_round_top_white_top"
+        app:elevation="4dp"
+        android:focusable="true">
 
-        <View
-            android:id="@+id/This_is_the_view_I_want_to_overlap_parent2"
-            android:layout_width="160dp"
-            android:layout_height="80dp"
-            android:layout_gravity="top|start"
-            android:layout_marginTop="-40dp"
-            android:background="#000000" />
-
-    </FrameLayout>
-
-
-</FrameLayout>
+        <Button
+            android:textColor="@color/white"
+            android:text="@string/confirm"
+            android:backgroundTint="@color/colorPrimaryVariant"
+            android:background="@drawable/btn_rounded_primary"
+            android:layout_gravity="bottom"
+            android:layout_width="match_parent"
+            android:layout_height="60dp" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
