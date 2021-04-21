@@ -1,35 +1,21 @@
 package com.lockminds.tayari.fragments
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.androidnetworking.AndroidNetworking
-import com.androidnetworking.common.Priority
-import com.androidnetworking.error.ANError
-import com.androidnetworking.interfaces.ParsedRequestListener
 import com.github.ybq.android.spinkit.SpinKitView
 import com.lockminds.tayari.App
 import com.lockminds.tayari.MenuActivity
 import com.lockminds.tayari.R
-import com.lockminds.tayari.RestaurantActivity
 import com.lockminds.tayari.adapter.MenuAdapter
-import com.lockminds.tayari.constants.APIURLs
-import com.lockminds.tayari.constants.Constants
 import com.lockminds.tayari.databinding.FragmentRestaurantTabsBinding
-import com.lockminds.tayari.model.Cousin
 import com.lockminds.tayari.model.Menu
-import com.lockminds.tayari.utils.ItemAnimation
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val DATE_KEY = "data_key"
 
 

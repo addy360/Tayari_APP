@@ -19,10 +19,13 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.lockminds.tayari.datasource.AppDatabase
 import com.lockminds.tayari.firebase.ui.auth.AuthUiActivity
 import com.lockminds.tayari.firebase.ui.auth.SignedActivity
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 open class BaseActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
@@ -60,7 +63,6 @@ open class BaseActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         firebaseAuth.addAuthStateListener(this.authStateListener)
     }
 
-
     public override fun onStop() {
         super.onStop()
         hideProgressBar()
@@ -84,7 +86,6 @@ open class BaseActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         Tools.setSystemBarColor(this, R.color.colorPrimaryDark)
     }
 
-
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
@@ -101,6 +102,9 @@ open class BaseActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
             R.id.logout -> {
                 Firebase.auth.signOut()
+                GlobalScope.launch {
+                    AppDatabase.getDatabase(applicationContext,this).clearAllTables()
+                }
                 val intent = Intent(this, AuthUiActivity::class.java).apply { }
                 startActivity(intent)
                 true
@@ -112,12 +116,9 @@ open class BaseActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
     private var progressBar: ProgressBar? = null
 
-
     fun hideProgressBar() {
         progressBar?.visibility = View.INVISIBLE
     }
-
-
 
 }
 

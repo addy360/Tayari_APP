@@ -295,4 +295,11 @@
     <string name="content">Content</string>
     <string name="recommended">Recommended</string>
     <string name="cart">Cart</string>
+    <string name="order_0_orders">0 Orders</string>
+    <string name="my_orders">My Orders</string>
+    <string name="refresh">Refresh</string>
+    <string name="select_table">Select Table</string>
+    <string name="welcome_dashboard_header">Your digital waiter is here!</string>
+    <string name="welcome_dashboard_sub_header">What would you like to order today?</string>
+    <string name="order_details">Order Details</string>
 </resources>

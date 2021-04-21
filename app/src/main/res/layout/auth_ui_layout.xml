@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
+    android:background="@drawable/ic_tayari_app_01"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".firebase.ui.auth.AuthUiActivity">
@@ -37,7 +38,7 @@
                 android:gravity="center_horizontal"
                 style="@style/Base.TextAppearance.AppCompat.Headline"
                 android:layout_width="match_parent"
-                android:textColor="@color/colorOnPrimary"
+                android:textColor="@color/white"
                 android:layout_height="wrap_content"
                 android:text="@string/welcome_text" />
             <Button

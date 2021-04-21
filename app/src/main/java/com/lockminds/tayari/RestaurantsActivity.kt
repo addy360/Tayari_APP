@@ -1,33 +1,49 @@
 package com.lockminds.tayari
 
-import android.content.Context
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.paging.ExperimentalPagingApi
+import androidx.paging.LoadState
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.androidnetworking.AndroidNetworking
-import com.androidnetworking.common.Priority
-import com.androidnetworking.error.ANError
-import com.androidnetworking.interfaces.ParsedRequestListener
 import com.lockminds.tayari.adapter.*
-import com.lockminds.tayari.constants.APIURLs
-import com.lockminds.tayari.constants.Constants
 import com.lockminds.tayari.databinding.ActivityRestaurantsBinding
-import com.lockminds.tayari.model.Restaurant
-import com.lockminds.tayari.utils.ItemAnimation
-import com.mancj.materialsearchbar.MaterialSearchBar
+import com.lockminds.tayari.viewModels.SearchRepositoriesViewModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 
 
-class RestaurantsActivity : BaseActivity(), MaterialSearchBar.OnSearchActionListener {
+class RestaurantsActivity : BaseActivity() {
     lateinit var binding: ActivityRestaurantsBinding
-    private var restaurantAdapter: RestaurantAllAdapter? = null
-    private val animation_type: Int = ItemAnimation.FADE_IN
+    private lateinit var viewModel: SearchRepositoriesViewModel
+    private val adapter = ReposAdapter()
+    private var searchJob: Job? = null
+
+    @ExperimentalPagingApi
+    private fun search() {
+        // Make sure we cancel the previous job before creating a new one
+        searchJob?.cancel()
+        searchJob = lifecycleScope.launch {
+            viewModel.searchRepo(applicationContext,"").collectLatest {
+                adapter.submitData(it)
+            }
+        }
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables", "ResourceType")
     @ExperimentalPagingApi
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,92 +51,112 @@ class RestaurantsActivity : BaseActivity(), MaterialSearchBar.OnSearchActionList
         binding = ActivityRestaurantsBinding.inflate(layoutInflater)
         val view: View = binding.root
         setContentView(view)
-        initComponents()
-        initSearch()
-    }
-
-    private fun initSearch() {
-        binding.searchBar.setOnSearchActionListener(this@RestaurantsActivity)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    private fun initComponents(){
-        initStatusBar()
-        binding.toolbar.navigationIcon = getDrawable(R.drawable.ic_back)
+        binding.toolbar.navigationIcon = getDrawable(R.drawable.ic_back_white)
         setSupportActionBar(binding.toolbar)
-        supportActionBar!!.title = getString(R.string.restaurants)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        Tools.setSystemBarColor(this, R.color.colorPrimaryDark)
-
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        supportActionBar!!.title = "Restaurants"
+        Tools.setSystemBarTransparent(this@RestaurantsActivity)
+        binding.recyclerView.setLayoutManager(LinearLayoutManager(this))
         binding.recyclerView.setHasFixedSize(true)
 
-        binding.searchBar.addTextChangeListener(object : TextWatcher  {
+        // get the view model
+        viewModel = ViewModelProvider(this, Injection.provideViewModelFactory(this))
+                .get(SearchRepositoriesViewModel::class.java)
 
-        override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
 
-            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+        initAdapter()
+        search()
+        initSearch()
+        initNav()
+        binding.retryButton.setOnClickListener { adapter.retry() }
+    }
 
-                restaurantAdapter?.filter?.filter(binding.searchBar.text.trim())
+
+    private fun initAdapter() {
+        binding.recyclerView.adapter = adapter.withLoadStateFooter(
+                footer = ReposLoadStateAdapter { adapter.retry() }
+        )
+        adapter.addLoadStateListener { loadState ->
+            // Only show the list if refresh succeeds.
+            binding.recyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
+            // Show loading spinner during initial load or refresh.
+            binding.progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+            // Show the retry state if initial load or refresh fails.
+            binding.retryButton.isVisible = loadState.source.refresh is LoadState.Error
+
+            // Toast on any error, regardless of whether it came from RemoteMediator or PagingSource
+            val errorState = loadState.source.append as? LoadState.Error
+                    ?: loadState.source.prepend as? LoadState.Error
+                    ?: loadState.append as? LoadState.Error
+                    ?: loadState.prepend as? LoadState.Error
+            errorState?.let {
+
+            }
+        }
+
+    }
+
+    private fun initNav(){
+        binding.cart.setOnClickListener {
+
+            GlobalScope.launch {
+
+                val cart = (application as App).repository.getOneCart()
+
+                if(cart != null){
+                    val restaurant  = (application as App).repository.getRestaurant(cart.team_id.toString())
+                    runOnUiThread {
+                        startActivity(
+                            CartActivity.createCartIntent(
+                                this@RestaurantsActivity,
+                                restaurant
+                            )
+                        )
+                    }
+                }else{
+                    showNoCart()
+                }
+
             }
 
-            override fun afterTextChanged(editable: Editable) {}
 
+        }
+
+        binding.profile.setOnClickListener {
+
+            val intent = Intent(this@RestaurantsActivity, ProfileActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.orders.setOnClickListener {
+            val intent = Intent(this@RestaurantsActivity, OrdersActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.home.setOnClickListener {
+            val intent = Intent(this@RestaurantsActivity, MainActivity::class.java)
+            startActivity(intent)
+        }
+    }
+    private fun showNoCart() {
+        runOnUiThread(Runnable {
+            Toast.makeText(this@RestaurantsActivity, "No item", Toast.LENGTH_SHORT).show()
         })
+    }
 
-        binding.swiperefresh.setOnRefreshListener {
-            setAdapter()
+    @ExperimentalPagingApi
+    private fun initSearch() {
+
+        // Scroll to top when the list is refreshed from network.
+        lifecycleScope.launch {
+            adapter.loadStateFlow
+                    // Only emit when REFRESH LoadState for RemoteMediator changes.
+                    .distinctUntilChangedBy { it.refresh }
+                    // Only react to cases where Remote REFRESH completes i.e., NotLoading.
+                    .filter { it.refresh is LoadState.NotLoading }
+                    .collectLatest { binding.recyclerView.scrollToPosition(0) }
         }
-
-        binding.spinKit.isVisible = true
-        setAdapter()
-
     }
 
-
-    private fun setAdapter(){
-        binding.spinKit.isVisible = true
-        val preference = application?.getSharedPreferences(Constants.PREFERENCE_KEY, Context.MODE_PRIVATE)
-        if (preference != null) {
-            AndroidNetworking.get(APIURLs.BASE_URL + "restaurants/get_all")
-                .setTag("lots")
-                .addHeaders("accept", "application/json")
-                .addHeaders("Authorization", "Bearer " + preference.getString(Constants.LOGIN_TOKEN, "false"))
-                .setPriority(Priority.HIGH)
-                .setPriority(Priority.LOW)
-                .build()
-                .getAsObjectList(Restaurant::class.java, object :
-                    ParsedRequestListener<List<Restaurant>> {
-                    override fun onResponse(business: List<Restaurant>) {
-                        val items: List<Restaurant> = business
-                        if (items.isNotEmpty()) {
-                            restaurantAdapter = RestaurantAllAdapter(applicationContext,items, animation_type)
-                            binding.recyclerView.adapter = restaurantAdapter
-                            restaurantAdapter!!.setOnItemClickListener { view, obj, position ->
-                                startActivity(RestaurantActivity.createRestaurantIntent(this@RestaurantsActivity, obj))
-                            }
-                        }
-                    }
-
-                    override fun onError(anError: ANError) {}
-                })
-
-        }
-
-        binding.spinKit.isVisible = false
-
-    }
-
-    override fun onSearchStateChanged(enabled: Boolean) {
-
-    }
-
-    override fun onSearchConfirmed(text: CharSequence?) {
-
-    }
-
-    override fun onButtonClicked(buttonCode: Int) {
-
-    }
 
 }

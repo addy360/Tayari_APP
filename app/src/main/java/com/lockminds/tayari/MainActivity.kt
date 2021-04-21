@@ -3,16 +3,11 @@ package com.lockminds.tayari
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.observe
 import androidx.paging.ExperimentalPagingApi
@@ -41,20 +36,14 @@ import com.lockminds.tayari.constants.APIURLs
 import com.lockminds.tayari.constants.Constants
 import com.lockminds.tayari.data.QrRestaurantResponse
 import com.lockminds.tayari.databinding.ActivityMainBinding
-import com.lockminds.tayari.model.Cousin
-import com.lockminds.tayari.model.Menu
-import com.lockminds.tayari.model.Restaurant
-import com.lockminds.tayari.model.RestaurantNear
+import com.lockminds.tayari.model.*
+import com.lockminds.tayari.ui.SearchRestaurantsActivity
 import com.lockminds.tayari.viewModels.*
-import com.theartofdev.edmodo.cropper.CropImage
-import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
+class MainActivity : BaseActivity() {
 
-class MainActivity : BaseActivity(), LocationListener {
-
-    private lateinit var locationManager: LocationManager
 
     private val restaurantsViewModel by viewModels<RestaurantsViewModel>{
         RestaurantsViewModelFactory((application as App).repository)
@@ -70,59 +59,76 @@ class MainActivity : BaseActivity(), LocationListener {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var codeScanner: CodeScanner
-    private val locationPermissionCode = 2
 
-     @ExperimentalPagingApi
-     override fun onCreate(savedInstanceState: Bundle?) {
+    @ExperimentalPagingApi
+    override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             binding = ActivityMainBinding.inflate(layoutInflater)
             val view: View =  binding.root
             setContentView(view)
+            binding.mainNavigation.bringToFront()
             database = Firebase.database.reference
             initStatusBar()
             initComponents()
             setAdapter()
             initQr()
 
-         binding.navigation.setOnNavigationItemReselectedListener {
-            when(it.itemId){
-                R.id.navigation_settings -> {
-                    // Return user to login page because task was not successfully
-                    val intent = Intent(this@MainActivity, ProfileActivity::class.java)
-                    startActivity(intent)
-                }
-            }
+        binding.searchHolder.setOnClickListener {
+            val intent = Intent(this@MainActivity, SearchRestaurantsActivity::class.java)
+            startActivity(intent)
+        }
+
+         binding.cart.setOnClickListener {
+
+                 GlobalScope.launch {
+
+                     val cart = (application as App).repository.getOneCart()
+
+                     if(cart != null){
+                         val restaurant  = (application as App).repository.getRestaurant(cart.team_id.toString())
+                         runOnUiThread {
+                             startActivity(
+                                 CartActivity.createCartIntent(
+                                     this@MainActivity,
+                                     restaurant
+                                 )
+                             )
+                         }
+                     }else{
+                        showNoCart()
+                     }
+
+                 }
+
+
          }
 
+         binding.profile.setOnClickListener {
+             val intent = Intent(this@MainActivity, ProfileActivity::class.java)
+             startActivity(intent)
+         }
+
+         binding.orders.setOnClickListener {
+            val intent = Intent(this@MainActivity, OrdersActivity::class.java)
+            startActivity(intent)
         }
+
+         binding.home.setOnClickListener {
+            Toast.makeText(this@MainActivity, "You'r Home", Toast.LENGTH_SHORT).show()
+        }
+
+        }
+
+    private fun showNoCart() {
+        runOnUiThread(Runnable {
+            Toast.makeText(this@MainActivity, "No item", Toast.LENGTH_SHORT).show()
+        })
+    }
 
     override fun onResume() {
         super.onResume()
         syncDatabase()
-        requestPermissions(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-        ) {
-            requestCode = 4
-            resultCallback = {
-                when(this) {
-                    is PermissionResult.PermissionGranted -> {
-                        binding.displayNearBy.isVisible = false
-                        getLocation()
-                    }
-                    is PermissionResult.PermissionDenied -> {
-                        //Add your logic to handle permission denial
-                    }
-                    is PermissionResult.PermissionDeniedPermanently -> {
-                        //Add your logic here if user denied permission(s) permanently.
-                        //Ideally you should ask user to manually go to settings and enable permission(s)
-                    }
-                    is PermissionResult.ShowRational -> {
-                        //If user denied permission frequently then she/he is not clear about why you are asking this permission.
-                        //This is your chance to explain them why you need permission.
-                    }
-                }
-            }
-        }
+        getLocation()
     }
 
     private fun initQr(){
@@ -141,20 +147,26 @@ class MainActivity : BaseActivity(), LocationListener {
             runOnUiThread {
                 binding.qr.isVisible = false
                 val gson = Gson()
-                val qrRestaurantResponse = gson.fromJson(it.toString(), QrRestaurantResponse::class.java)
+                val qrRestaurantResponse = gson.fromJson(
+                    it.toString(),
+                    QrRestaurantResponse::class.java
+                )
                 GlobalScope.launch {
-                    val restaurant = (application as App).repository.getRestaurant(qrRestaurantResponse.id)
-                        startActivity(createRestaurantIntent(this@MainActivity,restaurant))
+                    val restaurant = (application as App).repository.getRestaurant(
+                        qrRestaurantResponse.id
+                    )
+                        startActivity(createRestaurantIntent(this@MainActivity, restaurant))
                     }
                 }
             }
 
-
         codeScanner.errorCallback = ErrorCallback { // or ErrorCallback.SUPPRESS
             runOnUiThread {
                 binding.qr.isVisible = false
-                Toast.makeText(this, "Camera initialization error: ${it.message}",
-                    Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this, "Camera initialization error: ${it.message}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
 
@@ -181,10 +193,30 @@ class MainActivity : BaseActivity(), LocationListener {
 
     private fun initComponents() {
 
-            binding.recyclerCategories.layoutManager = GridLayoutManager(this, 1, GridLayoutManager.HORIZONTAL, false)
-            binding.recyclerViewOffers.layoutManager = GridLayoutManager(this, 1, GridLayoutManager.HORIZONTAL, false)
-            binding.recyclerNearBy.layoutManager = GridLayoutManager(this, 2, GridLayoutManager.HORIZONTAL, false)
-            binding.recyclerRestaurants.layoutManager = GridLayoutManager(this, 2, GridLayoutManager.HORIZONTAL, false)
+            binding.recyclerCategories.layoutManager = GridLayoutManager(
+                this,
+                1,
+                GridLayoutManager.HORIZONTAL,
+                false
+            )
+            binding.recyclerViewOffers.layoutManager = GridLayoutManager(
+                this,
+                1,
+                GridLayoutManager.HORIZONTAL,
+                false
+            )
+            binding.recyclerNearBy.layoutManager = GridLayoutManager(
+                this,
+                2,
+                GridLayoutManager.HORIZONTAL,
+                false
+            )
+            binding.recyclerRestaurants.layoutManager = GridLayoutManager(
+                this,
+                2,
+                GridLayoutManager.HORIZONTAL,
+                false
+            )
 
             binding.swiperefresh.setOnRefreshListener {
                 binding.swiperefresh.isRefreshing = false
@@ -204,7 +236,7 @@ class MainActivity : BaseActivity(), LocationListener {
             binding.displayNearBy.setOnClickListener {
 
                 requestPermissions(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
                 ) {
                     requestCode = 4
                     resultCallback = {
@@ -232,8 +264,12 @@ class MainActivity : BaseActivity(), LocationListener {
         }
 
     private fun setAdapter(){
-            val restaurantsAdapter = RestaurantsAdapter(this) { business -> restaurantAdapterOnClick(business) }
-            val nearByAdapter = NearByAdapter(this) { business -> restaurantAdapterOnClickNear(business) }
+            val restaurantsAdapter = RestaurantsAdapter(this) { business -> restaurantAdapterOnClick(
+                business
+            ) }
+            val nearByAdapter = NearByAdapter(this) { business -> restaurantAdapterOnClickNear(
+                business
+            ) }
             val cousinAdapter = CousinsAdapter(this) { cousin -> cousinAdapterOnClick(cousin) }
             binding.recyclerCategories.adapter = cousinAdapter
             binding.recyclerNearBy.adapter = nearByAdapter
@@ -267,73 +303,71 @@ class MainActivity : BaseActivity(), LocationListener {
     private fun restaurantAdapterOnClickNear(restaurant: RestaurantNear) {
         startActivity(createRestaurantNearIntent(this, restaurant))
     }
-        private fun adapterOfferOnClick(obj: Menu) {
-            startActivity(createMenuIntent(this,obj))
+
+    private fun adapterOfferOnClick(obj: Menu) {
+            startActivity(createMenuIntent(this, obj))
         }
 
-        private fun cousinAdapterOnClick(cousin: Cousin) {
+    private fun cousinAdapterOnClick(cousin: Cousin) {
             startActivity(createCousinRestaurantIntent(this, cousin))
         }
 
-        private fun syncDatabase(){
+    private fun syncDatabase(){
 
             val offersAdapter = OffersAdapter(this) { offer -> adapterOfferOnClick(offer) }
-                val preference = application?.getSharedPreferences(Constants.PREFERENCE_KEY, Context.MODE_PRIVATE)
+                val preference = application?.getSharedPreferences(
+                    Constants.PREFERENCE_KEY,
+                    Context.MODE_PRIVATE
+                )
                 if (preference != null) {
 
                     AndroidNetworking.get(APIURLs.BASE_URL + "offers/get_all")
                             .setTag("lots")
                             .addHeaders("accept", "application/json")
-                            .addHeaders("Authorization", "Bearer " + preference.getString(Constants.LOGIN_TOKEN, "false"))
+                            .addHeaders(
+                                "Authorization", "Bearer " + preference.getString(
+                                    Constants.LOGIN_TOKEN,
+                                    "false"
+                                )
+                            )
                             .setPriority(Priority.HIGH)
                             .setPriority(Priority.LOW)
                             .build()
-                            .getAsObjectList(Menu::class.java, object : ParsedRequestListener<List<Menu>> {
-                                override fun onResponse(menu: List<Menu>) {
-                                    val items: List<Menu> = menu
-                                    if (items.isNotEmpty()) {
-                                        binding.recyclerViewOffers.adapter = offersAdapter
-                                        offersAdapter.submitList(items)
+                            .getAsObjectList(
+                                Menu::class.java,
+                                object : ParsedRequestListener<List<Menu>> {
+                                    override fun onResponse(menu: List<Menu>) {
+                                        val items: List<Menu> = menu
+                                        if (items.isNotEmpty()) {
+                                            binding.recyclerViewOffers.adapter = offersAdapter
+                                            offersAdapter.submitList(items)
+                                        }
                                     }
-                                }
 
-                                override fun onError(anError: ANError) {}
-                            })
+                                    override fun onError(anError: ANError) {}
+                                })
 
                     AndroidNetworking.get(APIURLs.BASE_URL + "restaurants/get_all")
                         .setTag("lots")
                         .addHeaders("accept", "application/json")
-                        .addHeaders("Authorization", "Bearer " + preference.getString(Constants.LOGIN_TOKEN, "false"))
+                        .addHeaders(
+                            "Authorization", "Bearer " + preference.getString(
+                                Constants.LOGIN_TOKEN,
+                                "false"
+                            )
+                        )
                         .setPriority(Priority.HIGH)
                         .setPriority(Priority.LOW)
                         .build()
-                        .getAsObjectList(Restaurant::class.java, object : ParsedRequestListener<List<Restaurant>> {
-                            override fun onResponse(business: List<Restaurant>) {
-                                val items: List<Restaurant> = business
-                                if (items.isNotEmpty()) {
-
-                                    GlobalScope.launch {
-                                        (application as App).repository.syncRestaurants(items)
-                                    }
-                                }
-                            }
-
-                            override fun onError(anError: ANError) {}
-                        })
-
-                    AndroidNetworking.get(APIURLs.BASE_URL + "cousins/get_all")
-                            .setTag("cousins")
-                            .addHeaders("accept", "application/json")
-                            .addHeaders("Authorization", "Bearer " + preference.getString(Constants.LOGIN_TOKEN, "false"))
-                            .setPriority(Priority.HIGH)
-                            .setPriority(Priority.LOW)
-                            .build()
-                            .getAsObjectList(Cousin::class.java, object : ParsedRequestListener<List<Cousin>> {
-                                override fun onResponse(cousin: List<Cousin>) {
-                                    val items: List<Cousin> = cousin
+                        .getAsObjectList(
+                            Restaurant::class.java,
+                            object : ParsedRequestListener<List<Restaurant>> {
+                                override fun onResponse(business: List<Restaurant>) {
+                                    val items: List<Restaurant> = business
                                     if (items.isNotEmpty()) {
+
                                         GlobalScope.launch {
-                                            (application as App).repository.syncCousins(items)
+                                            (application as App).repository.syncRestaurants(items)
                                         }
                                     }
                                 }
@@ -341,23 +375,110 @@ class MainActivity : BaseActivity(), LocationListener {
                                 override fun onError(anError: ANError) {}
                             })
 
+                    AndroidNetworking.get(APIURLs.BASE_URL + "cousins/get_all")
+                            .setTag("cousins")
+                            .addHeaders("accept", "application/json")
+                            .addHeaders(
+                                "Authorization", "Bearer " + preference.getString(
+                                    Constants.LOGIN_TOKEN,
+                                    "false"
+                                )
+                            )
+                            .setPriority(Priority.HIGH)
+                            .setPriority(Priority.LOW)
+                            .build()
+                            .getAsObjectList(
+                                Cousin::class.java,
+                                object : ParsedRequestListener<List<Cousin>> {
+                                    override fun onResponse(cousin: List<Cousin>) {
+                                        val items: List<Cousin> = cousin
+                                        if (items.isNotEmpty()) {
+                                            GlobalScope.launch {
+                                                (application as App).repository.syncCousins(items)
+                                            }
+                                        }
+                                    }
+
+                                    override fun onError(anError: ANError) {}
+                                })
+
             }
 
         }
 
-    override fun onLocationChanged(location: Location) {
-        val preference = application?.getSharedPreferences(Constants.PREFERENCE_KEY, Context.MODE_PRIVATE)
+//    override fun onLocationChanged(location: Location) {
+//        val preference = application?.getSharedPreferences(
+//            Constants.PREFERENCE_KEY,
+//            Context.MODE_PRIVATE
+//        )
+//        if (preference != null) {
+//            AndroidNetworking.get(APIURLs.BASE_URL + "restaurants/get_all_near")
+//                    .setTag("lots")
+//                    .addHeaders("accept", "application/json")
+//                    .addHeaders(
+//                        "Authorization", "Bearer " + preference.getString(
+//                            Constants.LOGIN_TOKEN,
+//                            "false"
+//                        )
+//                    )
+//                    .addQueryParameter("latitude", location.latitude.toString())
+//                    .addQueryParameter("longitude", location.longitude.toString())
+//                    .setPriority(Priority.HIGH)
+//                    .setPriority(Priority.LOW)
+//                    .build()
+//                    .getAsObjectList(
+//                        RestaurantNear::class.java,
+//                        object : ParsedRequestListener<List<RestaurantNear>> {
+//                            override fun onResponse(business: List<RestaurantNear>) {
+//                                val items: List<RestaurantNear> = business
+//                                if (items.isNotEmpty()) {
+//                                    GlobalScope.launch {
+//                                        (application as App).repository.syncRestaurantsNear(items)
+//                                    }
+//                                }
+//                            }
+//
+//                            override fun onError(anError: ANError) {}
+//                        })
+//        }
+//    }
+
+    private fun getLocation() {
+//        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+//        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+//            ActivityCompat.requestPermissions(
+//                this,
+//                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+//                locationPermissionCode
+//            )
+//        }
+//        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
+
+        binding.nearBy.isVisible = true
+        binding.nearByRight.isVisible = true
+        binding.nearByLeft.isVisible = true
+        binding.recyclerNearBy.isVisible = true
+        binding.displayNearBy.isVisible =  false
+        val preference = application?.getSharedPreferences(
+            Constants.PREFERENCE_KEY,
+            Context.MODE_PRIVATE
+        )
         if (preference != null) {
-            AndroidNetworking.get(APIURLs.BASE_URL + "restaurants/get_all_near")
-                    .setTag("lots")
-                    .addHeaders("accept", "application/json")
-                    .addHeaders("Authorization", "Bearer " + preference.getString(Constants.LOGIN_TOKEN, "false"))
-                    .addQueryParameter("latitude",location.latitude.toString())
-                    .addQueryParameter("longitude",location.longitude.toString())
-                    .setPriority(Priority.HIGH)
-                    .setPriority(Priority.LOW)
-                    .build()
-                    .getAsObjectList(RestaurantNear::class.java, object : ParsedRequestListener<List<RestaurantNear>> {
+            AndroidNetworking.get(APIURLs.BASE_URL + "restaurants/get_all")
+                .setTag("lots")
+                .addHeaders("accept", "application/json")
+                .addHeaders(
+                    "Authorization", "Bearer " + preference.getString(
+                        Constants.LOGIN_TOKEN,
+                        "false"
+                    )
+                )
+                .setPriority(Priority.HIGH)
+                .setPriority(Priority.LOW)
+                .build()
+                .getAsObjectList(
+                    RestaurantNear::class.java,
+                    object : ParsedRequestListener<List<RestaurantNear>> {
                         override fun onResponse(business: List<RestaurantNear>) {
                             val items: List<RestaurantNear> = business
                             if (items.isNotEmpty()) {
@@ -370,21 +491,6 @@ class MainActivity : BaseActivity(), LocationListener {
                         override fun onError(anError: ANError) {}
                     })
         }
-    }
-
-
-    private fun getLocation() {
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), locationPermissionCode)
-        }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
-
-        binding.nearBy.isVisible = true
-        binding.nearByRight.isVisible = true
-        binding.nearByLeft.isVisible = true
-        binding.recyclerNearBy.isVisible = true
-        binding.displayNearBy.isVisible =  false
     }
 
  }

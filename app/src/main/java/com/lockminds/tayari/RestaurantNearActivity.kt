@@ -35,7 +35,7 @@ class RestaurantNearActivity : BaseActivity() {
         val view: View = binding.root
         setContentView(view)
         restaurant = intent.getParcelableExtra(INTENT_PARAM_1)!!
-        initStatusBar()
+        Tools.setSystemBarTransparent(this@RestaurantNearActivity)
         initComponents()
         loadImage()
     }
@@ -48,11 +48,12 @@ class RestaurantNearActivity : BaseActivity() {
     @SuppressLint("UseCompatLoadingForDrawables")
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun initComponents(){
-        binding.toolbar.navigationIcon = getDrawable(R.drawable.ic_back)
+        binding.toolbar.navigationIcon = getDrawable(R.drawable.ic_back_white)
         setSupportActionBar(binding.toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.title = restaurant.name
-        initStatusBar()
+        supportActionBar!!.title = null
+        binding.title.text = restaurant.name
+        Tools.setSystemBarTransparent(this@RestaurantNearActivity)
         setupViewPager(binding.viewPager)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
     }
@@ -105,7 +106,7 @@ class RestaurantNearActivity : BaseActivity() {
                             val items: List<Menu> = menu
                             if (items.isNotEmpty()) {
                                 GlobalScope.launch {
-                                    (application as App).repository.syncMenu(items)
+                                    (application as App).repository.syncMenu(restaurant.id.toString(),items)
                                 }
                             }
                         }
@@ -131,7 +132,7 @@ class RestaurantNearActivity : BaseActivity() {
                             if (items.isNotEmpty()) {
                                 if (items.isNotEmpty()) {
                                     GlobalScope.launch {
-                                        (application as App).repository.syncMenuItems(items)
+                                        (application as App).repository.syncMenuItems(restaurant.id.toString(),items)
                                     }
                                 }
                             }

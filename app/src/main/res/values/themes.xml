@@ -18,10 +18,17 @@
         <item name="android:dialogTheme">@style/Dialog.Theme</item>
         <item name="fontFamily">@font/sans_regular</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">@color/colorPrimary</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">false</item>
         <!-- Customize your theme here. -->
 
         <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="WelcomeScreen"  parent="Theme.Tayari">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
 
     <style name="AppTheme" parent="Theme.Tayari" />

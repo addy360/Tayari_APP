@@ -12,18 +12,7 @@ class RestaurantsViewModel(val businessDataSource: RestaurantDataSource, val app
 
     private val repository = appRepository
 
-    private val query = MutableLiveData<String>()
-
     val allRestaurants: LiveData<List<Restaurant>> = repository.allRestaurants.asLiveData()
-    val allRestaurantsNear: LiveData<List<RestaurantNear>> = repository.allRestaurantsNear.asLiveData()
-
-    val results: LiveData<List<Restaurant>> = Transformations.map(
-            query,
-            ::temp
-    )
-
-    private fun temp(query: String) = repository.searchRestaurant(query)
-    fun searchRestaurant(name: String) = apply { query.postValue(name) }
 
 }
 

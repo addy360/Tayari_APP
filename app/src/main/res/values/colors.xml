@@ -13,7 +13,7 @@
     <color name="colorPrimaryVariant">#EE4E2E</color>
     <color name="colorOnPrimaryVariant">#FFFFFF</color>
 
-    <color name="colorSecondary">#f2f2f2</color>
+    <color name="colorSecondary">#204071</color>
     <color name="colorOnSecondary">@color/red_A100</color>
     <color name="colorSecondaryVariant">@color/red_A100</color>
 

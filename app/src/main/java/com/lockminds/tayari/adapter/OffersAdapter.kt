@@ -1,4 +1,5 @@
 package com.lockminds.tayari.adapter
+
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +15,6 @@ import com.lockminds.tayari.model.Menu
 class OffersAdapter(context: Context,private val onClick: (Menu) -> Unit) :
     ListAdapter<Menu, OffersAdapter.OffersViewHolder>(OffersDiffCallback) {
     private val context: Context? = context
-    
 
     class OffersViewHolder(itemView: View, val onClick: (Menu) -> Unit) :
         RecyclerView.ViewHolder(itemView) {
@@ -44,7 +44,6 @@ class OffersAdapter(context: Context,private val onClick: (Menu) -> Unit) :
             .inflate(R.layout.item_offers, parent, false)
         return OffersViewHolder(view, onClick)
     }
-
 
     override fun onBindViewHolder(holder: OffersViewHolder, position: Int) {
         val business = getItem(position)

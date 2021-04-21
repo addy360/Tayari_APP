@@ -41,7 +41,6 @@ class CousinRestaurantActivity : BaseActivity() {
         val view: View = binding.root
         setContentView(view)
         cousin = intent.getParcelableExtra(INTENT_PARAM_1)!!
-        initStatusBar()
         initComponents()
         loadImage()
     }
@@ -54,11 +53,13 @@ class CousinRestaurantActivity : BaseActivity() {
     @SuppressLint("UseCompatLoadingForDrawables")
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun initComponents(){
-        binding.toolbar.navigationIcon = getDrawable(R.drawable.ic_back)
+        binding.toolbar.navigationIcon = getDrawable(R.drawable.ic_back_white)
         setSupportActionBar(binding.toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.title = cousin.restaurant_name
-        initStatusBar()
+        supportActionBar!!.title = null
+        binding.title.text = cousin.restaurant_name
+        supportActionBar!!.title = null
+        Tools.setSystemBarTransparent(this@CousinRestaurantActivity)
         setupViewPager(binding.viewPager)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
     }
@@ -114,7 +115,7 @@ class CousinRestaurantActivity : BaseActivity() {
                             val items: List<Menu> = menu
                             if (items.isNotEmpty()) {
                                 GlobalScope.launch {
-                                    (application as App).repository.syncMenu(items)
+                                    (application as App).repository.syncMenu(cousin.team_id.toString(),items)
                                 }
                             }
                         }

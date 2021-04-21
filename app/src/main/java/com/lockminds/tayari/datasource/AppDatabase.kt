@@ -5,20 +5,33 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.lockminds.tayari.datasource.daos.AppDao
 import com.lockminds.tayari.datasource.daos.RemoteKeysDao
-import com.lockminds.tayari.datasource.tables.RemoteKeys
-import com.lockminds.tayari.datasource.tables.Users
+import com.lockminds.tayari.datasource.daos.AppDao
+import com.lockminds.tayari.datasource.daos.RepoDao
+import com.lockminds.tayari.datasource.daos.OrderDao
 import com.lockminds.tayari.model.*
+import com.lockminds.tayari.model.keys.OrderItemRemoteKeys
+import com.lockminds.tayari.model.keys.OrderRemoteKeys
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [Users::class,RemoteKeys::class, RestaurantNear::class, Restaurant::class,Cousin::class, CartMenu::class, CartItem::class,Menu::class, MenuItem::class], version = 1, exportSchema = false)
+@Database(entities = [
+    RemoteKeys::class,
+    RestaurantNear::class, Restaurant::class,
+    Cousin::class, CartMenu::class,
+    CartItem::class, Order::class,
+    OrderItem::class, Menu::class,
+    MenuItem::class, Table::class,
+    OrderRemoteKeys::class,OrderItemRemoteKeys::class], version = 1, exportSchema = false)
 
-public abstract class AppDatabase : RoomDatabase() {
+abstract class AppDatabase : RoomDatabase() {
 
     abstract fun appDao(): AppDao
+    abstract fun reposDao(): RepoDao
+    abstract fun orderDao(): OrderDao
+
     abstract fun remoteKeysDao(): RemoteKeysDao
+
 
     companion object {
         // Singleton prevents multiple instances of database opening at the
@@ -30,6 +43,7 @@ public abstract class AppDatabase : RoomDatabase() {
             // if the INSTANCE is not null, then return it,
             // if it is, then create the database
             return INSTANCE ?: synchronized(this) {
+
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
@@ -40,6 +54,7 @@ public abstract class AppDatabase : RoomDatabase() {
                 // return instance
                 instance
             }
+
         }
 
         fun getInstance(context: Context): AppDatabase =

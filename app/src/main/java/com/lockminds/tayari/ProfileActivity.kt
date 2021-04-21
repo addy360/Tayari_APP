@@ -38,6 +38,8 @@ import com.lockminds.tayari.firebase.ui.auth.AuthUiActivity
 import com.lockminds.tayari.responses.Response
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.File
 
 
@@ -54,6 +56,52 @@ class ProfileActivity : BaseActivity() {
         initStatusBar()
         initComponents()
         initInformation()
+
+        binding.cart.setOnClickListener {
+
+            GlobalScope.launch {
+
+                val cart = (application as App).repository.getOneCart()
+
+                if(cart != null){
+                    val restaurant  = (application as App).repository.getRestaurant(cart.team_id.toString())
+                    runOnUiThread {
+                        startActivity(
+                            CartActivity.createCartIntent(
+                                this@ProfileActivity,
+                                restaurant
+                            )
+                        )
+                    }
+                }else{
+                    showNoCart()
+                }
+
+            }
+
+
+        }
+
+        binding.profile.setOnClickListener {
+            Toast.makeText(this@ProfileActivity, "You'r Here", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.orders.setOnClickListener {
+            val intent = Intent(this@ProfileActivity, OrdersActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.home.setOnClickListener {
+            val intent = Intent(this@ProfileActivity, MainActivity::class.java)
+            startActivity(intent)
+        }
+        
+    }
+
+    private fun showNoCart() {
+        runOnUiThread(Runnable {
+            Toast.makeText(this@ProfileActivity, "No item", Toast.LENGTH_SHORT).show()
+        })
     }
 
     override fun onResume() {

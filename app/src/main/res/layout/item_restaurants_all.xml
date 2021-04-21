@@ -3,14 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:mrl_rippleColor="@color/colorPrimaryVariant"
+    android:layout_marginBottom="@dimen/spacing_medium"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/lyt_parent"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/spacing_large"
         android:background="@color/transparent"
         android:clickable="true"
         android:focusable="true"
@@ -30,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/business_logo"
+                android:id="@+id/logo"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:scaleType="centerCrop" />
@@ -49,17 +49,10 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/business_name"
+                android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorOnPrimary"
-                android:textStyle="bold" />
-
-            <TextView
-                android:textColor="@color/overlay_dark_30"
-                android:id="@+id/business_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:textStyle="bold" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -70,7 +63,7 @@
                     android:id="@+id/location_icon"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -79,7 +72,7 @@
 
                 <TextView
                     android:textColor="@color/overlay_dark_30"
-                    android:id="@+id/business_location"
+                    android:id="@+id/address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
@@ -87,14 +80,6 @@
                     app:layout_constraintStart_toEndOf="@+id/location_icon"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <per.wsj.library.AndRatingBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:rating="2.5"
-                app:subStarColor="@color/overlay_dark_30"
-                app:bgColor="@color/overlay_dark_30"
-                app:starColor="@color/colorPrimaryVariant" />
 
         </LinearLayout>
 

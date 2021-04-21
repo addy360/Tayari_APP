@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-package com.lockminds.tayari.datasource.tables
+package com.lockminds.tayari.adapter
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import android.view.ViewGroup
+import androidx.paging.LoadState
+import androidx.paging.LoadStateAdapter
 
-@Entity(tableName = "remote_keys")
-data class RemoteKeys(
-        @PrimaryKey val repoId: Long,
-        val prevKey: Int?,
-        val nextKey: Int?
-)
+class ReposLoadStateAdapter(
+        private val retry: () -> Unit
+) : LoadStateAdapter<ReposLoadStateViewHolder>() {
+    override fun onBindViewHolder(holder: ReposLoadStateViewHolder, loadState: LoadState) {
+        holder.bind(loadState)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): ReposLoadStateViewHolder {
+        return ReposLoadStateViewHolder.create(parent, retry)
+    }
+}

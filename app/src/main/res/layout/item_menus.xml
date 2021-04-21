@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:mrl_rippleColor="@color/colorPrimaryVariant"
+    android:layout_marginBottom="@dimen/spacing_large"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -10,18 +11,16 @@
         android:id="@+id/lyt_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/spacing_large"
         android:background="@color/transparent"
         android:clickable="true"
-        android:focusable="true"
-        android:orientation="vertical">
+        android:focusable="true">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/icon"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:clipToPadding="true"
-            app:cardCornerRadius="8dp"
+            app:cardCornerRadius="10dp"
             app:cardElevation="0dp"
             app:cardPreventCornerOverlap="false"
             app:cardUseCompatPadding="false"
@@ -40,7 +39,7 @@
         <LinearLayout
             android:id="@+id/texts"
             android:layout_width="0dp"
-            android:layout_height="97dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:gravity="center_vertical"
@@ -52,16 +51,9 @@
 
             <TextView
                 android:id="@+id/name"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorOnPrimary"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/business_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/overlay_dark_30"
                 android:textStyle="bold" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -113,26 +105,27 @@
                 android:id="@+id/price"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="right"
                 android:textAppearance="@style/TextAppearance.Medium.Bold"
                 android:textColor="@color/colorPrimaryVariant"
+                app:layout_constraintBottom_toTopOf="@+id/textView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:paddingStart="@dimen/spacing_medium"
-                android:paddingEnd="@dimen/spacing_medium"
+                android:id="@+id/textView"
                 android:layout_width="0dp"
                 android:layout_height="35dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="8dp"
                 android:background="@drawable/btn_rounded_primary"
                 android:backgroundTint="@color/colorPrimaryVariant"
                 android:gravity="center"
+                android:paddingStart="@dimen/spacing_medium"
+                android:paddingEnd="@dimen/spacing_medium"
                 android:text="@string/buy_now"
                 android:textAllCaps="true"
                 android:textAppearance="@style/TextAppearance.Subhead.Bold"

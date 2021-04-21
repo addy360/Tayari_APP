@@ -24,6 +24,7 @@ class App: Application() {
     private val applicationScope = CoroutineScope(SupervisorJob())
     private val database by lazy { AppDatabase.getDatabase(this,applicationScope) }
     val repository by lazy { AppRepository(database.appDao(),database) }
+    lateinit var sessionManager: SessionManager
 
     override fun attachBaseContext(context: Context?) {
         super.attachBaseContext(context)
@@ -42,6 +43,7 @@ class App: Application() {
             .build()
         AndroidNetworking.initialize(applicationContext, okHttpClient)
         appContext = applicationContext
+        sessionManager = SessionManager(this)
     }
 
     companion object {

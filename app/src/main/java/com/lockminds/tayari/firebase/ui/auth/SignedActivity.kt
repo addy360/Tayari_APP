@@ -131,6 +131,7 @@ class SignedActivity : AppCompatActivity() {
                                 startActivity(intent)
 
                             } else {
+                                Firebase.auth.signOut()
                                 Toast.makeText(this@SignedActivity,  response.message, Toast.LENGTH_SHORT).show()
                             }
 

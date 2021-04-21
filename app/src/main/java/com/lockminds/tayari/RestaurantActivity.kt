@@ -6,20 +6,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
-import androidx.core.view.isVisible
 import androidx.viewpager.widget.ViewPager
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.ParsedRequestListener
-import com.lockminds.tayari.adapter.OffersAdapter
 import com.lockminds.tayari.adapter.SectionPagerAdapter
 import com.lockminds.tayari.constants.APIURLs
 import com.lockminds.tayari.constants.Constants
-import com.lockminds.tayari.constants.Constants.Companion.DATA_KEY
 import com.lockminds.tayari.constants.Constants.Companion.INTENT_PARAM_1
 import com.lockminds.tayari.databinding.ActivityRestaurantBinding
 import com.lockminds.tayari.fragments.RestaurantTabsFragment
@@ -39,7 +35,6 @@ class RestaurantActivity : BaseActivity() {
         val view: View = binding.root
         setContentView(view)
         restaurant = intent.getParcelableExtra(INTENT_PARAM_1)!!
-        initStatusBar()
         initComponents()
         loadImage()
     }
@@ -52,11 +47,12 @@ class RestaurantActivity : BaseActivity() {
     @SuppressLint("UseCompatLoadingForDrawables")
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun initComponents(){
-        binding.toolbar.navigationIcon = getDrawable(R.drawable.ic_back)
+        binding.toolbar.navigationIcon = getDrawable(R.drawable.ic_back_white)
         setSupportActionBar(binding.toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.title = restaurant.name
-        initStatusBar()
+        supportActionBar!!.title = null
+        binding.title.text = restaurant.name
+        Tools.setSystemBarTransparent(this@RestaurantActivity)
         setupViewPager(binding.viewPager)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
     }
@@ -110,7 +106,7 @@ class RestaurantActivity : BaseActivity() {
                             val items: List<Menu> = menu
                             if (items.isNotEmpty()) {
                                 GlobalScope.launch {
-                                    (application as App).repository.syncMenu(items)
+                                    (application as App).repository.syncMenu(restaurant.id.toString(),items)
                                 }
                             }
                         }
@@ -136,7 +132,7 @@ class RestaurantActivity : BaseActivity() {
                             if (items.isNotEmpty()) {
                                 if (items.isNotEmpty()) {
                                     GlobalScope.launch {
-                                        (application as App).repository.syncMenuItems(items)
+                                        (application as App).repository.syncMenuItems(restaurant.id.toString(),items)
                                     }
                                 }
                             }

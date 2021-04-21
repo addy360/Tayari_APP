@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 data class CartMenu(
         @PrimaryKey(autoGenerate = false) var id: Long,
         var team_id: String? = "",
+        var type: String? = "",
         var cousin_id: String? = "",
         var name: String? = "",
         var price: String? = "",
@@ -27,6 +28,7 @@ data class CartMenu(
         ): Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readLong(),
+            parcel.readString(),
             parcel.readString(),
             parcel.readString(),
             parcel.readString(),
@@ -65,10 +67,13 @@ data class CartMenu(
             "",
             "",
             "",
+            ""
     )
+
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(id)
+        parcel.writeString(type)
         parcel.writeString(team_id)
         parcel.writeString(cousin_id)
         parcel.writeString(name)
