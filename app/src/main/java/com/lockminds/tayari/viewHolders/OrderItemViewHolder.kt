@@ -42,7 +42,7 @@ class OrderItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val qty: TextView = view.findViewById(R.id.qty)
     private val price: TextView = view.findViewById(R.id.price)
     private val image: ImageView = view.findViewById(R.id.image)
-
+    private val tools= Tools()
 
     private var order: OrderItem? = null
 
@@ -68,7 +68,7 @@ class OrderItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         name.text = order.menu_name
         qty.text = "qty: "+order.qty
         price.text = "price: "+order.total_cost + order.currency
-        Tools.displayImageBusiness(itemView.context, image, order.menu_image)
+        tools.displayImageBusiness(itemView.context, image, order.menu_image.toString())
 
     }
 

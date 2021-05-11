@@ -1,8 +1,10 @@
 package com.lockminds.tayari.firebase.ui.auth
 
 import android.annotation.SuppressLint
+import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -13,6 +15,7 @@ import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.ParsedRequestListener
+import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.firebase.ui.auth.util.ExtraConstants
 import com.google.android.material.snackbar.Snackbar
@@ -22,8 +25,10 @@ import com.google.firebase.ktx.Firebase
 import com.google.gson.reflect.TypeToken
 import com.lockminds.tayari.MainActivity
 import com.lockminds.tayari.R
+import com.lockminds.tayari.SessionManager
 import com.lockminds.tayari.constants.APIURLs
 import com.lockminds.tayari.constants.Constants.Companion.EMAIL
+import com.lockminds.tayari.constants.Constants.Companion.FCM_TOKEN
 import com.lockminds.tayari.constants.Constants.Companion.LOGIN_STATUS
 import com.lockminds.tayari.constants.Constants.Companion.LOGIN_TOKEN
 import com.lockminds.tayari.constants.Constants.Companion.NAME
@@ -77,7 +82,7 @@ class SignedActivity : AppCompatActivity() {
                             loginUser(idToken)
                         }
                     }
-                    // Return user to login page because we didnt receive response
+                    // Return user to login page because we didn't receive response
                     val intent = Intent(this@SignedActivity, AuthUiActivity::class.java)
                     startActivity(intent)
                     finish()
@@ -93,9 +98,12 @@ class SignedActivity : AppCompatActivity() {
 
     @SuppressLint("HardwareIds")
     private fun loginUser(fb_token: String) {
+        Log.e("KELLY"," the sfs --------"+fb_token);
+            val session = SessionManager(applicationContext)
             val deviceToken = Settings.Secure.getString(applicationContext?.contentResolver,Settings.Secure.ANDROID_ID)
             AndroidNetworking.post(APIURLs.BASE_URL + "login/token")
                 .addBodyParameter("fb_token", fb_token)
+                .addBodyParameter("fcm_token", session.getFCMToken())
                 .addBodyParameter("device_name", deviceToken)
                 .addHeaders("accept", "application/json")
                 .setPriority(Priority.HIGH)
@@ -106,7 +114,7 @@ class SignedActivity : AppCompatActivity() {
 
                         override fun onResponse(response: LoginResponse) {
                             binding.spinKit.visibility = View.GONE
-                            if (response.getStatus()) {
+                            if (response.status == true) {
 
                                 val preference = applicationContext?.getSharedPreferences(
                                     PREFERENCE_KEY,
@@ -131,8 +139,15 @@ class SignedActivity : AppCompatActivity() {
                                 startActivity(intent)
 
                             } else {
-                                Firebase.auth.signOut()
                                 Toast.makeText(this@SignedActivity,  response.message, Toast.LENGTH_SHORT).show()
+                                AuthUI.getInstance()
+                                        .signOut(this@SignedActivity)
+                                        .addOnCompleteListener {
+                                            clearAppData()
+                                            val intent = Intent(this@SignedActivity, AuthUiActivity::class.java)
+                                            startActivity(intent)
+                                            finish()
+                                        }
                             }
 
                         }
@@ -146,16 +161,16 @@ class SignedActivity : AppCompatActivity() {
 
     }
 
-
     @SuppressLint("HardwareIds")
     private fun createUser(fb_token: String, name: String, email: String, phone: String) {
-
+        val session = SessionManager(applicationContext)
         val deviceToken = Settings.Secure.getString(applicationContext?.contentResolver,Settings.Secure.ANDROID_ID)
 
         AndroidNetworking.post(APIURLs.BASE_URL + "register")
                 .addBodyParameter("device_name", deviceToken)
                 .addBodyParameter("fb_token", fb_token)
                 .addBodyParameter("name", name)
+                .addBodyParameter("fcm_token", session.getFCMToken())
                 .addBodyParameter("phone", phone)
                 .addBodyParameter("email", email)
                 .addHeaders("accept", "application/json")
@@ -195,6 +210,7 @@ class SignedActivity : AppCompatActivity() {
                                     val user = FirebaseAuth.getInstance().currentUser
                                     user?.delete()
                                     Firebase.auth.signOut()
+                                    clearAppData()
                                 }
 
                             }
@@ -212,6 +228,18 @@ class SignedActivity : AppCompatActivity() {
         fun createIntent(context: Context, response: IdpResponse?): Intent {
             return Intent().setClass(context, SignedActivity::class.java)
                 .putExtra(ExtraConstants.IDP_RESPONSE, response)
+        }
+    }
+
+    protected fun clearAppData() {
+        try {
+            if (Build.VERSION_CODES.KITKAT <= Build.VERSION.SDK_INT) {
+                (getSystemService(ACTIVITY_SERVICE) as ActivityManager).clearApplicationUserData()
+            } else {
+                Runtime.getRuntime().exec("pm clear " + applicationContext.packageName)
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
         }
     }
 

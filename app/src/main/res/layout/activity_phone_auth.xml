@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".auth.PhoneAuthActivity">
+
+    <RelativeLayout
+        android:id="@+id/send_code_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:fitsSystemWindows="true"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="-100dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="220dp"
+                android:layout_height="220dp"
+                android:src="@drawable/sms" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Verify Your Number"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                android:textColor="@color/colorOnPrimary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:gravity="center"
+                android:text="Please enter your mobile number to receive a verification code. Carrier rates may apply"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:textColor="@color/colorOnPrimary" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xlarge"
+                android:layout_marginBottom="@dimen/spacing_large"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/prefix"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="+255"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                    android:textColor="@color/colorOnPrimary" />
+
+                <View
+                    android:layout_width="@dimen/spacing_medium"
+                    android:layout_height="0dp" />
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/phone_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Phone Number"
+                    android:inputType="phone"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text=""
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                    android:textColor="@color/colorOnPrimary"
+                    android:textStyle="bold">
+
+                    <requestFocus />
+
+                </com.google.android.material.textfield.TextInputEditText>
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/send_code"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_rounded_primary"
+                android:text="CONTINUE"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:visibility="gone"
+        android:id="@+id/verify_code_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_marginTop="100dp"
+                android:layout_gravity="center"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:src="@drawable/sms" />
+
+            <LinearLayout
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="280dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_medium"
+                    android:gravity="center"
+                    android:text="OTP has been sent to you on your mobile phone. Please enter it below"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                    android:textColor="@color/colorOnPrimary" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/spacing_xlarge"
+                    android:layout_marginBottom="@dimen/spacing_large"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <com.mukesh.OtpView
+                        android:id="@+id/otp_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:inputType="number"
+                        android:itemBackground="@color/colorOnPrimary"
+                        android:textColor="@color/colorPrimary"
+                        app:OtpItemCount="6"
+                        app:OtpLineColor="@color/colorPrimary"
+                        app:OtpViewType="line" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_coundown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_medium"
+                    android:gravity="center"
+                    android:text="02:00"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:textColor="@color/colorOnPrimary" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/verify_code"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="VERIFY CODE"
+                    android:textColor="@color/colorOnPrimary" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/resend_code"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="RESEND CODE"
+                    android:textColor="@color/colorOnPrimary"
+                    android:visibility="gone" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/auth"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:gravity="center"
+                    android:text="GO BACK"
+                    android:textColor="@color/colorOnPrimary"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:visibility="gone"
+        android:id="@+id/overlay"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/overlay"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/spin_kit"
+            style="@style/SpinKitView.Large.Circle"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            app:SpinKit_Color="@color/colorOnPrimary" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

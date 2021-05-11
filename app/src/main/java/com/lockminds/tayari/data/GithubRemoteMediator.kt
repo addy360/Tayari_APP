@@ -24,6 +24,7 @@ import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.lockminds.tayari.SessionManager
 import com.lockminds.tayari.api.GithubService
+import com.lockminds.tayari.api.RepoSearchResponse
 import com.lockminds.tayari.datasource.AppDatabase
 import com.lockminds.tayari.model.RemoteKeys
 import com.lockminds.tayari.model.Restaurant
@@ -78,8 +79,7 @@ class GithubRemoteMediator(
 
         try {
             val sessionManager = SessionManager(context)
-            val apiResponse = service.searchRepos(token = "Bearer ${sessionManager.fetchAuthToken()}",apiQuery, page, state.config.pageSize)
-
+            val apiResponse = service.restaurants(token = "Bearer ${sessionManager.fetchAuthToken()}", page, state.config.pageSize)
             val repos = apiResponse.items
             val endOfPaginationReached = repos.isEmpty()
             appDatabase.withTransaction {
@@ -96,6 +96,7 @@ class GithubRemoteMediator(
                 appDatabase.remoteKeysDao().insertAll(keys)
                 appDatabase.reposDao().insertAll(repos)
             }
+
             return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
         } catch (exception: IOException) {
             return MediatorResult.Error(exception)

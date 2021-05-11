@@ -21,7 +21,7 @@
                 android:elevation="0dp"
                 app:elevation="0dp"
                 android:id="@+id/toolbar"
-                app:title="Search restaurants, cousins ..."
+                app:title="@string/search_hint"
                 app:titleTextAppearance="@style/TextAppearance.Subhead.Bold"
                 app:titleTextColor="@color/colorPrimaryVariant"
                 android:layout_width="match_parent"
@@ -41,16 +41,23 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-                <androidx.appcompat.widget.SearchView
-                    android:autofillHints="search here"
+                <EditText
+                    android:hint="@string/search_hint"
+                    android:id="@+id/search_repo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="25dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="25dp"
+                    android:layout_marginBottom="8dp"
+                    android:imeOptions="actionSearch"
+                    android:inputType="textNoSuggestions"
+                    android:selectAllOnFocus="true"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                     />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -67,8 +74,9 @@
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
+            android:foregroundGravity="top"
             android:id="@+id/recyclerView"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true"
             android:scrollbars="none"

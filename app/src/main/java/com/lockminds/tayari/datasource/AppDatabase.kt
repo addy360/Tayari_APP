@@ -12,6 +12,7 @@ import com.lockminds.tayari.datasource.daos.OrderDao
 import com.lockminds.tayari.model.*
 import com.lockminds.tayari.model.keys.OrderItemRemoteKeys
 import com.lockminds.tayari.model.keys.OrderRemoteKeys
+import com.lockminds.tayari.model.keys.RestaurantSearchKeys
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -22,7 +23,8 @@ import kotlinx.coroutines.launch
     CartItem::class, Order::class,
     OrderItem::class, Menu::class,
     MenuItem::class, Table::class,
-    OrderRemoteKeys::class,OrderItemRemoteKeys::class], version = 1, exportSchema = false)
+    OrderRemoteKeys::class,OrderItemRemoteKeys::class,
+    RestaurantSearch::class, RestaurantSearchKeys::class], version = 1, exportSchema = false)
 
 abstract class AppDatabase : RoomDatabase() {
 
@@ -31,7 +33,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun orderDao(): OrderDao
 
     abstract fun remoteKeysDao(): RemoteKeysDao
-
 
     companion object {
         // Singleton prevents multiple instances of database opening at the
@@ -49,6 +50,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "com.lockminds.tayari_database"
                 ).addCallback(AgripoaDatabaseCallback(scope))
+                        .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 // return instance
@@ -70,7 +72,6 @@ abstract class AppDatabase : RoomDatabase() {
                         .build()
 
     }
-
 
     private class AgripoaDatabaseCallback(
         private val scope: CoroutineScope

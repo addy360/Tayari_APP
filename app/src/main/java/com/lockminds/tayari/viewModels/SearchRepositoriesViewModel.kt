@@ -36,13 +36,9 @@ class SearchRepositoriesViewModel(private val repository: GithubRepository) : Vi
     private var currentSearchResult: Flow<PagingData<UiModel>>? = null
 
     @ExperimentalPagingApi
-    fun searchRepo(context: Context,queryString: String): Flow<PagingData<UiModel>> {
-        val lastResult = currentSearchResult
-        if (queryString == currentQueryValue && lastResult != null) {
-            return lastResult
-        }
-        currentQueryValue = queryString
-        val newResult: Flow<PagingData<UiModel>> = repository.getSearchResultStream(context,queryString)
+    fun restaurants(context: Context): Flow<PagingData<UiModel>> {
+
+        val newResult: Flow<PagingData<UiModel>> = repository.restaurants(context)
                 .map { pagingData -> pagingData.map { UiModel.RepoItem(it) } }
                 .map {
                     it.insertSeparators<UiModel.RepoItem, UiModel> { before, after ->

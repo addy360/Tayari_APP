@@ -1,5 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
+    <style name="Theme.Splash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorSecondaryVariant</item>
+        <item name="colorPrimaryDark">@color/colorSecondaryVariant</item>
+        <item name="backgroundColor">@color/colorSecondaryVariant</item>
+        <item name="android:background">@drawable/sset</item>
+        <item name="android:navigationBarColor">@color/colorSecondaryVariant</item>
+    </style>
+
     <style name="Theme.Tayari" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/colorPrimaryDark</item>
@@ -16,13 +24,13 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="android:actionModeBackground">@color/colorBackground</item>
         <item name="android:dialogTheme">@style/Dialog.Theme</item>
-        <item name="fontFamily">@font/sans_regular</item>
+        <item name="fontFamily">@font/gilam_regular</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">@color/transparent</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">false</item>
         <!-- Customize your theme here. -->
-
+        <item name="otpViewStyle">@style/OtpWidget.OtpView</item>
         <item name="android:windowActionBarOverlay">true</item>
     </style>
 

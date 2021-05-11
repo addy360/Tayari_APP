@@ -20,7 +20,7 @@ class OffersAdapter(context: Context,private val onClick: (Menu) -> Unit) :
         RecyclerView.ViewHolder(itemView) {
         private val image: ImageView = itemView.findViewById(R.id.image)
         private var currentOffer: Menu? = null
-
+        private val tools = Tools()
         init {
             itemView.setOnClickListener {
                 currentOffer?.let {
@@ -32,7 +32,7 @@ class OffersAdapter(context: Context,private val onClick: (Menu) -> Unit) :
         /* Bind business name and image. */
         fun bind(offer: Menu, context: Context?) {
             currentOffer = offer
-            Tools.displayImageBusiness(context, image, offer.sale_image)
+            tools.displayImageBusiness(context, image, offer.sale_image.toString())
         }
 
 

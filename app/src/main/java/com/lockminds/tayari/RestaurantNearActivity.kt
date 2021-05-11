@@ -35,7 +35,7 @@ class RestaurantNearActivity : BaseActivity() {
         val view: View = binding.root
         setContentView(view)
         restaurant = intent.getParcelableExtra(INTENT_PARAM_1)!!
-        Tools.setSystemBarTransparent(this@RestaurantNearActivity)
+        tools.setSystemBarTransparent(this@RestaurantNearActivity)
         initComponents()
         loadImage()
     }
@@ -53,13 +53,13 @@ class RestaurantNearActivity : BaseActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.title = null
         binding.title.text = restaurant.name
-        Tools.setSystemBarTransparent(this@RestaurantNearActivity)
+        tools.setSystemBarTransparent(this@RestaurantNearActivity)
         setupViewPager(binding.viewPager)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
     }
 
     private fun loadImage(){
-        Tools.displayImageBusiness(applicationContext, binding.businessBanner, restaurant.banner)
+        tools.displayImageBusiness(applicationContext, binding.businessBanner, restaurant.banner.toString())
     }
 
     private fun setupViewPager(viewPager: ViewPager) {

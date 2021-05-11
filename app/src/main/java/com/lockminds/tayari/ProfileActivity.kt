@@ -1,6 +1,7 @@
 package com.lockminds.tayari
 
 import android.Manifest
+import android.app.ActivityManager
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -22,9 +23,8 @@ import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.ParsedRequestListener
 import com.bumptech.glide.Glide
+import com.firebase.ui.auth.AuthUI
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.google.gson.reflect.TypeToken
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -67,10 +67,10 @@ class ProfileActivity : BaseActivity() {
                     val restaurant  = (application as App).repository.getRestaurant(cart.team_id.toString())
                     runOnUiThread {
                         startActivity(
-                            CartActivity.createCartIntent(
-                                this@ProfileActivity,
-                                restaurant
-                            )
+                                CartActivity.createCartIntent(
+                                        this@ProfileActivity,
+                                        restaurant
+                                )
                         )
                     }
                 }else{
@@ -126,15 +126,7 @@ class ProfileActivity : BaseActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(false)
 
         binding.logout.setOnClickListener {
-            val preference = applicationContext?.getSharedPreferences(
-                    Constants.PREFERENCE_KEY,
-                    Context.MODE_PRIVATE
-            )
-            Firebase.auth.signOut()
-            preference?.edit()?.clear()?.commit()
-            val intent = Intent(this@ProfileActivity, AuthUiActivity::class.java)
-            startActivity(intent)
-            finish()
+            signOut()
         }
 
         binding.aboutTeam.setOnClickListener {
@@ -148,7 +140,7 @@ class ProfileActivity : BaseActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_close, menu)
-        Tools.changeMenuIconColor(menu, resources.getColor(R.color.colorPrimaryVariant))
+        tools.changeMenuIconColor(menu, resources.getColor(R.color.colorPrimaryVariant))
         return true
     }
 
@@ -162,7 +154,7 @@ class ProfileActivity : BaseActivity() {
     }
 
 
-    fun initInformation(){
+    private fun initInformation(){
         val preference = applicationContext?.getSharedPreferences(
                 Constants.PREFERENCE_KEY,
                 Context.MODE_PRIVATE
@@ -170,7 +162,7 @@ class ProfileActivity : BaseActivity() {
         if (preference != null) {
             binding.name.text = preference.getString(
                     Constants.NAME,
-                   ""
+                    ""
             )
             binding.name1.text = preference.getString(
                     Constants.NAME,

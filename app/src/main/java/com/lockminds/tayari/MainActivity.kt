@@ -19,6 +19,7 @@ import com.androidnetworking.interfaces.ParsedRequestListener
 import com.budiyev.android.codescanner.*
 import com.eazypermissions.common.model.PermissionResult
 import com.eazypermissions.dsl.extension.requestPermissions
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
@@ -29,6 +30,7 @@ import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.lockminds.tayari.CousinRestaurantActivity.Companion.createCousinRestaurantIntent
 import com.lockminds.tayari.MenuActivity.Companion.createMenuIntent
+import com.lockminds.tayari.MenuOfferActivity.Companion.createMenuOfferIntent
 import com.lockminds.tayari.RestaurantActivity.Companion.createRestaurantIntent
 import com.lockminds.tayari.RestaurantNearActivity.Companion.createRestaurantNearIntent
 import com.lockminds.tayari.adapter.*
@@ -36,6 +38,7 @@ import com.lockminds.tayari.constants.APIURLs
 import com.lockminds.tayari.constants.Constants
 import com.lockminds.tayari.data.QrRestaurantResponse
 import com.lockminds.tayari.databinding.ActivityMainBinding
+import com.lockminds.tayari.firebase.ui.auth.AuthUiActivity
 import com.lockminds.tayari.model.*
 import com.lockminds.tayari.ui.SearchRestaurantsActivity
 import com.lockminds.tayari.viewModels.*
@@ -43,7 +46,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity() {
-
 
     private val restaurantsViewModel by viewModels<RestaurantsViewModel>{
         RestaurantsViewModelFactory((application as App).repository)
@@ -67,13 +69,12 @@ class MainActivity : BaseActivity() {
             val view: View =  binding.root
             setContentView(view)
             binding.mainNavigation.bringToFront()
-            database = Firebase.database.reference
             initStatusBar()
             initComponents()
             setAdapter()
             initQr()
 
-        binding.searchHolder.setOnClickListener {
+         binding.searchHolder.setOnClickListener {
             val intent = Intent(this@MainActivity, SearchRestaurantsActivity::class.java)
             startActivity(intent)
         }
@@ -116,6 +117,8 @@ class MainActivity : BaseActivity() {
          binding.home.setOnClickListener {
             Toast.makeText(this@MainActivity, "You'r Home", Toast.LENGTH_SHORT).show()
         }
+
+
 
         }
 
@@ -213,7 +216,7 @@ class MainActivity : BaseActivity() {
             )
             binding.recyclerRestaurants.layoutManager = GridLayoutManager(
                 this,
-                2,
+                3,
                 GridLayoutManager.HORIZONTAL,
                 false
             )
@@ -233,33 +236,6 @@ class MainActivity : BaseActivity() {
                 startActivity(intent)
             }
 
-            binding.displayNearBy.setOnClickListener {
-
-                requestPermissions(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                ) {
-                    requestCode = 4
-                    resultCallback = {
-                        when(this) {
-                            is PermissionResult.PermissionGranted -> {
-                                binding.displayNearBy.isVisible = false
-                                getLocation()
-                            }
-                            is PermissionResult.PermissionDenied -> {
-                                //Add your logic to handle permission denial
-                            }
-                            is PermissionResult.PermissionDeniedPermanently -> {
-                                //Add your logic here if user denied permission(s) permanently.
-                                //Ideally you should ask user to manually go to settings and enable permission(s)
-                            }
-                            is PermissionResult.ShowRational -> {
-                                //If user denied permission frequently then she/he is not clear about why you are asking this permission.
-                                //This is your chance to explain them why you need permission.
-                            }
-                        }
-                    }
-                }
-            }
 
         }
 
@@ -305,7 +281,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun adapterOfferOnClick(obj: Menu) {
-            startActivity(createMenuIntent(this, obj))
+            startActivity(createMenuOfferIntent(this, obj))
         }
 
     private fun cousinAdapterOnClick(cousin: Cousin) {
@@ -315,6 +291,7 @@ class MainActivity : BaseActivity() {
     private fun syncDatabase(){
 
             val offersAdapter = OffersAdapter(this) { offer -> adapterOfferOnClick(offer) }
+
                 val preference = application?.getSharedPreferences(
                     Constants.PREFERENCE_KEY,
                     Context.MODE_PRIVATE
@@ -347,7 +324,7 @@ class MainActivity : BaseActivity() {
                                     override fun onError(anError: ANError) {}
                                 })
 
-                    AndroidNetworking.get(APIURLs.BASE_URL + "restaurants/get_all")
+                    AndroidNetworking.get(APIURLs.BASE_URL + "restaurants/ll")
                         .setTag("lots")
                         .addHeaders("accept", "application/json")
                         .addHeaders(
@@ -401,96 +378,43 @@ class MainActivity : BaseActivity() {
 
                                     override fun onError(anError: ANError) {}
                                 })
+                    AndroidNetworking.get(APIURLs.BASE_URL + "restaurants/get_all")
+                            .setTag("lots")
+                            .addHeaders("accept", "application/json")
+                            .addHeaders(
+                                    "Authorization", "Bearer " + preference.getString(
+                                    Constants.LOGIN_TOKEN,
+                                    "false"
+                            )
+                            )
+                            .setPriority(Priority.HIGH)
+                            .setPriority(Priority.LOW)
+                            .build()
+                            .getAsObjectList(
+                                    RestaurantNear::class.java,
+                                    object : ParsedRequestListener<List<RestaurantNear>> {
+                                        override fun onResponse(business: List<RestaurantNear>) {
+                                            val items: List<RestaurantNear> = business
+                                            if (items.isNotEmpty()) {
+                                                GlobalScope.launch {
+                                                    (application as App).repository.syncRestaurantsNear(items)
+                                                }
+                                            }
+                                        }
+
+                                        override fun onError(anError: ANError) {}
+                                    })
 
             }
 
         }
 
-//    override fun onLocationChanged(location: Location) {
-//        val preference = application?.getSharedPreferences(
-//            Constants.PREFERENCE_KEY,
-//            Context.MODE_PRIVATE
-//        )
-//        if (preference != null) {
-//            AndroidNetworking.get(APIURLs.BASE_URL + "restaurants/get_all_near")
-//                    .setTag("lots")
-//                    .addHeaders("accept", "application/json")
-//                    .addHeaders(
-//                        "Authorization", "Bearer " + preference.getString(
-//                            Constants.LOGIN_TOKEN,
-//                            "false"
-//                        )
-//                    )
-//                    .addQueryParameter("latitude", location.latitude.toString())
-//                    .addQueryParameter("longitude", location.longitude.toString())
-//                    .setPriority(Priority.HIGH)
-//                    .setPriority(Priority.LOW)
-//                    .build()
-//                    .getAsObjectList(
-//                        RestaurantNear::class.java,
-//                        object : ParsedRequestListener<List<RestaurantNear>> {
-//                            override fun onResponse(business: List<RestaurantNear>) {
-//                                val items: List<RestaurantNear> = business
-//                                if (items.isNotEmpty()) {
-//                                    GlobalScope.launch {
-//                                        (application as App).repository.syncRestaurantsNear(items)
-//                                    }
-//                                }
-//                            }
-//
-//                            override fun onError(anError: ANError) {}
-//                        })
-//        }
-//    }
-
     private fun getLocation() {
-//        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-//        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
-//            ActivityCompat.requestPermissions(
-//                this,
-//                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-//                locationPermissionCode
-//            )
-//        }
-//        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
-
-        binding.nearBy.isVisible = true
-        binding.nearByRight.isVisible = true
-        binding.nearByLeft.isVisible = true
-        binding.recyclerNearBy.isVisible = true
+        binding.nearBy.isVisible = false
+        binding.nearByRight.isVisible = false
+        binding.nearByLeft.isVisible = false
+        binding.recyclerNearBy.isVisible = false
         binding.displayNearBy.isVisible =  false
-        val preference = application?.getSharedPreferences(
-            Constants.PREFERENCE_KEY,
-            Context.MODE_PRIVATE
-        )
-        if (preference != null) {
-            AndroidNetworking.get(APIURLs.BASE_URL + "restaurants/get_all")
-                .setTag("lots")
-                .addHeaders("accept", "application/json")
-                .addHeaders(
-                    "Authorization", "Bearer " + preference.getString(
-                        Constants.LOGIN_TOKEN,
-                        "false"
-                    )
-                )
-                .setPriority(Priority.HIGH)
-                .setPriority(Priority.LOW)
-                .build()
-                .getAsObjectList(
-                    RestaurantNear::class.java,
-                    object : ParsedRequestListener<List<RestaurantNear>> {
-                        override fun onResponse(business: List<RestaurantNear>) {
-                            val items: List<RestaurantNear> = business
-                            if (items.isNotEmpty()) {
-                                GlobalScope.launch {
-                                    (application as App).repository.syncRestaurantsNear(items)
-                                }
-                            }
-                        }
-
-                        override fun onError(anError: ANError) {}
-                    })
-        }
     }
 
  }

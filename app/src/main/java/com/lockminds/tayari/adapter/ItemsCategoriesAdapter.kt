@@ -22,6 +22,7 @@ class ItemsCategoriesAdapter(context: Context,private val onClick: (Restaurant) 
         private val businessImage: ImageView = itemView.findViewById(R.id.business_banner)
         private var currentRestaurant: Restaurant? = null
 
+        private val tools=  Tools()
         init {
             itemView.setOnClickListener {
                 currentRestaurant?.let {
@@ -34,7 +35,7 @@ class ItemsCategoriesAdapter(context: Context,private val onClick: (Restaurant) 
         fun bind(business: Restaurant, context: Context?) {
             currentRestaurant = business
             businessTitle.text = business.name
-            Tools.displayImageBusiness(context, businessImage, business.banner)
+            tools.displayImageBusiness(context, businessImage, business.banner.toString())
         }
 
 

@@ -18,6 +18,7 @@ package com.lockminds.tayari.api
 
 import com.google.gson.annotations.SerializedName
 import com.lockminds.tayari.model.Restaurant
+import com.lockminds.tayari.model.RestaurantSearch
 
 /**
  * Data class to hold repo responses from searchRepo API calls.

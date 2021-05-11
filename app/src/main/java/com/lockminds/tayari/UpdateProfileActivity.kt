@@ -68,7 +68,7 @@ class UpdateProfileActivity : BaseActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_close, menu)
-        Tools.changeMenuIconColor(menu, resources.getColor(R.color.colorPrimaryVariant))
+        tools.changeMenuIconColor(menu, resources.getColor(R.color.colorPrimaryVariant))
         return true
     }
 

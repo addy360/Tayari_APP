@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="overlay">#7EF8F5F5</color>
     <color name="titleColor">#1F75FE</color>
     <color name="titleColorAlpha">#551F75FE</color>
     <color name="greyAlpha">#55999999</color>
@@ -15,13 +16,17 @@
 
     <color name="colorSecondary">#204071</color>
     <color name="colorOnSecondary">@color/red_A100</color>
-    <color name="colorSecondaryVariant">@color/red_A100</color>
+    <color name="colorSecondaryVariant">#FFFBB03B</color>
 
     <color name="colorBackground">#FFFFFF</color>
     <color name="colorOnBackground">#191818</color>
     <color name="colorBackgroundSlidup">#FFFFFF</color>
     <color name="colorPrimaryText">@color/colorOnPrimary</color>
 
+    <color name="pending">#ED1C24</color>
+    <color name="accepted">#F7941D</color>
+    <color name="process">#005288</color>
+    <color name="complete">#008438</color>
     <color name="transparent">@android:color/transparent</color>
 
     <color name="colorNavigationItem">#1E3F72</color>

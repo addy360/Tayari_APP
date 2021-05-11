@@ -104,6 +104,7 @@
                             android:textColor="@color/colorOnPrimary"
                             android:textSize="12sp"
                             android:textStyle="normal" />
+
                     </LinearLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -177,6 +178,30 @@
                         app:layout_constraintTop_toTopOf="parent" />
                     <TextView
                         android:id="@+id/order_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:textColor="@color/colorPrimaryVariant"
+                        android:textStyle="bold"
+                        android:id="@+id/order_paid"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                    <TextView
+                        android:textColor="@color/colorPrimaryVariant"
+                        android:textStyle="bold"
+                        android:id="@+id/order_balance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:layout_constraintBottom_toBottomOf="parent"

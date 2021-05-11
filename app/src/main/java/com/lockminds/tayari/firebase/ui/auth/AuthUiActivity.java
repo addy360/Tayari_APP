@@ -46,7 +46,7 @@ public class AuthUiActivity extends AppCompatActivity {
     private static final String FIREBASE_PRIVACY_POLICY_URL = "https://tayari.co.tz/policy";
 
     private static final int RC_SIGN_IN = 100;
-
+    private Tools tools = new Tools();
     @BindView(R.id.root) View mRootView;
 
     @NonNull
@@ -57,11 +57,11 @@ public class AuthUiActivity extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Tools.setSystemBarLight(this);
+        tools.setSystemBarLight(this);
         setContentView(R.layout.auth_ui_layout);
         ButterKnife.bind(this);
-        Tools.setSystemBarTransparent(this);
-        Tools.setSystemBarLight(this);
+        tools.setSystemBarTransparent(this);
+        tools.setSystemBarLight(this);
     }
 
     @NonNull
@@ -117,14 +117,7 @@ public class AuthUiActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() != null) {
-            Intent intent = new Intent(AuthUiActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }else{
-            startActivityForResult(buildSignInIntent(/*link=*/null), RC_SIGN_IN);
-        }
+        startActivityForResult(buildSignInIntent(/*link=*/null), RC_SIGN_IN);
 
     }
 

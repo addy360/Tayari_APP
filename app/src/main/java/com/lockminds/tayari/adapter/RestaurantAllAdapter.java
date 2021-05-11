@@ -28,7 +28,7 @@ public class RestaurantAllAdapter extends RecyclerView.Adapter<RecyclerView.View
     private Context ctx;
     private OnItemClickListener mOnItemClickListener;
     private int animation_type = 0;
-
+    private Tools tools = new Tools();
 
     @Override
     public Filter getFilter() {
@@ -99,7 +99,7 @@ public class RestaurantAllAdapter extends RecyclerView.Adapter<RecyclerView.View
             view.name.setText(p.getName());
             view.location.setText(p.getAddress());
             view.address.setText("");
-            Tools.displayImageBusiness(ctx,view.logo,p.getBanner());
+            tools.displayImageBusiness(ctx,view.logo,p.getBanner());
             view.lyt_parent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

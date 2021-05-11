@@ -3,25 +3,22 @@ package com.lockminds.tayari
 
 import android.content.Intent
 import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.lockminds.tayari.auth.AuthActivity
 import com.lockminds.tayari.datasource.AppDatabase
 import com.lockminds.tayari.firebase.ui.auth.AuthUiActivity
-import com.lockminds.tayari.firebase.ui.auth.SignedActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
@@ -29,44 +26,69 @@ import kotlinx.coroutines.launch
 
 open class BaseActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
-    private lateinit var mAuth: FirebaseAuth
-    private lateinit var mUser: FirebaseUser
-    lateinit var authStateListener: FirebaseAuth.AuthStateListener
-    lateinit var firebaseAuth: FirebaseAuth
-    lateinit var database: DatabaseReference
+    // [START declare_auth]
+    private lateinit var auth: FirebaseAuth
+    // [END declare_auth]
 
+    private lateinit var googleSignInClient: GoogleSignInClient
 
-    private var MyIp: String? = null
+    protected val tools = Tools()
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
-        Tools.setSystemBarLight(this)
-        mAuth = Firebase.auth
-        mUser = mAuth.currentUser!!
-        MyIp = Tools.getLocalIpAddress()
-        Tools.NetPolicy()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
+        tools.setSystemBarLight(this)
+        tools.setNavigationBarColor(this)
+        initSigning()
     }
 
-    override fun onResume() {
-        super.onResume()
-        firebaseAuth = FirebaseAuth.getInstance()
-        authStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
-            val firebaseUser = firebaseAuth.currentUser
-            if (firebaseUser == null) {
-                val intent = Intent(this, AuthUiActivity::class.java)
+    override fun setContentView(layoutResID: Int) {
+        super.setContentView(layoutResID)
+        setContentView(layoutResID)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        loginStatus()
+    }
+
+    private fun loginStatus(){
+        val auth = Firebase.auth
+        if(auth.currentUser == null){
+            val intent = Intent(this@BaseActivity, AuthActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    protected fun signOut() {
+        // [START auth_sign_out]
+        Firebase.auth.signOut()
+        // [END auth_sign_out]
+
+        googleSignInClient.signOut()
+            .addOnCompleteListener(this, OnCompleteListener<Void?> {
+                val intent = Intent(this@BaseActivity, AuthActivity::class.java)
                 startActivity(intent)
                 finish()
-            }
-        }
+            })
 
-        firebaseAuth.addAuthStateListener(this.authStateListener)
     }
 
-    public override fun onStop() {
-        super.onStop()
-        hideProgressBar()
-        firebaseAuth.removeAuthStateListener(this.authStateListener)
+    private fun initSigning() {
+        // [START config_signin]
+        // Configure Google Sign In
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+        // [END config_signin]
+
+        // [START initialize_auth]
+        // Initialize Firebase Auth
+        auth = Firebase.auth
+        // [END initialize_auth]
     }
 
     private fun isNightMode(): Boolean {
@@ -81,9 +103,9 @@ open class BaseActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
     fun initStatusBar(){
         if(!isNightMode()){
-            Tools.setSystemBarLight(this)
+            tools.setSystemBarLight(this)
         }
-        Tools.setSystemBarColor(this, R.color.colorPrimaryDark)
+        tools.setSystemBarColor(this, R.color.colorPrimaryDark)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -119,6 +141,7 @@ open class BaseActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     fun hideProgressBar() {
         progressBar?.visibility = View.INVISIBLE
     }
+
 
 }
 

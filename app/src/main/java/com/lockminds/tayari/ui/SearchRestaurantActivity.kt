@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
@@ -17,6 +19,7 @@ import com.lockminds.tayari.*
 import com.lockminds.tayari.adapter.*
 import com.lockminds.tayari.databinding.ActivitySearchRestaurantBinding
 import com.lockminds.tayari.viewModels.SearchRepositoriesViewModel
+import com.lockminds.tayari.viewModels.SearchRestaurantViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -27,16 +30,16 @@ import kotlinx.coroutines.launch
 
 class SearchRestaurantsActivity : BaseActivity() {
     lateinit var binding: ActivitySearchRestaurantBinding
-    private lateinit var viewModel: SearchRepositoriesViewModel
-    private val adapter = ReposAdapter()
+    private lateinit var viewModel: SearchRestaurantViewModel
+    private val adapter = SearchRestaurantAdapter()
     private var searchJob: Job? = null
 
     @ExperimentalPagingApi
-    private fun search() {
+    private fun search(query: String) {
         // Make sure we cancel the previous job before creating a new one
         searchJob?.cancel()
         searchJob = lifecycleScope.launch {
-            viewModel.searchRepo(applicationContext,"").collectLatest {
+            viewModel.searchRest(applicationContext,query).collectLatest {
                 adapter.submitData(it)
             }
         }
@@ -58,12 +61,12 @@ class SearchRestaurantsActivity : BaseActivity() {
         binding.recyclerView.setHasFixedSize(true)
 
         // get the view model
-        viewModel = ViewModelProvider(this, Injection.provideViewModelFactory(this))
-                .get(SearchRepositoriesViewModel::class.java)
+        viewModel = ViewModelProvider(this, Injection.provideSearchRestaurantViewModelFactory(this))
+                .get(SearchRestaurantViewModel::class.java)
 
         initAdapter()
-        search()
         initSearch()
+        search("")
         initNav()
         binding.retryButton.setOnClickListener { adapter.retry() }
     }
@@ -75,7 +78,8 @@ class SearchRestaurantsActivity : BaseActivity() {
         )
         adapter.addLoadStateListener { loadState ->
             // Only show the list if refresh succeeds.
-            binding.recyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
+            binding.recyclerView.isVisible = true
+            //loadState.source.refresh is LoadState.NotLoading
             // Show loading spinner during initial load or refresh.
             binding.progressBar.isVisible = loadState.source.refresh is LoadState.Loading
             // Show the retry state if initial load or refresh fails.
@@ -144,6 +148,23 @@ class SearchRestaurantsActivity : BaseActivity() {
     @ExperimentalPagingApi
     private fun initSearch() {
 
+        binding.searchRepo.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_GO) {
+                updateRepoListFromInput()
+                true
+            } else {
+                false
+            }
+        }
+        binding.searchRepo.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                updateRepoListFromInput()
+                true
+            } else {
+                false
+            }
+        }
+
         // Scroll to top when the list is refreshed from network.
         lifecycleScope.launch {
             adapter.loadStateFlow
@@ -152,6 +173,15 @@ class SearchRestaurantsActivity : BaseActivity() {
                     // Only react to cases where Remote REFRESH completes i.e., NotLoading.
                     .filter { it.refresh is LoadState.NotLoading }
                     .collectLatest { binding.recyclerView.scrollToPosition(0) }
+        }
+    }
+
+    @ExperimentalPagingApi
+    private fun updateRepoListFromInput() {
+        binding.searchRepo.text.trim().let {
+            if (it.isNotEmpty()) {
+                search(it.toString())
+            }
         }
     }
 

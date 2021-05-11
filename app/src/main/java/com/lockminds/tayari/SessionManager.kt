@@ -35,4 +35,11 @@ class SessionManager (context: Context) {
         return prefs.getString(Constants.USER_ID, null)
     }
 
+    /**
+     * Function to fetch user id
+     */
+    fun getFCMToken(): String? {
+        return prefs.getString(Constants.FCM_TOKEN, null)
+    }
+
 }

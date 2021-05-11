@@ -23,7 +23,7 @@ class NearByAdapter(context: Context,private val onClick: (RestaurantNear) -> Un
         private val businessLocation: TextView = itemView.findViewById(R.id.business_location)
         private val businessAddress: TextView = itemView.findViewById(R.id.business_address)
         private var currentRestaurantNear: RestaurantNear? = null
-
+        private val tools= Tools()
         init {
             itemView.setOnClickListener {
                 currentRestaurantNear?.let {
@@ -38,7 +38,7 @@ class NearByAdapter(context: Context,private val onClick: (RestaurantNear) -> Un
             businessTitle.text = business.name
             businessAddress.text = business.address
             businessLocation.text = ""
-            Tools.displayImageBusiness(context, businessImage, business.logo)
+            tools.displayImageBusiness(context, businessImage, business.logo.toString())
         }
 
 

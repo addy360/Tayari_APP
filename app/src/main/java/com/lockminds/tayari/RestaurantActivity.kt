@@ -52,13 +52,13 @@ class RestaurantActivity : BaseActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.title = null
         binding.title.text = restaurant.name
-        Tools.setSystemBarTransparent(this@RestaurantActivity)
+        tools.setSystemBarTransparent(this@RestaurantActivity)
         setupViewPager(binding.viewPager)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
     }
 
     private fun loadImage(){
-        Tools.displayImageBusiness(applicationContext, binding.businessBanner, restaurant.banner)
+        tools.displayImageBusiness(applicationContext, binding.businessBanner, restaurant.banner.toString())
     }
 
     private fun setupViewPager(viewPager: ViewPager) {

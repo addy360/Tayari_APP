@@ -36,6 +36,7 @@ class RepoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val image: ImageView = view.findViewById(R.id.logo)
 
     private var repo: Restaurant? = null
+    private var tools = Tools()
 
     init {
         view.setOnClickListener {
@@ -56,7 +57,7 @@ class RepoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         this.repo = repo
         name.text = repo.name
         address.text = repo.address
-        Tools.displayImageBusiness(image.context,image,repo.logo)
+        tools.displayImageBusiness(image.context,image,repo.logo.toString())
     }
 
     companion object {

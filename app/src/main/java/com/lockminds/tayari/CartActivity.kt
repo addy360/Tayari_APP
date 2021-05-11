@@ -110,9 +110,26 @@ class CartActivity : BaseActivity() {
         binding.confirm.setOnClickListener {
             processOrder()
         }
+        val behavior = BottomSheetBehavior.from(binding.bottomSheet)
+        behavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+
+            }
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                //Here listen all of action bottomsheet
+                when (newState) {
+//                    BottomSheetBehavior.STATE_HIDDEN -> showControllers()
+                    BottomSheetBehavior.STATE_EXPANDED -> hideControllers()
+                    BottomSheetBehavior.STATE_COLLAPSED -> showControllers()
+                }
+            }
+        })
+
     }
 
     private fun processOrder() {
+        binding.confirm.isVisible = false
         binding.spinKit.isVisible = true
         GlobalScope.launch {
             val items: List<CartMenu> = (application as App).repository.getCartMenusList(restaurant.id.toString())
@@ -146,6 +163,9 @@ class CartActivity : BaseActivity() {
                     obj.put("total",total)
                     obj.put("order", jsonArray)
                 } catch (e: JSONException) {
+
+                    binding.confirm.isVisible = true
+                    binding.spinKit.isVisible = false
                     e.printStackTrace()
                 }
 
@@ -180,6 +200,7 @@ class CartActivity : BaseActivity() {
                                             runOnUiThread {
                                                 val intent = Intent(this@CartActivity, OrdersActivity::class.java)
                                                 startActivity(intent)
+                                                finish()
                                             }
                                         }
                                     } else {
@@ -188,26 +209,46 @@ class CartActivity : BaseActivity() {
                                             response.message,
                                             Toast.LENGTH_SHORT
                                         ).show()
+
+                                        binding.confirm.isVisible = true
+                                        binding.spinKit.isVisible = false
                                     }
 
                                 }
 
                                 override fun onError(anError: ANError) {
-                                    binding.spinKit.isVisible = false
+
                                     Toast.makeText(
                                         this@CartActivity,
                                         anError.errorDetail,
                                         Toast.LENGTH_SHORT
                                     ).show()
+
+                                    binding.confirm.isVisible = true
+                                    binding.spinKit.isVisible = false
                                 }
 
                             })
 
+                }else{
+                    binding.confirm.isVisible = true
+                    binding.spinKit.isVisible = false
                 }
 
-                binding.spinKit.isVisible = true
             }
         }
+    }
+
+    private fun showControllers(){
+        binding.mainNavigation.isVisible = true
+        binding.toolbar.isVisible = true
+        binding.recyclerView.isVisible = true
+    }
+
+    private fun hideControllers(){
+        binding.recyclerView.isVisible = false
+        binding.mainNavigation.isVisible = false
+        binding.toolbar.isVisible = false
     }
 
     private fun initCart(){
@@ -253,10 +294,9 @@ class CartActivity : BaseActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        Tools.displayImageBusiness(this, binding.logo, restaurant.logo)
+        tools.displayImageBusiness(this, binding.logo, restaurant.logo.toString())
 
     }
-
 
     private fun toggleSlideUp() {
         val sheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
@@ -273,6 +313,7 @@ class CartActivity : BaseActivity() {
             Constants.PREFERENCE_KEY,
             Context.MODE_PRIVATE
         )
+
         if (preference != null) {
 
             AndroidNetworking.get(APIURLs.BASE_URL + "tables/get_tables")
@@ -325,7 +366,6 @@ class CartActivity : BaseActivity() {
                 .putExtra(Constants.INTENT_PARAM_1, restaurant)
         }
     }
-
 
 
     data class OrderData(

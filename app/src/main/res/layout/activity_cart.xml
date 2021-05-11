@@ -98,22 +98,23 @@ tools:context=".CartActivity">
             </RelativeLayout>
 
             <RelativeLayout
+                android:gravity="center_horizontal"
                 android:id="@+id/relativeLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:background="@color/colorPrimaryVariant"
+                android:background="@drawable/ic_gradient_bottom_02"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/relativeLayout2"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:paddingEnd="@dimen/spacing_large"
-                    android:paddingStart="@dimen/spacing_large"
                     android:id="@+id/cart_process"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
+                    android:paddingStart="@dimen/spacing_large"
+                    android:paddingEnd="@dimen/spacing_large"
                     android:text="@string/order_now"
                     android:textAllCaps="true"
                     android:textColor="@color/colorOnPrimaryVariant"
@@ -121,18 +122,7 @@ tools:context=".CartActivity">
             </RelativeLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.github.ybq.android.spinkit.SpinKitView
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:id="@+id/spin_kit"
-            style="@style/SpinKitView.Large.Circle"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            app:SpinKit_Color="@color/colorOnPrimary" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -143,7 +133,7 @@ tools:context=".CartActivity">
         android:id="@+id/bottomSheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/overlay_dark_20"
+        android:background="@color/overlay_dark_80"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         app:behavior_peekHeight="0dp">
 
@@ -200,35 +190,70 @@ tools:context=".CartActivity">
                     app:tint="@color/colorPrimaryVariant" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_marginTop="@dimen/spacing_xlarge"
+                    android:layout_marginTop="@dimen/action_bar_height"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:text="@string/select_table"
-                        android:textColor="@color/colorOnPrimary"
-                        app:layout_constraintBottom_toTopOf="@+id/table"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                    <androidx.appcompat.widget.AppCompatSpinner
-                        android:id="@+id/table"
-                        android:padding="@dimen/spacing_large"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:backgroundTint="@color/overlay_dark_5"
+                        android:background="@drawable/btn_rounded_search_filled"
+                        android:textColor="@color/colorPrimaryVariant"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
+                        <TextView
+                            android:textSize="16sp"
+                            android:id="@+id/textView2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="16dp"
+                            android:text="@string/select_table"
+                            android:textColor="@color/colorPrimaryVariant"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
+                        <androidx.appcompat.widget.AppCompatSpinner
+                            android:id="@+id/table"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="32dp"
+                            android:padding="@dimen/spacing_large"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/textView2"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </RelativeLayout>
+            <LinearLayout
+                android:gravity="center_horizontal"
+                android:layout_marginBottom="70dp"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.github.ybq.android.spinkit.SpinKitView
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:id="@+id/spin_kit"
+                    style="@style/SpinKitView.Large.Circle"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    app:SpinKit_Color="@color/colorOnPrimary" />
+            </LinearLayout>
             <com.balysv.materialripple.MaterialRippleLayout
                 android:layout_marginBottom="70dp"
                 android:layout_alignParentBottom="true"
@@ -242,8 +267,7 @@ tools:context=".CartActivity">
                     android:id="@+id/confirm"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/colorPrimaryVariant"
-                    android:backgroundTint="@color/colorPrimaryVariant"
+                    android:background="@drawable/ic_gradient_bottom_01"
                     android:gravity="center"
                     android:paddingStart="@dimen/spacing_large"
                     android:paddingEnd="@dimen/spacing_large"

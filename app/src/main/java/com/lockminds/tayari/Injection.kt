@@ -25,6 +25,7 @@ import com.lockminds.tayari.datasource.AppDatabase
 import com.lockminds.tayari.datasource.repository.OrderRepository
 import com.lockminds.tayari.viewModels.OrderItemViewModelFactory
 import com.lockminds.tayari.viewModels.OrderViewModelFactory
+import com.lockminds.tayari.viewModels.SearchRestaurantViewModelFactory
 import com.lockminds.tayari.viewModels.ViewModelFactory
 
 /**
@@ -48,6 +49,14 @@ object Injection {
      */
     fun provideViewModelFactory(context: Context): ViewModelProvider.Factory {
         return ViewModelFactory(provideGithubRepository(context))
+    }
+
+    /**
+     * Provides the [ViewModelProvider.Factory] that is then used to get a reference to
+     * [ViewModel] objects.
+     */
+    fun provideSearchRestaurantViewModelFactory(context: Context): ViewModelProvider.Factory {
+        return SearchRestaurantViewModelFactory(provideGithubRepository(context))
     }
 
     /**

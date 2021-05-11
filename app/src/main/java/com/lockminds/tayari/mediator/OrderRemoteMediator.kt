@@ -55,7 +55,8 @@ class OrderRemoteMediator(
                     // The LoadType is PREPEND so some data was loaded before,
                     // so we should have been able to get remote keys
                     // If the remoteKeys are null, then we're an invalid state and we have a bug
-                    throw InvalidObjectException("Remote key and the prevKey should not be null")
+                    return MediatorResult.Success(endOfPaginationReached = true)
+                    //throw InvalidObjectException("Remote key and the prevKey should not be null")
                 }
                 // If the previous key is null, then we can't request more data
                 val prevKey = remoteKeys.prevKey
@@ -67,7 +68,8 @@ class OrderRemoteMediator(
             LoadType.APPEND -> {
                 val remoteKeys = getRemoteKeyForLastItem(state)
                 if (remoteKeys == null || remoteKeys.nextKey == null) {
-                    throw InvalidObjectException("Remote key should not be null for $loadType")
+                    return MediatorResult.Success(endOfPaginationReached = true)
+                    //throw InvalidObjectException("Remote key should not be null for $loadType")
                 }
                 remoteKeys.nextKey
             }

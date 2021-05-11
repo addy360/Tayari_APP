@@ -18,11 +18,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Tayari">
-        <activity android:name=".ui.SearchRestaurantsActivity"></activity>
+        <activity
+            android:theme="@style/Theme.Splash"
+            android:name=".SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".MainActivity" />
+        <activity android:name=".auth.FacebookLoginActivity" />
+        <activity android:name=".auth.EmailPasswordActivity" />
+        <activity android:name=".auth.PhoneAuthActivity" />
+        <activity android:name=".auth.AuthActivity" />
+        <activity android:name=".ui.SearchRestaurantsActivity" />
         <activity android:name=".ui.OrderActivity" />
         <activity android:name=".RestaurantNearActivity" />
         <activity android:name=".MenuActivity" />
         <activity android:name=".RestaurantActivity" />
+        <activity android:name=".MenuOfferActivity" />
         <activity android:name=".CousinRestaurantActivity" />
         <activity android:name=".RestaurantsActivity" />
         <activity android:name=".firebase.ui.auth.SignedActivity" />
@@ -44,13 +59,6 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
 
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity android:name=".UpdateProfileActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".SettingsActivity" />

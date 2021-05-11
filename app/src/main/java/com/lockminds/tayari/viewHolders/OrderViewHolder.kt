@@ -43,7 +43,7 @@ class OrderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val image: ImageView = view.findViewById(R.id.image)
     private val elapseTimeHolder: View = view.findViewById(R.id.items_holder)
     private val elapseTime: TextView = view.findViewById(R.id.elapsed_time)
-
+    private val tools = Tools()
 
     private var order: Order? = null
 
@@ -65,29 +65,35 @@ class OrderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     private fun showRepoData(order: Order) {
         this.order = order
-
+        val resources = itemView.resources
         if(!order.execution_time.isNullOrBlank() && order.order_status.equals("processing")){
             elapseTimeHolder.isVisible = true
-            elapseTime.text = "waiting "+order.elapsed_time
+            elapseTime.text = order.elapsed_time
         }
 
+        if(order.balance.toString().toFloat() > 0 && order.order_status.equals("complete")){
+            elapseTimeHolder.isVisible = true
+            elapseTime.text = "Pay Now "+order.balance+order.currency
+        }
+
+
         date.text = order.created_at
-        table.text = "#"+order.id+" Table "+order.table_name
+        table.text = "#"+order.id
         restaurant.text = order.restaurant_name
-        price.text = order.total_cost + order.currency +" "+order.order_status
-        Tools.displayImageBusiness(itemView.context, image, order.restaurant_logo)
+        price.text = order.order_status
+        tools.displayImageBusiness(itemView.context, image, order.restaurant_logo.toString())
         if(order.order_status.equals("pending")){
-            price.setTextColor(Color.RED)
+            price.setTextColor(resources.getColor(R.color.pending))
         }
         if(order.order_status.equals("accepted")){
-            price.setTextColor(Color.MAGENTA)
+            price.setTextColor(resources.getColor(R.color.accepted))
         }
 
         if(order.order_status.equals("processing")){
-            price.setTextColor(Color.GRAY)
+            price.setTextColor(resources.getColor(R.color.process))
         }
         if(order.order_status.equals("complete")){
-            price.setTextColor(Color.CYAN)
+            price.setTextColor(resources.getColor(R.color.complete))
         }
 
     }

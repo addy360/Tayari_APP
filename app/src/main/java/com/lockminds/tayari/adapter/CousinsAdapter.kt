@@ -22,7 +22,7 @@ class CousinsAdapter(context: Context, private val onClick: (Cousin) -> Unit) :
         private val name: TextView = itemView.findViewById(R.id.name)
         private val image: ImageView = itemView.findViewById(R.id.image)
         private var currentCousin: Cousin? = null
-
+        private val tools = Tools()
         init {
             itemView.setOnClickListener {
                 currentCousin?.let {
@@ -35,7 +35,7 @@ class CousinsAdapter(context: Context, private val onClick: (Cousin) -> Unit) :
         fun bind(cousin: Cousin, context: Context?) {
             currentCousin = cousin
             name.text = cousin.name
-            Tools.displayImageBusiness(context, image, cousin.image)
+            tools.displayImageBusiness(context, image, cousin.image.toString())
         }
 
 

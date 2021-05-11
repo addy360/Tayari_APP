@@ -122,7 +122,7 @@ tools:context=".CartActivity">
                 android:id="@+id/relativeLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:background="@color/colorPrimaryVariant"
+                android:background="@drawable/ic_gradient_bottom_01"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/relativeLayout2"
@@ -132,6 +132,7 @@ tools:context=".CartActivity">
                     android:id="@+id/refresh"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -160,6 +161,39 @@ tools:context=".CartActivity">
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/lyt_no_connection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/img_no_internet_satellite" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Whoops!"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"
+                android:textColor="@color/colorOnPrimary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:text="No items found. Come back later"
+                android:gravity="center"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="@color/colorOnPrimary" />
+
+
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

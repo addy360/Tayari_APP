@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
@@ -20,7 +21,9 @@ import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.reflect.TypeToken
 import com.lockminds.tayari.constants.Constants
 import com.lockminds.tayari.MainActivity
+import com.lockminds.tayari.OrdersActivity
 import com.lockminds.tayari.R
+import com.lockminds.tayari.Tools
 import com.lockminds.tayari.constants.APIURLs
 import com.lockminds.tayari.responses.Response
 import com.lockminds.tayari.worker.AppWorker
@@ -114,7 +117,17 @@ class FCMService : FirebaseMessagingService() {
      * @param token The new token.
      */
     private fun sendRegistrationToServer(token: String?) {
-        val preference = applicationContext?.getSharedPreferences(Constants.PREFERENCE_KEY, Context.MODE_PRIVATE)
+        val preference = applicationContext?.getSharedPreferences(
+                Constants.PREFERENCE_KEY,
+                Context.MODE_PRIVATE
+        )
+                ?: return
+
+        with(preference.edit()) {
+            putString(Constants.FCM_TOKEN, token)
+            apply()
+        }
+
         if (preference != null) {
             AndroidNetworking.post(APIURLs.BASE_URL + "user/update_fcm_token")
                 .addBodyParameter("fcm_token", token)
@@ -127,7 +140,7 @@ class FCMService : FirebaseMessagingService() {
                     object : ParsedRequestListener<Response> {
 
                         override fun onResponse(response: Response) {
-                            if (response.getStatus()) {
+                            if (response.status) {
 
                             } else {
 
@@ -147,17 +160,26 @@ class FCMService : FirebaseMessagingService() {
      * @param messageBody FCM message body received.
      */
     private fun sendNotification(remoteMessage: RemoteMessage) {
-        val intent = Intent(this, MainActivity::class.java)
+        val tools = Tools()
+        val type = remoteMessage.data["type"]
+        val intent = if(type.equals("order")){
+            Intent(this, OrdersActivity::class.java)
+        }else{
+            Intent(this, MainActivity::class.java)
+        }
+        val icon = BitmapFactory.decodeResource(resources,R.drawable.ic_notification_icon)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
             PendingIntent.FLAG_ONE_SHOT)
 
+        val  message = remoteMessage.data["message"]?.replace(remoteMessage.data["old"].toString(),remoteMessage.data["new"].toString())
         val channelId = getString(R.string.default_notification_channel_id)
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
+            .setLargeIcon(icon)
             .setSmallIcon(R.drawable.ic_notification_icon)
-            .setContentTitle(remoteMessage.data["title"])
-            .setContentText(remoteMessage.data["message"])
+            .setContentTitle(tools.fromHtml(remoteMessage.data["title"]))
+            .setContentText(tools.fromHtml(message))
             .setAutoCancel(true)
             .setSound(defaultSoundUri)
             .setContentIntent(pendingIntent)
@@ -180,4 +202,9 @@ class FCMService : FirebaseMessagingService() {
 
         private const val TAG = "MyFirebaseMsgService"
     }
+
+    private fun String.replace(oldChar: Char, newChar: Char, ignoreCase: Boolean = false): String {
+        return this.replace(oldChar, newChar)
+    }
+
 }

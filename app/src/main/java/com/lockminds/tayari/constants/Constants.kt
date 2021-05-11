@@ -4,6 +4,7 @@ class Constants{
 
     companion object {
         const val PREFERENCE_KEY = "com.lockminds.brass_services.preferences"
+        const val FCM_TOKEN = "fcm_token"
         const val LOGIN_TOKEN = "login_token"
         const val LOGIN_STATUS = "login_status"
         const val USER_ID = "user_id"

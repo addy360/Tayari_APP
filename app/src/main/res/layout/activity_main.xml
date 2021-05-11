@@ -121,7 +121,7 @@
                     android:layout_width="0dp"
                     android:layout_marginStart="8dp"
                     android:gravity="center_vertical"
-                    android:text="Search for Restaurants, cousins ..."
+                    android:text="@string/search_hint"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/imageView3"
@@ -320,6 +320,7 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <TextView
+                        android:visibility="gone"
                         android:gravity="center"
                         android:textAlignment="center"
                         android:background="@drawable/btn_rectagle_primary_outline"

@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="facebook_app_id">1980865972205599</string>
+    <string name="fb_login_protocol_scheme">fb1980865972205599</string>
+
+    <!-- Strings related to login -->
+    <string name="phone">Phone</string>
+    <string name="sign_in_phone">Sign in with Phone</string>
+    <string name="sign_in_google">Sign in with Google</string>
+    <string name="sign_in_email">Sign in with Email</string>
+    <string name="sign_in_facebook">Sign in with Facebook</string>
+    <string name="password_strength_weak">Week</string>
+    <string name="password_strength_medium">Medium</string>
+    <string name="password_strength_strong">Strong</string>
+    <string name="password_strength_very_strong">Very Strong</string>
     <string name="loading">Loading</string>
     <string name="language">Language: %s</string>
-    <string name="search_hint">GitHub Repository</string>
+    <string name="search_hint">Restaurants, meals or drinks</string>
     <string name="no_results">No results 😓</string>
     <string name="unknown">\?</string>
     <string name="retry">Retry</string>

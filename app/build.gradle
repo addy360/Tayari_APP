@@ -3,7 +3,8 @@ plugins {
     id 'kotlin-android'
 }
 apply plugin: 'kotlin-kapt'
-
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion 30
@@ -13,8 +14,8 @@ android {
         applicationId "com.lockminds.tayari"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 3
-        versionName "3.0"
+        versionCode 9
+        versionName "1.0"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -120,7 +121,8 @@ dependencies {
 
     // Import the BoM for the Firebase platform
     implementation platform('com.google.firebase:firebase-bom:26.8.0')
-
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-analytics'
     // Declare the dependency for the Realtime Database library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-database-ktx'
@@ -149,5 +151,13 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.12.1'
-    apply plugin: 'com.google.gms.google-services'
+
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'com.balysv:material-ripple:1.0.2'
+    implementation 'com.github.mukeshsolanki:android-otpview-pinview:2.1.2'
+    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+    implementation 'com.google.android.gms:play-services-auth-api-phone:17.5.0'
+
+
 }

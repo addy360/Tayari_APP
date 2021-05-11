@@ -40,13 +40,14 @@ class CartMenuAdapter(context: Context) :
         private val decrease: ImageButton = itemView.findViewById(R.id.cart_decrease)
         private var currentCartMenu: CartMenu? = null
 
+        private val  tools = Tools()
         fun bind(cart: CartMenu, context: Context?) {
             currentCartMenu = cart
             name.text = cart.name
             qty.text = cart.qty
             total.text = cart.total
             price.text = cart.price
-            Tools.displayImageBusiness(context, image, cart.image)
+            tools.displayImageBusiness(context, image, cart.image.toString())
 
             vh.setOnClickListener {
                 currentCartMenu?.let {

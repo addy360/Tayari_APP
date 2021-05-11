@@ -16,7 +16,9 @@
 
 package com.lockminds.tayari.api
 
+import com.lockminds.tayari.api.responses.RestaurantSearchResponse
 import com.lockminds.tayari.constants.APIURLs.Companion.BASE_URL
+import com.lockminds.tayari.model.RestaurantSearch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level
@@ -34,13 +36,20 @@ interface GithubService {
     /**
      * Get repos ordered by stars.
      */
+    @GET("restaurants/get_all")
+    suspend fun restaurants(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int,
+        @Query("per_page") itemsPerPage: Int
+    ): RepoSearchResponse
+
     @GET("restaurants/search")
-    suspend fun searchRepos(
+    suspend fun searchRest(
         @Header("Authorization") token: String,
         @Query("q") query: String,
         @Query("page") page: Int,
         @Query("per_page") itemsPerPage: Int
-    ): RepoSearchResponse
+    ): RestaurantSearchResponse
 
     companion object {
 

@@ -121,7 +121,7 @@ class OrdersActivity : BaseActivity() {
     @ExperimentalPagingApi
     @SuppressLint("UseCompatLoadingForDrawables")
    fun initComponents() {
-        binding.toolbar.navigationIcon = getDrawable(R.drawable.ic_back)
+        binding.toolbar.navigationIcon = getDrawable(R.drawable.ic_baseline_arrow_back_24)
         setSupportActionBar(binding.toolbar)
         initStatusBar()
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)

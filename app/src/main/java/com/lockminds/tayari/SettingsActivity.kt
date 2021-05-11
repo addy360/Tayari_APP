@@ -15,7 +15,7 @@ class SettingsActivity : BaseActivity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         var view: View = binding.root
         setContentView(view)
-        Tools.setSystemBarLight(this)
+        tools.setSystemBarLight(this)
         setSupportActionBar(binding.toolbar)
         binding.toolbar.title = getString(R.string.app_name)
     }

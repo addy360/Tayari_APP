@@ -26,7 +26,7 @@ class MenuAdapter(context: Context, private val onClick: (Menu) -> Unit) :
         private val price: TextView = itemView.findViewById(R.id.price)
         private val image: ImageView = itemView.findViewById(R.id.image)
         private var currentMenu: Menu? = null
-
+        private val tools= Tools()
         init {
             itemView.setOnClickListener {
                 currentMenu?.let {
@@ -42,7 +42,7 @@ class MenuAdapter(context: Context, private val onClick: (Menu) -> Unit) :
             currentMenu = menu
             name.text = menu.name
             price.text = myMoney(menu.price.toString())+menu.currency
-            Tools.displayImageBusiness(context, image, menu.image)
+            tools.displayImageBusiness(context, image, menu.image.toString())
         }
 
 

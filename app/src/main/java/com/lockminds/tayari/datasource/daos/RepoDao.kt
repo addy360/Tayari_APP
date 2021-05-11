@@ -21,7 +21,10 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.lockminds.tayari.model.RemoteKeys
 import com.lockminds.tayari.model.Restaurant
+import com.lockminds.tayari.model.RestaurantSearch
+import com.lockminds.tayari.model.keys.RestaurantSearchKeys
 
 @Dao
 interface RepoDao {
@@ -29,12 +32,31 @@ interface RepoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(repos: List<Restaurant>)
 
-    @Query("SELECT * FROM restaurants WHERE " +
-            "name LIKE :queryString OR description LIKE :queryString " +
-            "ORDER BY name ASC")
-    fun reposByName(queryString: String): PagingSource<Int, Restaurant>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllRestSearch(repos: List<RestaurantSearch>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllRestSearchKeys(repos: List<RestaurantSearchKeys>)
+
+    @Query("SELECT * FROM restaurants ORDER BY name ASC")
+    fun restaurants(): PagingSource<Int, Restaurant>
+
+    @Query("SELECT * FROM restaurants_search ORDER BY name ASC")
+    fun restaurantsSearch(): PagingSource<Int, RestaurantSearch>
+
+    @Query("SELECT * FROM restaurants_search WHERE name LIKE :queryString ORDER BY name ASC")
+    fun searchRest(queryString: String): PagingSource<Int, RestaurantSearch>
+
+    @Query("DELETE FROM restaurants_search")
+    suspend fun clearRestaurantsSearch()
 
     @Query("DELETE FROM restaurants")
     suspend fun clearRepos()
+
+    @Query("DELETE FROM restaurant_search_key")
+    suspend fun clearRestSearchKey()
+
+    @Query("SELECT * FROM restaurant_search_key WHERE id = :repoId")
+    suspend fun remoteKeysRestSearch(repoId: Long): RestaurantSearchKeys?
 
 }

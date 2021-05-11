@@ -57,12 +57,14 @@ class OrderActivity : BaseActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar!!.title = null
         binding.title.text = order.restaurant_name
-        binding.orderId.text = "#: "+order.id+" Status: "+order.order_status
-        binding.orderPrice.text = "cost: "+order.cost+order.currency+" Paid: "+order.paid+order.currency
+        binding.orderId.text = "#: "+order.id + " "+order.order_status
+        binding.orderPrice.text = "cost: "+order.cost+order.currency
         binding.orderTable.text = "Table: "+order.table_name
         binding.orderDate.text = order.created_at
-        Tools.displayImageBusiness(applicationContext, binding.businessBanner, order.restaurant_banner)
-        Tools.setSystemBarTransparent(this@OrderActivity)
+        binding.orderPaid.text = "Paid "+order.paid+order.currency
+        binding.orderBalance.text = "Balance "+order.balance+order.currency
+        tools.displayImageBusiness(applicationContext, binding.businessBanner, order.restaurant_banner.toString())
+        tools.setSystemBarTransparent(this@OrderActivity)
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.setHasFixedSize(true)
 

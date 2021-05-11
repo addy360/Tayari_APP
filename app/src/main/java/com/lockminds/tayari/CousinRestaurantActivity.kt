@@ -59,13 +59,13 @@ class CousinRestaurantActivity : BaseActivity() {
         supportActionBar!!.title = null
         binding.title.text = cousin.restaurant_name
         supportActionBar!!.title = null
-        Tools.setSystemBarTransparent(this@CousinRestaurantActivity)
+        tools.setSystemBarTransparent(this@CousinRestaurantActivity)
         setupViewPager(binding.viewPager)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
     }
 
     private fun loadImage(){
-        Tools.displayImageBusiness(applicationContext, binding.businessBanner, cousin.restaurant_banner)
+        tools.displayImageBusiness(applicationContext, binding.businessBanner, cousin.restaurant_banner.toString())
     }
 
     private fun setupViewPager(viewPager: ViewPager) {

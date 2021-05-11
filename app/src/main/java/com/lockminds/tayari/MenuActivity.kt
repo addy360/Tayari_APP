@@ -84,8 +84,8 @@ class MenuActivity : BaseActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.title = menu.name
-        Tools.setSystemBarTransparent(this@MenuActivity)
-        Tools.displayImageBusiness(applicationContext, binding.image, menu.image)
+        tools.setSystemBarTransparent(this@MenuActivity)
+        tools.displayImageBusiness(applicationContext, binding.image, menu.image.toString())
         initMenu()
         binding.slideClose.setOnClickListener {
             toggleSlideUp()
@@ -250,7 +250,7 @@ class MenuActivity : BaseActivity() {
             val menuItem = (application as App).repository.getMenuItem(view.id.toString())
             if(menuItem != null){
                 runOnUiThread {
-                    Tools.displayImageBusiness(this@MenuActivity,binding.productImage,menuItem.product_image)
+                    tools.displayImageBusiness(this@MenuActivity,binding.productImage,menuItem.product_image.toString())
                     binding.productName.text = menuItem.product_name
                     binding.productPrice.text = menuItem.price+menuItem.currency
                     binding.itemId.setText(menuItem.id.toString())

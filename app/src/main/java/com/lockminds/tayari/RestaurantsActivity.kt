@@ -37,7 +37,7 @@ class RestaurantsActivity : BaseActivity() {
         // Make sure we cancel the previous job before creating a new one
         searchJob?.cancel()
         searchJob = lifecycleScope.launch {
-            viewModel.searchRepo(applicationContext,"").collectLatest {
+            viewModel.restaurants(applicationContext).collectLatest {
                 adapter.submitData(it)
             }
         }
@@ -55,7 +55,7 @@ class RestaurantsActivity : BaseActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.title = "Restaurants"
-        Tools.setSystemBarTransparent(this@RestaurantsActivity)
+        tools.setSystemBarTransparent(this@RestaurantsActivity)
         binding.recyclerView.setLayoutManager(LinearLayoutManager(this))
         binding.recyclerView.setHasFixedSize(true)
 
