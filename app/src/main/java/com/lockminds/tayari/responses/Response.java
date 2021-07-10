@@ -4,6 +4,16 @@ public class Response {
 
     Boolean status;
     String uid;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    String id;
     String message;
 
     public Response() {
@@ -17,10 +27,11 @@ public class Response {
         this.message = message;
     }
 
-    public Response(Boolean status, String uid, String message) {
+    public Response(Boolean status, String uid, String message, String id) {
         this.status = status;
         this.message = message;
         this.uid = uid;
+        this.id = id;
     }
 
     public String getUid() {

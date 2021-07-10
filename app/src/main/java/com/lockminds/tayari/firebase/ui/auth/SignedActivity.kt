@@ -40,7 +40,9 @@ import com.lockminds.tayari.databinding.ActivitySignedBinding
 import com.lockminds.tayari.responses.LoginResponse
 
 class SignedActivity : AppCompatActivity() {
+
     lateinit var binding: ActivitySignedBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignedBinding.inflate(layoutInflater)
@@ -48,7 +50,6 @@ class SignedActivity : AppCompatActivity() {
         setContentView(view)
         initComponents()
     }
-
 
     private fun initComponents(){
         val currentUser = FirebaseAuth.getInstance().currentUser
@@ -65,36 +66,34 @@ class SignedActivity : AppCompatActivity() {
 
         val user = FirebaseAuth.getInstance().currentUser
 
-        user.getIdToken(true)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
+        user?.getIdToken(true)?.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
 
-                    val idToken = task.result.token.toString()
+                val idToken = task.result.token.toString()
 
-                    val name = user?.displayName
-                    val phone = user?.phoneNumber
-                    val email = user?.email
+                val name = user?.displayName
+                val phone = user?.phoneNumber
+                val email = user?.email
 
-                    if (response != null) {
-                        if (response.isNewUser) {
-                            createUser(idToken,name.toString(),email.toString(),phone.toString())
-                        } else {
-                            loginUser(idToken)
-                        }
+                if (response != null) {
+                    if (response.isNewUser) {
+                        createUser(idToken,name.toString(),email.toString(),phone.toString())
+                    } else {
+                        loginUser(idToken)
                     }
-                    // Return user to login page because we didn't receive response
-                    val intent = Intent(this@SignedActivity, AuthUiActivity::class.java)
-                    startActivity(intent)
-                    finish()
                 }
-
-                // Return user to login page because task was not successfully
+                // Return user to login page because we didn't receive response
                 val intent = Intent(this@SignedActivity, AuthUiActivity::class.java)
                 startActivity(intent)
                 finish()
             }
-    }
 
+            // Return user to login page because task was not successfully
+            val intent = Intent(this@SignedActivity, AuthUiActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+    }
 
     @SuppressLint("HardwareIds")
     private fun loginUser(fb_token: String) {

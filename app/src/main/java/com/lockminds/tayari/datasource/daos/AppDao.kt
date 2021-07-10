@@ -16,6 +16,10 @@ interface AppDao {
     @Query("SELECT * FROM orders WHERE customer = :id ORDER BY id DESC")
     fun getOrders(id: String): Flow<List<Order>>
 
+    // Orders
+    @Query("SELECT * FROM orders WHERE customer = :customer AND id = :order")
+    fun getOrder(customer: String, order:String): Order
+
     @Query("SELECT * FROM cart_menu LIMIT 1")
     fun getOneCart(): CartMenu
 

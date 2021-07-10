@@ -8,7 +8,12 @@ import android.os.PersistableBundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.androidnetworking.AndroidNetworking
+import com.androidnetworking.common.Priority
+import com.androidnetworking.error.ANError
+import com.androidnetworking.interfaces.ParsedRequestListener
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -16,9 +21,13 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.gson.reflect.TypeToken
 import com.lockminds.tayari.auth.AuthActivity
+import com.lockminds.tayari.constants.APIURLs
+import com.lockminds.tayari.constants.Constants
 import com.lockminds.tayari.datasource.AppDatabase
 import com.lockminds.tayari.firebase.ui.auth.AuthUiActivity
+import com.lockminds.tayari.responses.Response
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
@@ -34,9 +43,11 @@ open class BaseActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
     protected val tools = Tools()
 
+    protected lateinit var sessionManager: SessionManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        sessionManager = SessionManager(applicationContext)
         tools.setSystemBarLight(this)
         tools.setNavigationBarColor(this)
         initSigning()
@@ -58,6 +69,11 @@ open class BaseActivity : AppCompatActivity(), CoroutineScope by MainScope() {
             val intent = Intent(this@BaseActivity, AuthActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        update_fcm_token()
     }
 
     protected fun signOut() {
@@ -142,6 +158,35 @@ open class BaseActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         progressBar?.visibility = View.INVISIBLE
     }
 
+    fun update_fcm_token(){
+        AndroidNetworking.post(APIURLs.BASE_URL + "user/update_fcm_token")
+            .addBodyParameter("fcm_token", sessionManager.getFCMToken())
+            .addHeaders("accept", "application/json")
+            .setPriority(Priority.HIGH)
+            .addHeaders("Authorization", "Bearer " + sessionManager.fetchAuthToken())
+            .build()
+            .getAsParsed(
+                object : TypeToken<Response?>() {},
+                object : ParsedRequestListener<Response> {
+
+                    override fun onResponse(response: Response) {
+                        if (response.status) {
+
+                        } else {
+
+                        }
+
+                    }
+
+                    override fun onError(anError: ANError) { }
+
+                })
+    }
+
+
+     fun toast(message: String){
+        Toast.makeText(this@BaseActivity, message, Toast.LENGTH_SHORT).show()
+    }
 
 }
 

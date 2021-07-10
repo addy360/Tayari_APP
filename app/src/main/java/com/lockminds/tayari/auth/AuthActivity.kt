@@ -70,8 +70,10 @@ open class AuthActivity : AppCompatActivity() {
 
     private fun initComponents(){
         binding.google.setOnClickListener {
+            Log.e("Kelly","google signin")
             signInGoogle()
         }
+
         binding.phone.setOnClickListener {
             val intent = Intent(this@AuthActivity, PhoneAuthActivity::class.java)
             startActivity(intent)
@@ -103,7 +105,6 @@ open class AuthActivity : AppCompatActivity() {
 
     private fun initSigning() {
 
-
         // [START initialize_fblogin]
         // Initialize Facebook Login button
         callbackManager = CallbackManager.Factory.create()
@@ -127,8 +128,6 @@ open class AuthActivity : AppCompatActivity() {
         })
         // [END initialize_fblogin]
 
-
-
         // [START config_signin]
         // Configure Google Sign In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -138,7 +137,6 @@ open class AuthActivity : AppCompatActivity() {
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
         // [END config_signin]
-
 
         // [START initialize_auth]
         // Initialize Firebase Auth
@@ -166,7 +164,6 @@ open class AuthActivity : AppCompatActivity() {
             // Pass the activity result back to the Facebook SDK
             callbackManager.onActivityResult(requestCode, resultCode, data)
         }
-
 
     }
     // [END onactivityresult]
@@ -218,91 +215,93 @@ open class AuthActivity : AppCompatActivity() {
         binding.overlay.isVisible = true
         val mUser = FirebaseAuth.getInstance().currentUser
 
-        var email: String? = if(mUser.email.isNullOrBlank()){
+        var email: String? = if(mUser?.email.isNullOrBlank()){
             ""
         }else{
-            mUser.email.toString()
+            mUser?.email.toString()
         }
 
-        var name: String? = if(mUser.displayName.isNullOrBlank()){
+        var name: String? = if(mUser?.displayName.isNullOrBlank()){
             ""
         }else{
-            mUser.displayName.toString()
+            mUser?.displayName.toString()
         }
 
-        var phoneNumber: String? = if(mUser.phoneNumber.isNullOrBlank()){
+        var phoneNumber: String? = if(mUser?.phoneNumber.isNullOrBlank()){
             ""
         }else{
-            mUser.phoneNumber.toString()
+            mUser?.phoneNumber.toString()
         }
 
-        mUser.getIdToken(true)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val idToken: String? = task.result?.token
-                    val session = SessionManager(applicationContext)
-                    val deviceToken = Settings.Secure.getString(applicationContext?.contentResolver, Settings.Secure.ANDROID_ID)
-                    AndroidNetworking.post(APIURLs.BASE_URL + "login")
-                        .addBodyParameter("device_name", deviceToken)
-                        .addBodyParameter("fb_token", idToken.toString())
-                        .addBodyParameter("name", name)
-                        .addBodyParameter("fcm_token", session.getFCMToken())
-                        .addBodyParameter("phone", phoneNumber)
-                        .addBodyParameter("email", email)
-                        .addHeaders("accept", "application/json")
-                        .setPriority(Priority.HIGH)
-                        .build()
-                        .getAsParsed(
-                            object : TypeToken<LoginResponse?>() {},
-                            object : ParsedRequestListener<LoginResponse> {
+        if (mUser != null) {
+            mUser.getIdToken(true)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val idToken: String? = task.result?.token
+                        val session = SessionManager(applicationContext)
+                        val deviceToken = Settings.Secure.getString(applicationContext?.contentResolver, Settings.Secure.ANDROID_ID)
+                        AndroidNetworking.post(APIURLs.BASE_URL + "login")
+                            .addBodyParameter("device_name", deviceToken)
+                            .addBodyParameter("fb_token", idToken.toString())
+                            .addBodyParameter("name", name)
+                            .addBodyParameter("fcm_token", session.getFCMToken())
+                            .addBodyParameter("phone", phoneNumber)
+                            .addBodyParameter("email", email)
+                            .addHeaders("accept", "application/json")
+                            .setPriority(Priority.HIGH)
+                            .build()
+                            .getAsParsed(
+                                object : TypeToken<LoginResponse?>() {},
+                                object : ParsedRequestListener<LoginResponse> {
 
-                                override fun onResponse(response: LoginResponse) {
-                                    if (response.status == true) {
+                                    override fun onResponse(response: LoginResponse) {
+                                        if (response.status == true) {
 
-                                        val preference = applicationContext?.getSharedPreferences(
-                                            Constants.PREFERENCE_KEY,
-                                            Context.MODE_PRIVATE
-                                        )
-                                            ?: return
+                                            val preference = applicationContext?.getSharedPreferences(
+                                                Constants.PREFERENCE_KEY,
+                                                Context.MODE_PRIVATE
+                                            )
+                                                ?: return
 
-                                        with(preference.edit()) {
-                                            putString(Constants.LOGIN_STATUS, "true")
-                                            putString(Constants.LOGIN_TOKEN, response.token)
-                                            putString(Constants.NAME, response.name)
-                                            putString(Constants.PHONE_NUMBER, response.phone_number)
-                                            putString(Constants.PHOTO_URL, response.photo_url)
-                                            putString(Constants.USER_ID, response.id)
-                                            putString(Constants.EMAIL, response.email)
-                                            apply()
+                                            with(preference.edit()) {
+                                                putString(Constants.LOGIN_STATUS, "true")
+                                                putString(Constants.LOGIN_TOKEN, response.token)
+                                                putString(Constants.NAME, response.name)
+                                                putString(Constants.PHONE_NUMBER, response.phone_number)
+                                                putString(Constants.PHOTO_URL, response.photo_url)
+                                                putString(Constants.USER_ID, response.id)
+                                                putString(Constants.EMAIL, response.email)
+                                                apply()
+                                            }
+
+                                            Toast.makeText(this@AuthActivity,  response.message, Toast.LENGTH_LONG).show()
+
+                                            val intent = Intent(this@AuthActivity, MainActivity::class.java)
+                                            startActivity(intent)
+                                            finish()
+
+                                        } else {
+                                            binding.overlay.isVisible = false
+                                            Toast.makeText(this@AuthActivity,  response.message, Toast.LENGTH_LONG).show()
+                                            signOut()
                                         }
 
-                                        Toast.makeText(this@AuthActivity,  response.message, Toast.LENGTH_LONG).show()
-
-                                        val intent = Intent(this@AuthActivity, MainActivity::class.java)
-                                        startActivity(intent)
-                                        finish()
-
-                                    } else {
-                                        binding.overlay.isVisible = false
-                                        Toast.makeText(this@AuthActivity,  response.message, Toast.LENGTH_LONG).show()
-                                        signOut()
                                     }
 
-                                }
+                                    override fun onError(anError: ANError) {
+                                        Toast.makeText(this@AuthActivity, anError.errorBody, Toast.LENGTH_SHORT).show()
+                                        signOut()
+                                        binding.overlay.isVisible = false
+                                    }
 
-                                override fun onError(anError: ANError) {
-                                    Toast.makeText(this@AuthActivity, anError.errorBody, Toast.LENGTH_SHORT).show()
-                                    signOut()
-                                    binding.overlay.isVisible = false
-                                }
-
-                            })
-                } else {
-                    Toast.makeText(this@AuthActivity, "Failed to login", Toast.LENGTH_LONG).show()
-                    signOut()
-                    binding.overlay.isVisible = false
+                                })
+                    } else {
+                        Toast.makeText(this@AuthActivity, "Failed to login", Toast.LENGTH_LONG).show()
+                        signOut()
+                        binding.overlay.isVisible = false
+                    }
                 }
-            }
+        }
 
 
     }

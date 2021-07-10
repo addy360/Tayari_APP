@@ -156,6 +156,7 @@ class SearchRestaurantsActivity : BaseActivity() {
                 false
             }
         }
+
         binding.searchRepo.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 updateRepoListFromInput()

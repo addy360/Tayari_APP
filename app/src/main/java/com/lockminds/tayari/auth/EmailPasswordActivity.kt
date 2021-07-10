@@ -172,92 +172,91 @@ class EmailPasswordActivity : AppCompatActivity(), TextWatcher {
     private fun loginServer() {
         val mUser = FirebaseAuth.getInstance().currentUser
 
-        var email: String? = if(mUser.email.isNullOrBlank()){
+        var email: String? = if(mUser?.email.isNullOrBlank()){
             ""
         }else{
-            mUser.email.toString()
+            mUser?.email.toString()
         }
 
-        var name: String? = if(mUser.displayName.isNullOrBlank()){
+        var name: String? = if(mUser?.displayName.isNullOrBlank()){
             ""
         }else{
-            mUser.displayName.toString()
+            mUser?.displayName.toString()
         }
 
-        var phoneNumber: String? = if(mUser.phoneNumber.isNullOrBlank()){
+        var phoneNumber: String? = if(mUser?.phoneNumber.isNullOrBlank()){
             ""
         }else{
-            mUser.phoneNumber.toString()
+            mUser?.phoneNumber.toString()
         }
 
-        mUser.getIdToken(true)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val idToken: String? = task.result?.token
-                    val session = SessionManager(applicationContext)
-                    val deviceToken = Settings.Secure.getString(applicationContext?.contentResolver, Settings.Secure.ANDROID_ID)
-                    AndroidNetworking.post(APIURLs.BASE_URL + "login")
-                        .addBodyParameter("device_name", deviceToken)
-                        .addBodyParameter("fb_token", idToken.toString())
-                        .addBodyParameter("name", name)
-                        .addBodyParameter("fcm_token", session.getFCMToken())
-                        .addBodyParameter("phone", phoneNumber)
-                        .addBodyParameter("email", email)
-                        .addHeaders("accept", "application/json")
-                        .setPriority(Priority.HIGH)
-                        .build()
-                        .getAsParsed(
-                            object : TypeToken<LoginResponse?>() {},
-                            object : ParsedRequestListener<LoginResponse> {
+        mUser?.getIdToken(true)?.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val idToken: String? = task.result?.token
+                val session = SessionManager(applicationContext)
+                val deviceToken = Settings.Secure.getString(applicationContext?.contentResolver, Settings.Secure.ANDROID_ID)
+                AndroidNetworking.post(APIURLs.BASE_URL + "login")
+                    .addBodyParameter("device_name", deviceToken)
+                    .addBodyParameter("fb_token", idToken.toString())
+                    .addBodyParameter("name", name)
+                    .addBodyParameter("fcm_token", session.getFCMToken())
+                    .addBodyParameter("phone", phoneNumber)
+                    .addBodyParameter("email", email)
+                    .addHeaders("accept", "application/json")
+                    .setPriority(Priority.HIGH)
+                    .build()
+                    .getAsParsed(
+                        object : TypeToken<LoginResponse?>() {},
+                        object : ParsedRequestListener<LoginResponse> {
 
-                                override fun onResponse(response: LoginResponse) {
-                                    binding.overlay.isVisible = false
-                                    if (response.status == true) {
+                            override fun onResponse(response: LoginResponse) {
+                                binding.overlay.isVisible = false
+                                if (response.status == true) {
 
-                                        val preference = applicationContext?.getSharedPreferences(
-                                            Constants.PREFERENCE_KEY,
-                                            Context.MODE_PRIVATE
-                                        )
-                                            ?: return
+                                    val preference = applicationContext?.getSharedPreferences(
+                                        Constants.PREFERENCE_KEY,
+                                        Context.MODE_PRIVATE
+                                    )
+                                        ?: return
 
-                                        with(preference.edit()) {
-                                            putString(Constants.LOGIN_STATUS, "true")
-                                            putString(Constants.LOGIN_TOKEN, response.token)
-                                            putString(Constants.NAME, response.name)
-                                            putString(Constants.PHONE_NUMBER, response.phone_number)
-                                            putString(Constants.PHOTO_URL, response.photo_url)
-                                            putString(Constants.USER_ID, response.id)
-                                            putString(Constants.EMAIL, response.email)
-                                            apply()
-                                        }
-
-                                        Toast.makeText(this@EmailPasswordActivity,  response.message, Toast.LENGTH_LONG).show()
-
-                                        val intent = Intent(this@EmailPasswordActivity, MainActivity::class.java)
-                                        startActivity(intent)
-                                        finish()
-
-                                    } else {
-                                        Toast.makeText(this@EmailPasswordActivity,  response.message, Toast.LENGTH_LONG).show()
-                                        binding.overlay.isVisible = false
-                                        signOut()
+                                    with(preference.edit()) {
+                                        putString(Constants.LOGIN_STATUS, "true")
+                                        putString(Constants.LOGIN_TOKEN, response.token)
+                                        putString(Constants.NAME, response.name)
+                                        putString(Constants.PHONE_NUMBER, response.phone_number)
+                                        putString(Constants.PHOTO_URL, response.photo_url)
+                                        putString(Constants.USER_ID, response.id)
+                                        putString(Constants.EMAIL, response.email)
+                                        apply()
                                     }
 
-                                }
+                                    Toast.makeText(this@EmailPasswordActivity,  response.message, Toast.LENGTH_LONG).show()
 
-                                override fun onError(anError: ANError) {
-                                    Toast.makeText(this@EmailPasswordActivity, anError.errorBody, Toast.LENGTH_SHORT).show()
+                                    val intent = Intent(this@EmailPasswordActivity, MainActivity::class.java)
+                                    startActivity(intent)
+                                    finish()
+
+                                } else {
+                                    Toast.makeText(this@EmailPasswordActivity,  response.message, Toast.LENGTH_LONG).show()
                                     binding.overlay.isVisible = false
                                     signOut()
                                 }
 
-                            })
-                } else {
-                    Toast.makeText(this@EmailPasswordActivity,"Login failed", Toast.LENGTH_SHORT).show()
-                    binding.overlay.isVisible = false
-                    signOut()
-                }
+                            }
+
+                            override fun onError(anError: ANError) {
+                                Toast.makeText(this@EmailPasswordActivity, anError.errorBody, Toast.LENGTH_SHORT).show()
+                                binding.overlay.isVisible = false
+                                signOut()
+                            }
+
+                        })
+            } else {
+                Toast.makeText(this@EmailPasswordActivity,"Login failed", Toast.LENGTH_SHORT).show()
+                binding.overlay.isVisible = false
+                signOut()
             }
+        }
 
     }
 

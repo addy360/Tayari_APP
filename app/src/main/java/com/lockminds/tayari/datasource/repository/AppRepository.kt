@@ -24,6 +24,10 @@ class AppRepository(
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
+    fun getOrder(customer: String, order:String): Order = appDao.getOrder(customer,order)
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
     fun getOneCart(): CartMenu = appDao.getOneCart()
     // End Orders
 

@@ -38,6 +38,13 @@ class SessionManager (context: Context) {
     /**
      * Function to fetch user id
      */
+    fun fetchPhonenumber(): String? {
+        return prefs.getString(Constants.PHONE_NUMBER, "")
+    }
+
+    /**
+     * Function to fetch user id
+     */
     fun getFCMToken(): String? {
         return prefs.getString(Constants.FCM_TOKEN, null)
     }

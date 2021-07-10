@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
@@ -24,7 +25,9 @@ import com.lockminds.tayari.constants.APIURLs
 import com.lockminds.tayari.constants.Constants
 import com.lockminds.tayari.databinding.ActivityCartBinding
 import com.lockminds.tayari.model.*
+import com.lockminds.tayari.responses.OrderResponse
 import com.lockminds.tayari.responses.Response
+import com.lockminds.tayari.ui.OrderActivity
 import com.lockminds.tayari.viewModels.CartViewModel
 import com.lockminds.tayari.viewModels.CartViewModelFactory
 import com.lockminds.tayari.viewModels.TablesViewModel
@@ -183,10 +186,10 @@ class CartActivity : BaseActivity() {
                         .setPriority(Priority.LOW)
                         .build()
                         .getAsParsed(
-                            object : TypeToken<Response?>() {},
-                            object : ParsedRequestListener<Response> {
+                            object : TypeToken<OrderResponse?>() {},
+                            object : ParsedRequestListener<OrderResponse> {
 
-                                override fun onResponse(response: Response) {
+                                override fun onResponse(response: OrderResponse) {
                                     binding.spinKit.isVisible = false
                                     if (response.status) {
 
@@ -198,8 +201,7 @@ class CartActivity : BaseActivity() {
                                         GlobalScope.launch {
                                             (application as App).repository.emptyCart(restaurant.id.toString())
                                             runOnUiThread {
-                                                val intent = Intent(this@CartActivity, OrdersActivity::class.java)
-                                                startActivity(intent)
+                                                startActivity(OrderActivity.createOrderIntent(this@CartActivity,response.order))
                                                 finish()
                                             }
                                         }

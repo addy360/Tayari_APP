@@ -19,11 +19,8 @@ import com.androidnetworking.interfaces.ParsedRequestListener
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.reflect.TypeToken
+import com.lockminds.tayari.*
 import com.lockminds.tayari.constants.Constants
-import com.lockminds.tayari.MainActivity
-import com.lockminds.tayari.OrdersActivity
-import com.lockminds.tayari.R
-import com.lockminds.tayari.Tools
 import com.lockminds.tayari.constants.APIURLs
 import com.lockminds.tayari.responses.Response
 import com.lockminds.tayari.worker.AppWorker
@@ -164,42 +161,50 @@ class FCMService : FirebaseMessagingService() {
         val type = remoteMessage.data["type"]
         val intent = if(type.equals("order")){
             Intent(this, OrdersActivity::class.java)
+        }else if(type.equals("order_paid")){
+            Intent(this, OrdersActivity::class.java)
         }else{
             Intent(this, MainActivity::class.java)
         }
-        val icon = BitmapFactory.decodeResource(resources,R.drawable.ic_notification_icon)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-            PendingIntent.FLAG_ONE_SHOT)
 
-        val  message = remoteMessage.data["message"]?.replace(remoteMessage.data["old"].toString(),remoteMessage.data["new"].toString())
-        val channelId = getString(R.string.default_notification_channel_id)
-        val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val notificationBuilder = NotificationCompat.Builder(this, channelId)
-            .setLargeIcon(icon)
-            .setSmallIcon(R.drawable.ic_notification_icon)
-            .setContentTitle(tools.fromHtml(remoteMessage.data["title"]))
-            .setContentText(tools.fromHtml(message))
-            .setAutoCancel(true)
-            .setSound(defaultSoundUri)
-            .setContentIntent(pendingIntent)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+        if(type.equals("order_paid")) {
+            val intents = Intent(this@FCMService, OrdersActivity::class.java)
+            intents.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intents)
+        }
+            val icon = BitmapFactory.decodeResource(resources,R.drawable.ic_notification_icon)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                PendingIntent.FLAG_ONE_SHOT)
 
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val  message = remoteMessage.data["message"]?.replace(remoteMessage.data["old"].toString(),remoteMessage.data["new"].toString())
+            val channelId = getString(R.string.default_notification_channel_id)
+            val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+            val notificationBuilder = NotificationCompat.Builder(this, channelId)
+                .setLargeIcon(icon)
+                .setSmallIcon(R.drawable.ic_notification_icon)
+                .setContentTitle(tools.fromHtml(remoteMessage.data["title"]))
+                .setContentText(tools.fromHtml(message))
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
 
-        // Since android Oreo notification channel is needed.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId,
-                getString(R.string.default_notification_channel_id_desc),
-                NotificationManager.IMPORTANCE_HIGH)
-            notificationManager.createNotificationChannel(channel)
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+            // Since android Oreo notification channel is needed.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channel = NotificationChannel(channelId,
+                    getString(R.string.default_notification_channel_id_desc),
+                    NotificationManager.IMPORTANCE_HIGH)
+                notificationManager.createNotificationChannel(channel)
+            }
+
+            notificationManager.notify(0 /* ID of notification */, notificationBuilder.build())
         }
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build())
-    }
 
     companion object {
-
         private const val TAG = "MyFirebaseMsgService"
     }
 

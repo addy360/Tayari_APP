@@ -3,6 +3,7 @@ package com.lockminds.tayari.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -12,18 +13,24 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.androidnetworking.AndroidNetworking
+import com.androidnetworking.common.Priority
+import com.androidnetworking.error.ANError
+import com.androidnetworking.interfaces.ParsedRequestListener
+import com.google.gson.reflect.TypeToken
 import com.lockminds.tayari.*
 import com.lockminds.tayari.adapter.OrderItemsAdapter
 import com.lockminds.tayari.adapter.ReposLoadStateAdapter
+import com.lockminds.tayari.constants.APIURLs
+import com.lockminds.tayari.constants.Constants
 import com.lockminds.tayari.constants.Constants.Companion.INTENT_PARAM_1
 import com.lockminds.tayari.databinding.ActivityOrderBinding
 import com.lockminds.tayari.model.Order
+import com.lockminds.tayari.responses.Response
 import com.lockminds.tayari.viewModels.OrderItemViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChangedBy
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
 
@@ -68,10 +75,21 @@ class OrderActivity : BaseActivity() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.setHasFixedSize(true)
 
+        if(order.balance.toString() == "0" || order.balance.toString() == "0.0"){
+            binding.payNow.isVisible = false
+        }
+
         binding.navBack.setOnClickListener {
             onBackPressed()
         }
+
+        binding.payNow.setOnClickListener {
+            startActivity(PayOrderGatewayActivity.createOrderIntent(this@OrderActivity,order))
+        }
     }
+
+
+
     @ExperimentalPagingApi
     private fun initItems() {
         searchJob?.cancel()
