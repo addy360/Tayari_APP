@@ -24,6 +24,7 @@ class Constants{
         const val INTENT_PARAM_1 = "intent_param_1"
         const val INTENT_PARAM_2 = "intent_param_2"
 
+
     }
 
 }
