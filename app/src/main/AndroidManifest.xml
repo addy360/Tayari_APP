@@ -18,12 +18,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Tayari">
-        <activity android:name=".ui.BrowserActivity" />
+        <activity android:name=".ui.BrowserActivity"
+            android:exported="true"/>
         <activity android:name=".ui.PayOrderGatewayActivity" />
         <activity android:name=".ui.PayOrderActivity" />
         <activity
             android:name=".SplashActivity"
-            android:theme="@style/Theme.Splash">
+            android:theme="@style/Theme.Splash"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

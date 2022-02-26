@@ -79,6 +79,11 @@ class OrderActivity : BaseActivity() {
             binding.payNow.isVisible = false
         }
 
+        if(order.payment_status == "complete"){
+            binding.payNow.text = "Paid"
+            binding.payNow.isEnabled = false
+        }
+
         binding.navBack.setOnClickListener {
             onBackPressed()
         }

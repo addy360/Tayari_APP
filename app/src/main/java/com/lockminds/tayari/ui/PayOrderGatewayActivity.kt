@@ -5,13 +5,16 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
+import android.widget.Switch
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
+import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.androidnetworking.interfaces.ParsedRequestListener
 import com.google.gson.reflect.TypeToken
 import com.lockminds.tayari.*
@@ -21,12 +24,19 @@ import com.lockminds.tayari.databinding.ActivityPayOrderGatewayBinding
 import com.lockminds.tayari.model.Order
 import com.lockminds.tayari.model.Parameters
 import com.lockminds.tayari.responses.Response
+import com.lockminds.tayari.responses.TigoTokenResponse
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.json.JSONObject
+import java.util.*
 
 class PayOrderGatewayActivity : BaseActivity() {
     lateinit var order: Order
     lateinit var binding: ActivityPayOrderGatewayBinding
+    var START_MILLI_SECONDS = 60000L
+    lateinit var countDownTimer: CountDownTimer
+    var isRunning: Boolean = false
+    var timer_in_milli_seonds = 0L
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,16 +49,22 @@ class PayOrderGatewayActivity : BaseActivity() {
         initStatusBar()
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         order = intent.getParcelableExtra(Constants.INTENT_PARAM_1)!!
-        binding.payNow.setOnClickListener {
+       /* binding.payNow.setOnClickListener {
             payWithTigo()
-        }
+        }*/
+        binding.payNow.isVisible = false
+        binding.timerText.isVisible = false
+        requestTigoToken();
         binding.totalRight.text = "${order.balance}${order.currency}"
         binding.phoneNumber.setText(sessionManager.fetchPhonenumber().toString())
 
+        if (order.payment_status == "complete"){
+            binding.payNow.text = "Paid"
+            binding.payNow.isEnabled = false
+        }
+
         binding.cart.setOnClickListener {
-
             GlobalScope.launch {
-
                 val cart = (application as App).repository.getOneCart()
 
                 if(cart != null){
@@ -86,7 +102,49 @@ class PayOrderGatewayActivity : BaseActivity() {
         }
     }
 
-    private fun payWithTigo() {
+    private fun timer(){
+        if (!isRunning){
+            val time = binding.timerText.text.toString()
+            timer_in_milli_seonds = 5 * 60000L
+            binding.timerText.isVisible = true;
+            startTimer(timer_in_milli_seonds)
+        }
+    }
+
+    private fun startTimer(timer_in_seconds: Long){
+        binding.payNow.isVisible = false
+        countDownTimer = object :
+        CountDownTimer(timer_in_seconds, 1000){
+            override fun onTick(p0: Long) {
+               timer_in_milli_seonds = p0
+                updateTextUI()
+            }
+
+            override fun onFinish() {
+                print("count finished")
+                binding.payNow.text = "Re try"
+                binding.payNow.isVisible = true
+            }
+
+        }
+        countDownTimer.start()
+        isRunning = true
+    }
+
+    private fun updateTextUI(){
+        val minute = (timer_in_milli_seonds / 1000) / 60
+        val second = (timer_in_milli_seonds / 1000) % 60
+        binding.timerText.text = "$minute:$second"
+        when(minute.toInt()){
+            1 -> checkPayment()
+            2 -> checkPayment()
+            3 -> checkPayment()
+            4 -> checkPayment()
+            5 -> checkPayment()
+        }
+    }
+
+  /*  private fun payWithTigo() {
         binding.spinKit.isVisible = true
         AndroidNetworking.post(APIURLs.BASE_URL + "orders/pay_order")
             .addBodyParameter("order",order.id.toString())
@@ -129,6 +187,154 @@ class PayOrderGatewayActivity : BaseActivity() {
                     }
 
                 })
+
+    }*/
+
+    private fun payWithTigo(token: String) {
+        binding.spinKit.isVisible = true
+      val obj =  JSONObject()
+      obj.put("CustomerMSISDN", binding.phoneNumber.text.toString())
+      obj.put("BillerMSISDN", APIURLs.PAY_BILLER)
+      obj.put("Amount", order.balance)
+      obj.put("Remarks", "Food purchase")
+      obj.put("ReferenceID", "TYP"+ UUID.randomUUID().toString())
+        AndroidNetworking.post(APIURLs.TIGO_PUSH_BILL)
+            .addJSONObjectBody(obj)
+            .addHeaders("accept", "application/json")
+            .addHeaders("username", APIURLs.PAY_USERNAME)
+            .addHeaders("Cache-Control", "no-cache")
+            .addHeaders("password", APIURLs.PAY_PASSWORD)
+            .addHeaders(
+                "Authorization", "Bearer $token")
+            .setPriority(Priority.HIGH)
+            .setPriority(Priority.LOW)
+            .build()
+            .getAsJSONObject(
+                object : JSONObjectRequestListener{
+                    override fun onResponse(response: JSONObject?) {
+                        Log.d("onResponse: ", response.toString())
+                        binding.spinKit.isVisible = false
+                        Log.d("onResponse: ", response.toString())
+                        Toast.makeText(
+                            this@PayOrderGatewayActivity,
+                            response.toString(),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        timer()
+                        response?.let { savePaymentResponse(it) }
+                    }
+
+                    override fun onError(anError: ANError?) {
+                        binding.spinKit.isVisible = false
+                        anError?.errorDetail?.let { Log.d("onError: ", it) }
+                        Toast.makeText(
+                            this@PayOrderGatewayActivity,
+                            anError?.errorDetail,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                }
+            )
+
+    }
+
+    private fun requestTigoToken() {
+        binding.spinKit.isVisible = true
+       val map = mapOf("username" to APIURLs.PAY_USERNAME, "password" to APIURLs.PAY_PASSWORD, "grant_type" to "password")
+
+        AndroidNetworking.post(APIURLs.TIGO_TOKEN)
+           // .addUrlEncodeFormBodyParameter(map)
+            .addUrlEncodeFormBodyParameter("username", APIURLs.PAY_USERNAME)
+            .addUrlEncodeFormBodyParameter("password", APIURLs.PAY_PASSWORD)
+            .addUrlEncodeFormBodyParameter("grant_type", "password")
+            .setPriority(Priority.HIGH)
+            .setPriority(Priority.LOW)
+            .build()
+            .getAsJSONObject(object : JSONObjectRequestListener{
+                override fun onResponse(response: JSONObject?) {
+                    binding.spinKit.isVisible = false
+                    Log.d("onResponse: ", response.toString())
+                    binding.payNow.isVisible = true
+
+                    binding.payNow.setOnClickListener {
+                        response?.getString("access_token")?.let { it1 -> payWithTigo(it1) }
+                    }
+                }
+
+                override fun onError(anError: ANError?) {
+                    binding.spinKit.isVisible = false
+                    anError?.errorDetail?.let { Log.d("onError: ", it) }
+                        Toast.makeText(
+                            this@PayOrderGatewayActivity,
+                            anError?.errorDetail,
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                }
+
+            })
+
+
+    }
+
+    private fun savePaymentResponse(json: JSONObject){
+        val obj =  JSONObject()
+        obj.put("CustomerMSISDN", binding.phoneNumber.text.toString())
+        obj.put("orderID", order.id)
+        obj.put("amount", order.balance)
+        obj.put("ReferenceID", json.getString("ReferenceID"))
+
+        AndroidNetworking.post(APIURLs.BASE_URL+APIURLs.PAYMENT_SAVE)
+            .addJSONObjectBody(obj)
+            .addHeaders("accept", "application/json")
+            .setPriority(Priority.HIGH)
+            .setPriority(Priority.LOW)
+            .build()
+            .getAsJSONObject(object : JSONObjectRequestListener{
+                override fun onResponse(response: JSONObject?) {
+                    Log.d( "onSave: ", response.toString())
+                }
+
+                override fun onError(anError: ANError?) {
+                    Log.d("onError: ", anError?.message.toString())
+                }
+
+            })
+
+    }
+
+    private fun checkPayment(){
+        val obj =  JSONObject()
+        obj.put("id", order.id)
+
+        AndroidNetworking.post(APIURLs.BASE_URL+APIURLs.PAYMENT_CHECK)
+            .addJSONObjectBody(obj)
+            .addHeaders("accept", "application/json")
+            .setPriority(Priority.HIGH)
+            .setPriority(Priority.LOW)
+            .build()
+            .getAsJSONObject(object : JSONObjectRequestListener{
+                override fun onResponse(response: JSONObject?) {
+                    Log.d( "onCheck: ", response.toString())
+                    if (response?.getBoolean("status") == true){
+                        Toast.makeText(
+                            this@PayOrderGatewayActivity,
+                            "Payment successfully paid",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        countDownTimer.cancel()
+                        isRunning = false
+                        binding.timerText.isVisible = false
+                        finish()
+                    }
+                }
+
+                override fun onError(anError: ANError?) {
+                    Log.d("onError: ", anError?.message.toString())
+                }
+
+            })
 
     }
 

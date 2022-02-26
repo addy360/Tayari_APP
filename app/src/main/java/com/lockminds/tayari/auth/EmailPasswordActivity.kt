@@ -56,14 +56,34 @@ class EmailPasswordActivity : AppCompatActivity(), TextWatcher {
 
     private fun initControllers() {
         binding.loginBtn.setOnClickListener {
-                if (buttonState()){
+            val email = binding.email.text.toString()
+            val password = binding.password.text.toString()
+                var valid = true;
+                if(email.isEmpty()){
+                    binding.email.error = "Please add email address"
+                    binding.email.isFocusable
+                    valid = false
+                }
+                if (password.isEmpty()){
+                    binding.password.error = "Please add password"
+                    binding.password.isFocusable
+                    valid = false
+                }
+            if (valid && buttonState()){
+                createAccount(email, password)
+            }else if (!buttonState() && password.isNotEmpty()){
+                Toast.makeText(this@EmailPasswordActivity, "Weak Password", Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(this@EmailPasswordActivity, "Invalid inputs", Toast.LENGTH_SHORT).show()
+            }
+              /*  if (buttonState()){
                     binding.overlay.isVisible = true
                     val email = binding.email.text.toString()
                     val password = binding.password.text.toString()
                     createAccount(email,password)
                 }else{
-                    Toast.makeText(this@EmailPasswordActivity, "Check details", Toast.LENGTH_SHORT).show()
-                }
+                    Toast.makeText(this@EmailPasswordActivity, "Weak Password", Toast.LENGTH_SHORT).show()
+                }*/
         }
 
         binding.password.addTextChangedListener(this)

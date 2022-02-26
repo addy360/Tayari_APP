@@ -51,7 +51,8 @@
                 app:iconTint="@color/colorOnPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="gone" />
 
             <com.google.android.material.button.MaterialButton
                 android:paddingVertical="@dimen/spacing_medium"
@@ -70,20 +71,21 @@
                 app:layout_constraintTop_toBottomOf="@+id/phone" />
 
             <com.google.android.material.button.MaterialButton
-                android:paddingVertical="@dimen/spacing_medium"
-                app:icon="@drawable/ic_baseline_email_24"
-                app:iconSize="24dp"
-                app:iconTint="@color/colorOnPrimary"
                 android:id="@+id/email"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:backgroundTint="@color/colorPrimary"
+                android:paddingVertical="@dimen/spacing_medium"
                 android:text="@string/sign_in_email"
                 android:textColor="@color/colorOnPrimary"
+                app:icon="@drawable/ic_baseline_email_24"
+                app:iconSize="24dp"
+                app:iconTint="@color/colorOnPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/google" />
+                app:layout_constraintTop_toBottomOf="@+id/google"
+                tools:visibility="gone" />
 
 
             <androidx.constraintlayout.widget.ConstraintLayout

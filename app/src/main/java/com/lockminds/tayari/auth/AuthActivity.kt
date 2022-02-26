@@ -10,10 +10,12 @@ import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
+import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.androidnetworking.interfaces.ParsedRequestListener
 import com.facebook.AccessToken
 import com.facebook.CallbackManager
@@ -21,6 +23,7 @@ import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
+import com.fasterxml.jackson.module.kotlin.jsonMapper
 import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -40,8 +43,11 @@ import com.lockminds.tayari.Tools
 import com.lockminds.tayari.constants.APIURLs
 import com.lockminds.tayari.constants.Constants
 import com.lockminds.tayari.databinding.ActivityAuthBinding
+import com.lockminds.tayari.databinding.AddUserDataBinding
 import com.lockminds.tayari.firebase.ui.auth.AuthUiActivity
 import com.lockminds.tayari.responses.LoginResponse
+import com.lockminds.tayari.responses.UserVerifyResponse
+import org.json.JSONObject
 
 open class AuthActivity : AppCompatActivity() {
 
@@ -53,6 +59,7 @@ open class AuthActivity : AppCompatActivity() {
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var callbackManager: CallbackManager
     private lateinit var buttonFacebookLogin: LoginButton
+    private lateinit var alertDialog: AlertDialog;
     private val tools = Tools()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,9 +76,12 @@ open class AuthActivity : AppCompatActivity() {
 
 
     private fun initComponents(){
+        binding.phone.isVisible = false
+        binding.email.isVisible = false
         binding.google.setOnClickListener {
             Log.e("Kelly","google signin")
             signInGoogle()
+            //addData()
         }
 
         binding.phone.setOnClickListener {
@@ -168,6 +178,22 @@ open class AuthActivity : AppCompatActivity() {
     }
     // [END onactivityresult]
 
+    private fun addData(){
+        val builder = AlertDialog.Builder(this@AuthActivity)
+        val  viewBinding = AddUserDataBinding.inflate(layoutInflater)
+        builder.setView(viewBinding.root)
+        viewBinding.buttonContinue.setOnClickListener {
+            val phone: String = viewBinding.phoneNumber.text.toString()
+            if (phone.isNotEmpty()){
+                loginServer(phone)
+            }else{
+                viewBinding.phoneNumber.error = "Please add phone number"
+                viewBinding.phoneNumber.isFocusable = true
+            }
+        }
+        builder.create().show()
+    }
+
     // [START auth_with_google]
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
@@ -175,7 +201,9 @@ open class AuthActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
-                    loginServer()
+                   // loginServer()
+                   // addData()
+                    checkUser()
                 } else {
                     // If sign in fails, display a message to the user.
                     Toast.makeText(this@AuthActivity, task.exception.toString(), Toast.LENGTH_SHORT).show()
@@ -200,7 +228,8 @@ open class AuthActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
-                    loginServer()
+                    //loginServer("")
+                    checkUser()
                 } else {
                     // If sign in fails, display a message to the user.
                     Toast.makeText(baseContext, "Authentication failed.",
@@ -210,8 +239,55 @@ open class AuthActivity : AppCompatActivity() {
     }
     // [END auth_with_facebook]
 
+    private fun checkUser(){
+        binding.overlay.isVisible = true
+        val mUser = FirebaseAuth.getInstance().currentUser
+        mUser?.getIdToken(true)?.addOnCompleteListener{ task ->
+            val idToken: String? = task.result?.token
+            AndroidNetworking.get(APIURLs.BASE_URL + "login/userverify/${idToken}")
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsJSONObject(
+                    object : JSONObjectRequestListener{
+                        override fun onResponse(response: JSONObject?) {
+                            val status = response?.get("status").toString()
+                            Log.d(TAG, "onLoginCheck: $status")
+                            if(status == "valid"){
+                                loginServer("")
+                            }else{
+                                addData()
+                            }
+                        }
+
+                        override fun onError(anError: ANError?) {
+                            Log.d(TAG, "onError: ${anError.toString()}")
+                        }
+
+                    }
+                )
+            /*    .getAsParsed(
+                                object : TypeToken<UserVerifyResponse?>() {},
+                                object : ParsedRequestListener<UserVerifyResponse>{
+                                    override fun onResponse(response: UserVerifyResponse?) {
+                                        Log.d(TAG, "onLoginCheck: ${response?.status}")
+                                        if(response?.status.toString() == "valid"){
+                                            loginServer("")
+                                        }else{
+                                            addData()
+                                        }
+                                    }
+
+                                    override fun onError(anError: ANError?) {
+                                        Log.d(TAG, "onError: ${anError.toString()}")
+                                    }
+
+                                }
+                            )*/
+        }
+    }
+
     @SuppressLint("HardwareIds")
-    private fun loginServer() {
+    private fun loginServer(phone: String) {
         binding.overlay.isVisible = true
         val mUser = FirebaseAuth.getInstance().currentUser
 
@@ -228,7 +304,7 @@ open class AuthActivity : AppCompatActivity() {
         }
 
         var phoneNumber: String? = if(mUser?.phoneNumber.isNullOrBlank()){
-            ""
+            phone
         }else{
             mUser?.phoneNumber.toString()
         }

@@ -5,10 +5,27 @@
       <map>
         <entry key="..\:/PROJECTS/TAYARI/ANDROID/TAYARI/app/src/main/res/drawable/phone.xml" value="0.21666666666666667" />
         <entry key="..\:/PROJECTS/TAYARI/ANDROID/TAYARI/app/src/main/res/drawable/tanzania.xml" value="0.21666666666666667" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/activity_auth.xml" value="0.20677083333333332" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/activity_cart.xml" value="0.20677083333333332" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/activity_order.xml" value="0.42592592592592593" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/activity_orders.xml" value="0.20677083333333332" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/activity_pay_order_gateway.xml" value="0.20358974358974358" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/activity_phone_auth.xml" value="0.20677083333333332" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/activity_profile.xml" value="0.1" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/activity_settings.xml" value="0.1" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/activity_signed.xml" value="0.1" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/activity_update_profile.xml" value="0.1" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/add_user_data.xml" value="0.20677083333333332" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/auth_ui_layout.xml" value="0.20677083333333332" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/item_menus.xml" value="0.33" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/item_order.xml" value="0.20677083333333332" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/item_restaurants.xml" value="0.25" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/item_restaurants_near_by.xml" value="0.25" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/item_services.xml" value="0.22" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

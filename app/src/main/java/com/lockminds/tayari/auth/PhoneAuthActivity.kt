@@ -77,18 +77,23 @@ class PhoneAuthActivity : AppCompatActivity() {
             override fun onVerificationFailed(e: FirebaseException) {
                 // This callback is invoked in an invalid request for verification is made,
                 // for instance if the the phone number format is not valid.
+                Log.d(TAG, "onVerificationFailed: "+ e.message);
                 Toast.makeText(this@PhoneAuthActivity, "onCodeSent failed :${e.message}", Toast.LENGTH_LONG).show()
-
+                binding.auth.isVisible = true
+                binding.overlay.isVisible = false
+                binding.sendCode.isVisible = true;
                 if (e is FirebaseAuthInvalidCredentialsException) {
                     // Invalid request
                     Toast.makeText(this@PhoneAuthActivity, "code is invalid", Toast.LENGTH_LONG).show()
                     binding.verifyCode.isVisible = true
                     binding.overlay.isVisible = false
+                    Log.d(TAG, "onVerificationFailed: "+ e.message);
                 } else if (e is FirebaseTooManyRequestsException) {
                     // The SMS quota for the project has been exceeded
                     Toast.makeText(this@PhoneAuthActivity, "failed try another method", Toast.LENGTH_LONG).show()
                     binding.auth.isVisible = true
                     binding.overlay.isVisible = false
+                    Log.d(TAG, "onVerificationFailed: "+ e.message);
                 }
 
                 // Show a message and update the UI
@@ -222,6 +227,7 @@ class PhoneAuthActivity : AppCompatActivity() {
                         binding.verifyCode.isVisible = true
                         Toast.makeText(this@PhoneAuthActivity, "Verifying code is invalid", Toast.LENGTH_LONG).show()
                         binding.overlay.isVisible = false
+                        Log.d(TAG, "signInWithPhoneAuthCredential: failed")
                     }
                     // Update UI
                 }
@@ -310,7 +316,7 @@ class PhoneAuthActivity : AppCompatActivity() {
                                         putString(Constants.EMAIL, response.email)
                                         apply()
                                     }
-
+                                    Log.d(TAG, "onResponse: ${response.message}")
                                     Toast.makeText(this@PhoneAuthActivity,  response.message, Toast.LENGTH_LONG).show()
 
                                     val intent = Intent(this@PhoneAuthActivity, MainActivity::class.java)
@@ -318,6 +324,7 @@ class PhoneAuthActivity : AppCompatActivity() {
                                     finish()
 
                                 } else {
+                                    Log.d(TAG, "onResponse: ${response.message}")
                                     binding.overlay.isVisible = false
                                     Toast.makeText(this@PhoneAuthActivity,  response.message, Toast.LENGTH_LONG).show()
                                     signOut()
@@ -327,6 +334,7 @@ class PhoneAuthActivity : AppCompatActivity() {
 
                             override fun onError(anError: ANError) {
                                 binding.overlay.isVisible = false
+                                Log.d(TAG, "onError: ${anError.errorBody}")
                                 Toast.makeText(this@PhoneAuthActivity, anError.errorBody, Toast.LENGTH_SHORT).show()
                                 signOut()
                             }
@@ -334,6 +342,7 @@ class PhoneAuthActivity : AppCompatActivity() {
                         })
             } else {
                 binding.overlay.isVisible = false
+                Log.d(TAG, "loginServer: login fail")
                 Toast.makeText(this@PhoneAuthActivity,"Login failed", Toast.LENGTH_SHORT).show()
                 signOut()
             }

@@ -166,48 +166,71 @@ tools:context=".CartActivity">
                     android:src="@mipmap/ic_launcher" />
 
             </androidx.cardview.widget.CardView>
+
             <RelativeLayout
                 android:id="@+id/slide_up_surface"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
+                android:layout_marginBottom="-10dp"
+                android:background="@drawable/shape_slideup"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="vertical"
                 android:paddingStart="@dimen/spacing_large"
                 android:paddingTop="@dimen/spacing_large"
-                android:paddingEnd="@dimen/spacing_large"
-                android:layout_width="match_parent"
-                android:layout_marginBottom="-10dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:clickable="true"
-                android:background="@drawable/shape_slideup"
-                android:focusable="true">
+                android:paddingEnd="@dimen/spacing_large">
+
                 <ImageView
-                    android:layout_alignParentEnd="true"
                     android:id="@+id/slide_close"
-                    android:layout_marginEnd="@dimen/spacing_large"
-                    android:layout_gravity="end"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="@dimen/spacing_large"
                     app:srcCompat="@drawable/ic_close"
                     app:tint="@color/colorPrimaryVariant" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_marginTop="@dimen/action_bar_height"
+                <RadioGroup
+                    android:id="@+id/type"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/slide_close"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radioButton2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Now"
+                        android:checked="true"/>
+
+                    <RadioButton
+                        android:id="@+id/radioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Reservation" />
+                </RadioGroup>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/type"
+                    android:layout_marginTop="@dimen/spacing_large">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:backgroundTint="@color/overlay_dark_5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/btn_rounded_search_filled"
+                        android:backgroundTint="@color/overlay_dark_5"
+                        android:orientation="horizontal"
                         android:textColor="@color/colorPrimaryVariant"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        app:layout_constraintTop_toTopOf="parent">
 
                         <TextView
-                            android:textSize="16sp"
                             android:id="@+id/textView2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -216,6 +239,7 @@ tools:context=".CartActivity">
                             android:layout_marginBottom="16dp"
                             android:text="@string/select_table"
                             android:textColor="@color/colorPrimaryVariant"
+                            android:textSize="16sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
