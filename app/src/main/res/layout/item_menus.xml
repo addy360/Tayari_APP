@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.balysv.materialripple.MaterialRippleLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.balysv.materialripple.MaterialRippleLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:qpp="http://schemas.android.com/tools"
     app:mrl_rippleColor="@color/colorPrimaryVariant"
     android:layout_marginBottom="@dimen/spacing_large"
     android:layout_width="match_parent"
@@ -85,6 +85,8 @@
             <me.zhanghai.android.materialratingbar.MaterialRatingBar
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
+                app:mrb_progressTint="@color/colorPrimaryVariant"
+                app:mrb_secondaryProgressTint="@color/colorPrimaryVariant"
                 android:rating="2.5"/>
              <!--   app:bgColor="@color/overlay_dark_30"
                 app:starColor="@color/colorPrimaryVariant"

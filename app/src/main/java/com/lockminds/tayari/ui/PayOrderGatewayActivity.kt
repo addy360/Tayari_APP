@@ -1,6 +1,7 @@
 package com.lockminds.tayari.ui
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -8,6 +9,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Switch
 import android.widget.Toast
 import androidx.core.view.isVisible
@@ -21,6 +23,7 @@ import com.lockminds.tayari.*
 import com.lockminds.tayari.constants.APIURLs
 import com.lockminds.tayari.constants.Constants
 import com.lockminds.tayari.databinding.ActivityPayOrderGatewayBinding
+import com.lockminds.tayari.databinding.PaymentSuccessBinding
 import com.lockminds.tayari.model.Order
 import com.lockminds.tayari.model.Parameters
 import com.lockminds.tayari.responses.Response
@@ -37,6 +40,7 @@ class PayOrderGatewayActivity : BaseActivity() {
     lateinit var countDownTimer: CountDownTimer
     var isRunning: Boolean = false
     var timer_in_milli_seonds = 0L
+    lateinit var alertDialog: AlertDialog
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +56,7 @@ class PayOrderGatewayActivity : BaseActivity() {
        /* binding.payNow.setOnClickListener {
             payWithTigo()
         }*/
+
         binding.payNow.isVisible = false
         binding.timerText.isVisible = false
         requestTigoToken();
@@ -66,7 +71,6 @@ class PayOrderGatewayActivity : BaseActivity() {
         binding.cart.setOnClickListener {
             GlobalScope.launch {
                 val cart = (application as App).repository.getOneCart()
-
                 if(cart != null){
                     val restaurant  = (application as App).repository.getRestaurant(cart.team_id.toString())
                     runOnUiThread {
@@ -104,7 +108,6 @@ class PayOrderGatewayActivity : BaseActivity() {
 
     private fun timer(){
         if (!isRunning){
-            val time = binding.timerText.text.toString()
             timer_in_milli_seonds = 5 * 60000L
             binding.timerText.isVisible = true;
             startTimer(timer_in_milli_seonds)
@@ -122,7 +125,7 @@ class PayOrderGatewayActivity : BaseActivity() {
 
             override fun onFinish() {
                 print("count finished")
-                binding.payNow.text = "Re try"
+                binding.payNow.text = "Retry"
                 binding.payNow.isVisible = true
             }
 
@@ -220,8 +223,10 @@ class PayOrderGatewayActivity : BaseActivity() {
                             response.toString(),
                             Toast.LENGTH_SHORT
                         ).show()
-                        timer()
-                        response?.let { savePaymentResponse(it) }
+                        if(response?.getBoolean("ResponseStatus") == true) {
+                            timer()
+                            savePaymentResponse(response)
+                        }
                     }
 
                     override fun onError(anError: ANError?) {
@@ -284,6 +289,9 @@ class PayOrderGatewayActivity : BaseActivity() {
         obj.put("orderID", order.id)
         obj.put("amount", order.balance)
         obj.put("ReferenceID", json.getString("ReferenceID"))
+        obj.put("ResponseCode", json.getString("ResponseCode"))
+        obj.put("ResponseDescription", json.getString("ResponseDescription"))
+        obj.put("ResponseStatus", json.getBoolean("ResponseStatus"))
 
         AndroidNetworking.post(APIURLs.BASE_URL+APIURLs.PAYMENT_SAVE)
             .addJSONObjectBody(obj)
@@ -310,6 +318,7 @@ class PayOrderGatewayActivity : BaseActivity() {
 
         AndroidNetworking.post(APIURLs.BASE_URL+APIURLs.PAYMENT_CHECK)
             .addJSONObjectBody(obj)
+            .addBodyParameter("id", order.id.toString())
             .addHeaders("accept", "application/json")
             .setPriority(Priority.HIGH)
             .setPriority(Priority.LOW)
@@ -326,7 +335,7 @@ class PayOrderGatewayActivity : BaseActivity() {
                         countDownTimer.cancel()
                         isRunning = false
                         binding.timerText.isVisible = false
-                        finish()
+                        paymentSuccess(binding.root)
                     }
                 }
 
@@ -342,6 +351,21 @@ class PayOrderGatewayActivity : BaseActivity() {
         runOnUiThread(Runnable {
             toast("No item")
         })
+    }
+
+    private fun paymentSuccess(view: View){
+        var alert = AlertDialog.Builder(view.context)
+        var payBinding: PaymentSuccessBinding = PaymentSuccessBinding.inflate(layoutInflater)
+        alert.setView(payBinding.root)
+        payBinding.okayButton.setOnClickListener {
+            alertDialog.dismiss()
+            val intent = Intent(this@PayOrderGatewayActivity, MainActivity::class.java)
+            startActivity(intent)
+        }
+        alertDialog = alert.create()
+        alertDialog.window?.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        alertDialog.window?.setBackgroundDrawableResource(R.drawable.round_corner)
+        alertDialog.show()
     }
 
     companion object{

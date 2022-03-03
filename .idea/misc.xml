@@ -5,6 +5,7 @@
       <map>
         <entry key="..\:/PROJECTS/TAYARI/ANDROID/TAYARI/app/src/main/res/drawable/phone.xml" value="0.21666666666666667" />
         <entry key="..\:/PROJECTS/TAYARI/ANDROID/TAYARI/app/src/main/res/drawable/tanzania.xml" value="0.21666666666666667" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/drawable/round_corner.xml" value="0.1055" />
         <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/activity_auth.xml" value="0.20677083333333332" />
         <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/activity_cart.xml" value="0.20677083333333332" />
         <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/activity_order.xml" value="0.42592592592592593" />
@@ -17,11 +18,27 @@
         <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/activity_update_profile.xml" value="0.1" />
         <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/add_user_data.xml" value="0.20677083333333332" />
         <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/auth_ui_layout.xml" value="0.20677083333333332" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/item_business.xml" value="0.20677083333333332" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/item_cart.xml" value="0.20677083333333332" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/item_categories_home.xml" value="0.20677083333333332" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/item_cousins.xml" value="0.20677083333333332" />
         <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/item_menus.xml" value="0.33" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/item_news.xml" value="0.20677083333333332" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/item_offers.xml" value="0.20677083333333332" />
         <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/item_order.xml" value="0.20677083333333332" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/item_order_item.xml" value="0.20677083333333332" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/item_products.xml" value="0.20677083333333332" />
         <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/item_restaurants.xml" value="0.25" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/item_restaurants_all.xml" value="0.20677083333333332" />
         <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/item_restaurants_near_by.xml" value="0.25" />
         <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/item_services.xml" value="0.22" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/layout_temp.xml" value="0.20677083333333332" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/payment_success.xml" value="0.20677083333333332" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/repo_view_item.xml" value="0.20677083333333332" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/repos_load_state_footer_view_item.xml" value="0.20677083333333332" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/separator_view_item.xml" value="0.20677083333333332" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/signed_in_layout.xml" value="0.20677083333333332" />
+        <entry key="..\:/Users/thetrues/AndroidStudioProjects/Tayari_APP/app/src/main/res/layout/toast_icon_text.xml" value="0.20677083333333332" />
       </map>
     </option>
   </component>
