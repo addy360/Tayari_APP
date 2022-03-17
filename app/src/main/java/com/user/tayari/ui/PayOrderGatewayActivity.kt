@@ -4,33 +4,27 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Switch
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
-import com.androidnetworking.interfaces.ParsedRequestListener
-import com.google.gson.reflect.TypeToken
 import com.user.tayari.*
 import com.user.tayari.constants.APIURLs
 import com.user.tayari.constants.Constants
-import com.user.tayari.databinding.ActivityPayOrderGatewayBinding
-import com.user.tayari.databinding.PaymentSuccessBinding
 import com.user.tayari.model.Order
-import com.user.tayari.model.Parameters
-import com.user.tayari.responses.Response
-import com.user.tayari.responses.TigoTokenResponse
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import user.tayari.R
+import user.tayari.databinding.ActivityPayOrderGatewayBinding
+import user.tayari.databinding.PaymentSuccessBinding
 import java.util.*
 
 class PayOrderGatewayActivity : BaseActivity() {
@@ -84,10 +78,7 @@ class PayOrderGatewayActivity : BaseActivity() {
                 }else{
                     showNoCart()
                 }
-
             }
-
-
         }
 
         binding.profile.setOnClickListener {
@@ -116,6 +107,7 @@ class PayOrderGatewayActivity : BaseActivity() {
 
     private fun startTimer(timer_in_seconds: Long){
         binding.payNow.isVisible = false
+        binding.timerText.isVisible = true
         countDownTimer = object :
         CountDownTimer(timer_in_seconds, 1000){
             override fun onTick(p0: Long) {
@@ -196,35 +188,43 @@ class PayOrderGatewayActivity : BaseActivity() {
     private fun payWithTigo(token: String) {
         binding.spinKit.isVisible = true
       val obj =  JSONObject()
+
+      obj.put("token", token)
       obj.put("CustomerMSISDN", binding.phoneNumber.text.toString())
-      obj.put("BillerMSISDN", APIURLs.PAY_BILLER)
+      obj.put("BillerMSISDN", 25565744455)
       obj.put("Amount", order.balance)
       obj.put("Remarks", "Food purchase")
-      obj.put("ReferenceID", "TYP"+ UUID.randomUUID().toString())
+      obj.put("ReferenceID", "TYR"+ UUID.randomUUID().toString())
         AndroidNetworking.post(APIURLs.TIGO_PUSH_BILL)
             .addJSONObjectBody(obj)
             .addHeaders("accept", "application/json")
-            .addHeaders("username", APIURLs.PAY_USERNAME)
             .addHeaders("Cache-Control", "no-cache")
-            .addHeaders("password", APIURLs.PAY_PASSWORD)
-            .addHeaders(
-                "Authorization", "Bearer $token")
             .setPriority(Priority.HIGH)
             .setPriority(Priority.LOW)
             .build()
             .getAsJSONObject(
                 object : JSONObjectRequestListener{
                     override fun onResponse(response: JSONObject?) {
-                        Log.d("onResponse: ", response.toString())
                         binding.spinKit.isVisible = false
                         Log.d("onResponse: ", response.toString())
-                        Toast.makeText(
-                            this@PayOrderGatewayActivity,
-                            response.toString(),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        if (response != null) {
+                            if(response.getBoolean("ResponseStatus")) {
+                                Toast.makeText(
+                                    this@PayOrderGatewayActivity,
+                                    "Payment request sent",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }else{
+                                Toast.makeText(
+                                    this@PayOrderGatewayActivity,
+                                    "Failed check try again!!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
                         if(response?.getBoolean("ResponseStatus") == true) {
                             timer()
+                            binding.timerText.isVisible = true;
                             savePaymentResponse(response)
                         }
                     }
@@ -246,14 +246,7 @@ class PayOrderGatewayActivity : BaseActivity() {
 
     private fun requestTigoToken() {
         binding.spinKit.isVisible = true
-       val map = mapOf("username" to APIURLs.PAY_USERNAME, "password" to APIURLs.PAY_PASSWORD, "grant_type" to "password")
-
-        AndroidNetworking.post(APIURLs.TIGO_TOKEN)
-           // .addUrlEncodeFormBodyParameter(map)
-            .addUrlEncodeFormBodyParameter("username", APIURLs.PAY_USERNAME)
-            .addUrlEncodeFormBodyParameter("password", APIURLs.PAY_PASSWORD)
-            .addUrlEncodeFormBodyParameter("grant_type", "password")
-            .setPriority(Priority.HIGH)
+        AndroidNetworking.get(APIURLs.TIGO_TOKEN)
             .setPriority(Priority.LOW)
             .build()
             .getAsJSONObject(object : JSONObjectRequestListener{
@@ -263,13 +256,24 @@ class PayOrderGatewayActivity : BaseActivity() {
                     binding.payNow.isVisible = true
 
                     binding.payNow.setOnClickListener {
-                        response?.getString("access_token")?.let { it1 -> payWithTigo(it1) }
+                        var num = binding.phoneNumber.text.toString();
+                        if (num.length != 12 && num.length == 10){
+                            Toast.makeText(
+                                this@PayOrderGatewayActivity,
+                                "Please add country code to your phone number",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }else {
+                            response?.getString("access_token")?.let { it1 -> payWithTigo(it1) }
+                        }
                     }
                 }
 
                 override fun onError(anError: ANError?) {
                     binding.spinKit.isVisible = false
-                    anError?.errorDetail?.let { Log.d("onError: ", it) }
+                    if (anError != null) {
+                        anError.message?.let { Log.d("onError: ", it) }
+                    }
                         Toast.makeText(
                             this@PayOrderGatewayActivity,
                             anError?.errorDetail,

@@ -8,10 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.user.tayari.R
 import com.user.tayari.Tools
 import com.user.tayari.model.Restaurant
 import com.user.tayari.utils.ItemAnimation
+import user.tayari.R
 
 class RestaurantsAdapter(context: Context, private val onClick: (Restaurant) -> Unit) :
     ListAdapter<Restaurant, RestaurantsAdapter.RestaurantsViewHolder>(RestaurantsDiffCallback) {

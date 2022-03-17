@@ -18,7 +18,6 @@ package com.user.tayari.api
 
 import com.google.gson.annotations.SerializedName
 import com.user.tayari.model.Restaurant
-import com.user.tayari.model.RestaurantSearch
 
 /**
  * Data class to hold repo responses from searchRepo API calls.

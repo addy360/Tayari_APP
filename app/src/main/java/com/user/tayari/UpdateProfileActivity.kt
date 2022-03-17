@@ -2,7 +2,6 @@ package com.user.tayari
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.Menu
@@ -18,8 +17,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.reflect.TypeToken
 import com.user.tayari.constants.APIURLs
 import com.user.tayari.constants.Constants
-import com.user.tayari.databinding.ActivityUpdateProfileBinding
 import com.user.tayari.responses.Response
+import user.tayari.R
+import user.tayari.databinding.ActivityUpdateProfileBinding
 
 class UpdateProfileActivity : BaseActivity() {
 

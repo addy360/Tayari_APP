@@ -9,12 +9,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.ybq.android.spinkit.SpinKitView
 import com.user.tayari.App
 import com.user.tayari.MenuActivity
-import com.user.tayari.R
 import com.user.tayari.adapter.MenuAdapter
-import com.user.tayari.databinding.FragmentRestaurantTabsBinding
 import com.user.tayari.model.Menu
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import user.tayari.R
+import user.tayari.databinding.FragmentRestaurantTabsBinding
 
 private const val DATE_KEY = "data_key"
 

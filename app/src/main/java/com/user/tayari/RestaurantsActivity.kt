@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -13,10 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.user.tayari.adapter.*
-import com.user.tayari.databinding.ActivityRestaurantsBinding
 import com.user.tayari.viewModels.SearchRepositoriesViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -24,6 +21,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
+import user.tayari.R
+import user.tayari.databinding.ActivityRestaurantsBinding
 
 
 class RestaurantsActivity : BaseActivity() {

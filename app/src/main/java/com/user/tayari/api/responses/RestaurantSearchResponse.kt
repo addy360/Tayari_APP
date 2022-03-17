@@ -17,7 +17,6 @@
 package com.user.tayari.api.responses
 
 import com.google.gson.annotations.SerializedName
-import com.user.tayari.model.Restaurant
 import com.user.tayari.model.RestaurantSearch
 
 /**

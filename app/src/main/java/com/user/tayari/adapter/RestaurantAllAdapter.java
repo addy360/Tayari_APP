@@ -12,13 +12,14 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.user.tayari.R;
 import com.user.tayari.Tools;
 import com.user.tayari.model.Restaurant;
 import com.user.tayari.utils.ItemAnimation;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import user.tayari.R;
 
 public class RestaurantAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  implements Filterable {
 

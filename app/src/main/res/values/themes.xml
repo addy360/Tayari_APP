@@ -1,11 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.Splash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/colorSecondaryVariant</item>
-        <item name="colorPrimaryDark">@color/colorSecondaryVariant</item>
-        <item name="backgroundColor">@color/colorSecondaryVariant</item>
-        <item name="android:background">@drawable/sset</item>
-        <item name="android:navigationBarColor">@color/colorSecondaryVariant</item>
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/white</item>
+        <item name="backgroundColor">@color/white</item>
+        <!--<item name="android:background">@drawable/sset</item>-->
+        <item name="android:navigationBarColor">@color/white</item>
     </style>
 
     <style name="Theme.Tayari" parent="Theme.MaterialComponents.DayNight.NoActionBar">

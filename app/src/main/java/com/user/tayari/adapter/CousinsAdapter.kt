@@ -8,10 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.user.tayari.R
 import com.user.tayari.Tools
 import com.user.tayari.model.Cousin
 import com.user.tayari.utils.ItemAnimation
+import user.tayari.R
 
 class CousinsAdapter(context: Context, private val onClick: (Cousin) -> Unit) :
     ListAdapter<Cousin, CousinsAdapter.CousinsViewHolder>(CousinsDiffCallback) {

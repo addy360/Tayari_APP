@@ -5,12 +5,13 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.user.tayari.R;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.ActionCodeSettings;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import user.tayari.R;
 
 @SuppressLint("RestrictedApi")
 public final class ConfigurationUtils {

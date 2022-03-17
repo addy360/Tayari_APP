@@ -5,10 +5,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.user.tayari.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+
+import user.tayari.R;
 
 /**
  * Notifies the user of sign in successes or failures beyond the lifecycle of an activity.

@@ -22,10 +22,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.user.tayari.R
 import com.user.tayari.RestaurantActivity
 import com.user.tayari.Tools
 import com.user.tayari.model.Restaurant
+import user.tayari.R
 
 /**
  * View Holder for a [Restaurant] RecyclerView list item.

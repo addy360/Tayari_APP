@@ -18,7 +18,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.user.tayari.MainActivity
 import com.user.tayari.Tools
-import com.user.tayari.databinding.ActivityFacebookLoginBinding
+import user.tayari.databinding.ActivityFacebookLoginBinding
 
 class FacebookLoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFacebookLoginBinding

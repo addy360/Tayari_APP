@@ -20,12 +20,10 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.user.tayari.R
 import com.user.tayari.viewHolders.OrderItemViewHolder
-import com.user.tayari.viewHolders.OrderViewHolder
 import com.user.tayari.viewHolders.SeparatorViewHolder
 import com.user.tayari.viewModels.OrderItemUiModel
-import com.user.tayari.viewModels.OrderUiModel
+import user.tayari.R
 
 /**
  * Adapter for the list of repositories.

@@ -11,122 +11,109 @@
         android:layout_height="match_parent"
         tools:context=".AuthActivity">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/app_logo"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:layout_marginTop="100dp"
-            android:layout_marginBottom="100dp"
-            android:src="@drawable/logo"
-            app:civ_border_color="#FF000000"
-            app:civ_border_width="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/action_container"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/action_container"
+        <ImageView
+            android:id="@+id/imageView5"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="60dp"
-            android:layout_marginEnd="60dp"
-            android:layout_marginBottom="32dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:cropToPadding="true"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/app_logo">
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/tayari_picture" />
 
+        <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:adjustViewBounds="true"
+            android:cropToPadding="true"
+            android:scaleType="fitCenter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/tayari_colored" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/phone"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/colorPrimary"
-                android:paddingVertical="@dimen/spacing_medium"
-                android:text="@string/sign_in_phone"
-                android:textColor="@color/colorOnPrimary"
-                app:icon="@drawable/ic_baseline_phone_24"
-                app:iconSize="24dp"
-                app:iconTint="@color/colorOnPrimary"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:visibility="gone" />
-
-            <com.google.android.material.button.MaterialButton
-                android:paddingVertical="@dimen/spacing_medium"
-                app:icon="@drawable/google"
-                app:iconSize="24dp"
-                app:iconTint="@color/colorOnPrimary"
-                android:id="@+id/google"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:backgroundTint="@color/colorPrimary"
-                android:text="@string/sign_in_google"
-                android:textColor="@color/colorOnPrimary"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/phone" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/email"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:backgroundTint="@color/colorPrimary"
-                android:paddingVertical="@dimen/spacing_medium"
-                android:text="@string/sign_in_email"
-                android:textColor="@color/colorOnPrimary"
-                app:icon="@drawable/ic_baseline_email_24"
-                app:iconSize="24dp"
-                app:iconTint="@color/colorOnPrimary"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/google"
-                tools:visibility="gone" />
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:visibility="gone"
-                android:layout_marginTop="@dimen/spacing_medium"
-                android:gravity="center"
-                android:background="@color/colorOnPrimary"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.facebook.login.widget.LoginButton
-                    android:id="@+id/facebook"
-                    android:background="@color/colorOnPrimary"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:backgroundTint="@color/colorOnPrimary"
-                    android:text="@string/sign_in_facebook"
-                    android:textColor="@color/colorPrimary"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:id="@+id/linearLayout5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_large"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <TextView
-                android:linksClickable="true"
-                android:id="@+id/policy"
-                android:textColor="@color/colorPrimary"
-                android:textAlignment="center"
+                android:id="@+id/textView5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:fontFamily="@font/gilam_regular"
+                android:text="Digital Waiter"
+                android:textColor="@color/colorSecondary"
+                android:textSize="40sp"
+                android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
+                android:layout_marginTop="-10dp"
+                android:layout_height="wrap_content"
+                android:text="For a great experience"
+                android:textColor="@color/colorSecondary"
+                android:textSize="30sp" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/colorSecondary"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="4dp"
+                app:cardPreventCornerOverlap="true"
+                app:cardUseCompatPadding="true">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:id="@+id/google"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/spacing_medium">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/google_symbol" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/spacing_medium"
+                        android:paddingEnd="@dimen/spacing_medium"
+                        android:text="Sign in with Google"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.cardview.widget.CardView>
+<View
+    android:layout_width="wrap_content"
+    android:layout_height="50dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="By continuing you are indicating that you accept our \n Terms of service and Privacy policy"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorSecondary"
+                android:textSize="12sp" />
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="10dp"/>
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:visibility="gone"

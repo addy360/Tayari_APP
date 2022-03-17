@@ -26,8 +26,8 @@ import com.user.tayari.SessionManager
 import com.user.tayari.Tools
 import com.user.tayari.constants.APIURLs
 import com.user.tayari.constants.Constants
-import com.user.tayari.databinding.ActivityPhoneAuthBinding
 import com.user.tayari.responses.LoginResponse
+import user.tayari.databinding.ActivityPhoneAuthBinding
 import java.util.*
 import java.util.concurrent.TimeUnit
 

@@ -29,7 +29,6 @@ import com.user.tayari.model.Order
 import com.user.tayari.model.keys.OrderRemoteKeys
 import retrofit2.HttpException
 import java.io.IOException
-import java.io.InvalidObjectException
 
 // GitHub page API is 1 based: https://developer.github.com/v3/#pagination
 private const val STARTING_PAGE_INDEX = 1

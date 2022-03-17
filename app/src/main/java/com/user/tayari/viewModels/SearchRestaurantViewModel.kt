@@ -22,7 +22,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import com.user.tayari.data.GithubRepository
-import com.user.tayari.model.Restaurant
 import com.user.tayari.model.RestaurantSearch
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

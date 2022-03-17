@@ -2,7 +2,8 @@ package com.user.tayari
 
 import android.os.Bundle
 import android.view.View
-import com.user.tayari.databinding.ActivitySettingsBinding
+import user.tayari.R
+import user.tayari.databinding.ActivitySettingsBinding
 
 
 class SettingsActivity : BaseActivity() {

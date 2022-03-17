@@ -5,7 +5,8 @@ import android.os.Bundle
 import android.transition.TransitionInflater
 import androidx.annotation.RequiresApi
 import androidx.preference.PreferenceFragmentCompat
-import com.user.tayari.R
+import user.tayari.R
+
 
 class SettingsFragment : PreferenceFragmentCompat() {
 

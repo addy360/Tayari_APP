@@ -5,45 +5,29 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.ScrollView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.core.view.isVisible
-import com.androidnetworking.AndroidNetworking
-import com.androidnetworking.common.Priority
-import com.androidnetworking.error.ANError
-import com.androidnetworking.interfaces.ParsedRequestListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
-import com.google.firebase.ktx.Firebase
-import com.google.gson.Gson
 import com.user.tayari.CartActivity.Companion.createCartIntent
-import com.user.tayari.adapter.CartMenuAdapter
-import com.user.tayari.constants.APIURLs
 import com.user.tayari.constants.Constants
-import com.user.tayari.data.QrRestaurantResponse
-import com.user.tayari.databinding.ActivityServiceDetailsBinding
 import com.user.tayari.datasource.myMoney
-import com.user.tayari.firebase.ui.auth.AuthUiActivity
-import com.user.tayari.fragments.RestaurantTabsFragment
 import com.user.tayari.model.CartItem
 import com.user.tayari.model.CartMenu
 import com.user.tayari.model.Menu
-import com.user.tayari.model.MenuItem
 import com.user.tayari.viewModels.CartItemViewModel
 import com.user.tayari.viewModels.CartItemViewModelFactory
 import com.user.tayari.viewModels.CartViewModel
 import com.user.tayari.viewModels.CartViewModelFactory
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import user.tayari.R
+import user.tayari.databinding.ActivityServiceDetailsBinding
 
 
 class MenuActivity : BaseActivity() {

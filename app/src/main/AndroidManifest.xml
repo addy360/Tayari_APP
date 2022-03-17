@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.lockminds.tayari">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="user.tayari">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -11,19 +12,21 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
-        android:name=".App"
+        android:name="com.user.tayari.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:usesCleartextTraffic="true"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Tayari">
-        <activity android:name=".ui.BrowserActivity"
+        android:theme="@style/Theme.Tayari"
+        tools:ignore="UnusedAttribute">
+        <activity android:name="com.user.tayari.ui.BrowserActivity"
             android:exported="true"/>
-        <activity android:name=".ui.PayOrderGatewayActivity" />
-        <activity android:name=".ui.PayOrderActivity" />
+        <activity android:name="com.user.tayari.ui.PayOrderGatewayActivity" />
+        <activity android:name="com.user.tayari.ui.PayOrderActivity" />
         <activity
-            android:name=".SplashActivity"
+            android:name="com.user.tayari.SplashActivity"
             android:theme="@style/Theme.Splash"
             android:exported="true">
             <intent-filter>
@@ -32,20 +35,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
-        <activity android:name=".auth.FacebookLoginActivity" />
-        <activity android:name=".auth.EmailPasswordActivity" />
-        <activity android:name=".auth.PhoneAuthActivity" />
-        <activity android:name=".auth.AuthActivity" />
-        <activity android:name=".ui.SearchRestaurantsActivity" />
-        <activity android:name=".ui.OrderActivity" />
-        <activity android:name=".RestaurantNearActivity" />
-        <activity android:name=".MenuActivity" />
-        <activity android:name=".RestaurantActivity" />
-        <activity android:name=".MenuOfferActivity" />
-        <activity android:name=".CousinRestaurantActivity" />
-        <activity android:name=".RestaurantsActivity" />
-        <activity android:name=".firebase.ui.auth.SignedActivity" />
+        <activity android:name="com.user.tayari.MainActivity" />
+        <activity android:name="com.user.tayari.auth.FacebookLoginActivity" />
+        <activity android:name="com.user.tayari.auth.EmailPasswordActivity" />
+        <activity android:name="com.user.tayari.auth.PhoneAuthActivity" />
+        <activity android:name="com.user.tayari.auth.AuthActivity" />
+        <activity android:name="com.user.tayari.ui.SearchRestaurantsActivity" />
+        <activity android:name="com.user.tayari.ui.OrderActivity" />
+        <activity android:name="com.user.tayari.RestaurantNearActivity" />
+        <activity android:name="com.user.tayari.MenuActivity" />
+        <activity android:name="com.user.tayari.RestaurantActivity" />
+        <activity android:name="com.user.tayari.MenuOfferActivity" />
+        <activity android:name="com.user.tayari.CousinRestaurantActivity" />
+        <activity android:name="com.user.tayari.RestaurantsActivity" />
+        <activity android:name="com.user.tayari.firebase.ui.auth.SignedActivity" />
         <!--
          Set custom default icon. This is used when no icon is set for incoming notification messages.
         See README(https://goo.gl/l4GJaQ) for more.
@@ -64,21 +67,21 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
 
-        <activity android:name=".UpdateProfileActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".CartActivity" />
-        <activity android:name=".OrdersActivity" />
+        <activity android:name="com.user.tayari.UpdateProfileActivity" />
+        <activity android:name="com.user.tayari.ProfileActivity" />
+        <activity android:name="com.user.tayari.SettingsActivity" />
+        <activity android:name="com.user.tayari.CartActivity" />
+        <activity android:name="com.user.tayari.OrdersActivity" />
         <activity
-            android:name=".firebase.ui.auth.AuthUiActivity"
+            android:name="com.user.tayari.firebase.ui.auth.AuthUiActivity"
             android:theme="@style/WelcomeScreen" />
-        <activity android:name=".firebase.ui.auth.AnonymousUpgradeActivity" />
+        <activity android:name="com.user.tayari.firebase.ui.auth.AnonymousUpgradeActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
 
         <service
-            android:name=".firebase.FCMService"
+            android:name="com.user.tayari.firebase.FCMService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

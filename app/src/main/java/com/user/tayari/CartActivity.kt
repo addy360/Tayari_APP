@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
@@ -23,10 +22,9 @@ import com.user.tayari.adapter.CartMenuAdapter
 import com.user.tayari.adapter.TablesSpinnerAdapter
 import com.user.tayari.constants.APIURLs
 import com.user.tayari.constants.Constants
-import com.user.tayari.databinding.ActivityCartBinding
 import com.user.tayari.model.*
+import com.user.tayari.BaseActivity
 import com.user.tayari.responses.OrderResponse
-import com.user.tayari.responses.Response
 import com.user.tayari.ui.OrderActivity
 import com.user.tayari.viewModels.CartViewModel
 import com.user.tayari.viewModels.CartViewModelFactory
@@ -35,6 +33,8 @@ import com.user.tayari.viewModels.TablesViewModelFactory
 import kotlinx.coroutines.*
 import org.json.JSONException
 import org.json.JSONObject
+import user.tayari.R
+import user.tayari.databinding.ActivityCartBinding
 
 
 class CartActivity : BaseActivity() {

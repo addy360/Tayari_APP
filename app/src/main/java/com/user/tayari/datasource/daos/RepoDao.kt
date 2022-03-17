@@ -21,7 +21,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.user.tayari.model.RemoteKeys
 import com.user.tayari.model.Restaurant
 import com.user.tayari.model.RestaurantSearch
 import com.user.tayari.model.keys.RestaurantSearchKeys

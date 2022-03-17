@@ -17,7 +17,6 @@ import androidx.annotation.StyleRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
-import com.user.tayari.R;
 import com.user.tayari.Tools;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
@@ -34,6 +33,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import user.tayari.R;
 
 public class AuthUiActivity extends AppCompatActivity {
 

@@ -24,7 +24,6 @@ import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.user.tayari.SessionManager
 import com.user.tayari.api.GithubService
-import com.user.tayari.api.RepoSearchResponse
 import com.user.tayari.datasource.AppDatabase
 import com.user.tayari.model.RemoteKeys
 import com.user.tayari.model.Restaurant

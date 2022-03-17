@@ -4,7 +4,6 @@ package com.user.tayari
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
@@ -24,7 +23,6 @@ import com.google.firebase.ktx.Firebase
 import com.google.gson.reflect.TypeToken
 import com.user.tayari.auth.AuthActivity
 import com.user.tayari.constants.APIURLs
-import com.user.tayari.constants.Constants
 import com.user.tayari.datasource.AppDatabase
 import com.user.tayari.firebase.ui.auth.AuthUiActivity
 import com.user.tayari.responses.Response
@@ -32,6 +30,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import user.tayari.R
 
 open class BaseActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 

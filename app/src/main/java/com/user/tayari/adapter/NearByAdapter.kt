@@ -8,9 +8,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.user.tayari.R
 import com.user.tayari.Tools
 import com.user.tayari.model.RestaurantNear
+import user.tayari.R
 
 class NearByAdapter(context: Context,private val onClick: (RestaurantNear) -> Unit) :
     ListAdapter<RestaurantNear, NearByAdapter.NearByViewHolder>(NearByDiffCallback) {

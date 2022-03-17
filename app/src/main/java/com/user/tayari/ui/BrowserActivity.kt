@@ -3,15 +3,13 @@ package com.user.tayari.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import com.user.tayari.BaseActivity
-import com.user.tayari.R
 import com.user.tayari.constants.Constants
-import com.user.tayari.databinding.ActivityBrowserBinding
-import com.user.tayari.model.Order
 import com.user.tayari.model.Parameters
+import user.tayari.R
+import user.tayari.databinding.ActivityBrowserBinding
 
 class BrowserActivity : BaseActivity() {
     lateinit var binding: ActivityBrowserBinding

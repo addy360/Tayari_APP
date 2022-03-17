@@ -16,7 +16,6 @@
 
 package com.user.tayari.viewHolders
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,11 +23,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.user.tayari.R
 import com.user.tayari.Tools
 import com.user.tayari.model.Order
 import com.user.tayari.ui.OrderActivity
-import com.user.tayari.utils.Timer
+import user.tayari.R
 import java.util.*
 
 /**

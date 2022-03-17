@@ -1,7 +1,7 @@
 package com.user.tayari.auth
 
 import android.graphics.Color
-import com.user.tayari.R
+import user.tayari.R
 
 enum class PasswordStrength private constructor(internal var resId: Int, color: Int) {
 

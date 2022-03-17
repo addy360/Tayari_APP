@@ -1,7 +1,6 @@
 package com.user.tayari
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -16,7 +15,6 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.user.tayari.adapter.OrdersAdapter
 import com.user.tayari.adapter.ReposLoadStateAdapter
-import com.user.tayari.databinding.ActivityOrdersBinding
 import com.user.tayari.viewModels.OrderViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
@@ -24,9 +22,10 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
+import user.tayari.R
+import user.tayari.databinding.ActivityOrdersBinding
 import java.lang.Runnable
 import java.util.*
-
 
 class OrdersActivity : BaseActivity() {
 

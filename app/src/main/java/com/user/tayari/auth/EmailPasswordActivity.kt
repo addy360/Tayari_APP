@@ -18,19 +18,18 @@ import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.ParsedRequestListener
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.gson.reflect.TypeToken
 import com.user.tayari.MainActivity
-import com.user.tayari.R
 import com.user.tayari.SessionManager
 import com.user.tayari.Tools
 import com.user.tayari.constants.APIURLs
 import com.user.tayari.constants.Constants
-import com.user.tayari.databinding.ActivityEmailPasswordBinding
 import com.user.tayari.responses.LoginResponse
+import user.tayari.R
+import user.tayari.databinding.ActivityEmailPasswordBinding
 
 class EmailPasswordActivity : AppCompatActivity(), TextWatcher {
     private lateinit var binding: ActivityEmailPasswordBinding

@@ -24,6 +24,7 @@ import com.user.tayari.constants.Constants
 import com.user.tayari.constants.APIURLs
 import com.user.tayari.responses.Response
 import com.user.tayari.worker.AppWorker
+import user.tayari.R
 
 class FCMService : FirebaseMessagingService() {
 
@@ -172,7 +173,7 @@ class FCMService : FirebaseMessagingService() {
             intents.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intents)
         }
-            val icon = BitmapFactory.decodeResource(resources,R.drawable.ic_notification_icon)
+            val icon = BitmapFactory.decodeResource(resources, R.drawable.ic_notification_icon)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT)

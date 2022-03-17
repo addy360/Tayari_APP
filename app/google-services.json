@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "875397523898",
+    "firebase_url": "https://tayari-systems-default-rtdb.firebaseio.com",
     "project_id": "tayari-systems",
     "storage_bucket": "tayari-systems.appspot.com"
   },
@@ -14,6 +15,46 @@
       },
       "oauth_client": [
         {
+          "client_id": "875397523898-04gud2lgv2gs1vdq9v9de7577g16hhh4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lockminds.tayari",
+            "certificate_hash": "316db7c9a38ba474d25d54df53a9a098efcdeeca"
+          }
+        },
+        {
+          "client_id": "875397523898-bcq17650k3qu8i7ig3eplimvgmkcoqvk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lockminds.tayari",
+            "certificate_hash": "b6897768351e95f34c2d650e84e4fde6dd757fd0"
+          }
+        },
+        {
+          "client_id": "875397523898-dcnjf6sb71dn721fcov2i3tsssfu6nvm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lockminds.tayari",
+            "certificate_hash": "a1e7cad2116b8d537c710ce7e896c19c0385a90a"
+          }
+        },
+        {
+          "client_id": "875397523898-leeblu7t6df15rtsmpaegti334kjcbjc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lockminds.tayari",
+            "certificate_hash": "ff78ed29e09f8e5006d52ffe44b7ff9170333930"
+          }
+        },
+        {
+          "client_id": "875397523898-vvsvqkalpms3cvu5csr2m7jtv7ig8iqr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lockminds.tayari",
+            "certificate_hash": "d573aea400740c3e3cff90c94469da5264b46a35"
+          }
+        },
+        {
           "client_id": "875397523898-fqsukv2nd5h2bi1vq2n1ajqd1los0dft.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -21,6 +62,49 @@
       "api_key": [
         {
           "current_key": "AIzaSyCLCAOikD6mH44zJEiirPheG21R02QLZO8"
+        },
+        {
+          "current_key": "AIzaSyDmsfjKKX5gDbUwdqSz19nhNWctGL4l05w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "875397523898-fqsukv2nd5h2bi1vq2n1ajqd1los0dft.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:875397523898:android:3c26bde95c13885aae1583",
+        "android_client_info": {
+          "package_name": "com.user.tayari"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "875397523898-2ukk4sbqtphaf6vm6vi1tb3tmelmjjpb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.user.tayari",
+            "certificate_hash": "d573aea400740c3e3cff90c94469da5264b46a35"
+          }
+        },
+        {
+          "client_id": "875397523898-fqsukv2nd5h2bi1vq2n1ajqd1los0dft.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLCAOikD6mH44zJEiirPheG21R02QLZO8"
+        },
+        {
+          "current_key": "AIzaSyDmsfjKKX5gDbUwdqSz19nhNWctGL4l05w"
         }
       ],
       "services": {

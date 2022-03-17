@@ -18,7 +18,6 @@ package com.user.tayari.api
 
 import com.user.tayari.api.responses.RestaurantSearchResponse
 import com.user.tayari.constants.APIURLs.Companion.BASE_URL
-import com.user.tayari.model.RestaurantSearch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level

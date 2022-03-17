@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
-import com.user.tayari.R
 import com.user.tayari.model.Table
+import user.tayari.R
 
 class TablesSpinnerAdapter(val context: Context, var dataSource: List<Table>) : BaseAdapter() {
 

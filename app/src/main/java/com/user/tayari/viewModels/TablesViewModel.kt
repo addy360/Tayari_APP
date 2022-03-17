@@ -2,8 +2,6 @@ package com.user.tayari.viewModels
 
 import androidx.lifecycle.*
 import com.user.tayari.datasource.repository.AppRepository
-import com.user.tayari.model.CartMenu
-import com.user.tayari.model.Order
 import com.user.tayari.model.Table
 
 

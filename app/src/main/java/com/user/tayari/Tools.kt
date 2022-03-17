@@ -29,6 +29,7 @@ import androidx.core.widget.NestedScrollView
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.user.tayari.constants.APIURLs
+import user.tayari.R
 import java.net.URI
 import java.net.URISyntaxException
 import java.text.SimpleDateFormat

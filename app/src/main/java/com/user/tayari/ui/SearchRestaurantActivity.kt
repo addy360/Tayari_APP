@@ -17,8 +17,6 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.user.tayari.*
 import com.user.tayari.adapter.*
-import com.user.tayari.databinding.ActivitySearchRestaurantBinding
-import com.user.tayari.viewModels.SearchRepositoriesViewModel
 import com.user.tayari.viewModels.SearchRestaurantViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -26,6 +24,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
+import user.tayari.R
+import user.tayari.databinding.ActivitySearchRestaurantBinding
 
 
 class SearchRestaurantsActivity : BaseActivity() {

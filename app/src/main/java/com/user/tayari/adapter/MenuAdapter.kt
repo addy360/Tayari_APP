@@ -9,12 +9,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.user.tayari.R
 import com.user.tayari.Tools
 import com.user.tayari.datasource.myMoney
 import com.user.tayari.model.Menu
 import com.user.tayari.utils.ItemAnimation
-import java.text.NumberFormat
+import user.tayari.R
 
 class MenuAdapter(context: Context, private val onClick: (Menu) -> Unit) :
     ListAdapter<Menu, MenuAdapter.MenuViewHolder>(MenuDiffCallback) {

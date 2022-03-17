@@ -6,28 +6,24 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
-import androidx.core.view.isVisible
 import androidx.viewpager.widget.ViewPager
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.ParsedRequestListener
-import com.user.tayari.adapter.OffersAdapter
 import com.user.tayari.adapter.SectionPagerAdapter
 import com.user.tayari.constants.APIURLs
 import com.user.tayari.constants.Constants
-import com.user.tayari.constants.Constants.Companion.DATA_KEY
 import com.user.tayari.constants.Constants.Companion.INTENT_PARAM_1
-import com.user.tayari.databinding.ActivityRestaurantBinding
 import com.user.tayari.fragments.RestaurantTabsFragment
 import com.user.tayari.model.Cousin
 import com.user.tayari.model.Menu
-import com.user.tayari.model.Restaurant
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import user.tayari.R
+import user.tayari.databinding.ActivityRestaurantBinding
 
 class CousinRestaurantActivity : BaseActivity() {
 

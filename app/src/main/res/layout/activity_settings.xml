@@ -58,7 +58,7 @@
 
     <fragment
         android:id="@+id/settings_fragment"
-        class="com.lockminds.tayari.fragments.SettingsFragment"
+        class="user.tayari.fragments.SettingsFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -20,12 +20,10 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.user.tayari.R
-import com.user.tayari.viewHolders.RepoViewHolder
 import com.user.tayari.viewHolders.SearchRestaurantViewHolder
 import com.user.tayari.viewHolders.SeparatorViewHolder
-import com.user.tayari.viewModels.UiModel
 import com.user.tayari.viewModels.UiSearchModel
+import user.tayari.R
 
 /**
  * Adapter for the list of repositories.

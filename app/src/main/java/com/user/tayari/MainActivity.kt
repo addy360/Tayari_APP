@@ -3,7 +3,6 @@ package com.user.tayari
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.location.LocationManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -17,11 +16,6 @@ import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.ParsedRequestListener
 import com.budiyev.android.codescanner.*
-import com.eazypermissions.common.model.PermissionResult
-import com.eazypermissions.dsl.extension.requestPermissions
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -29,7 +23,6 @@ import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.user.tayari.CousinRestaurantActivity.Companion.createCousinRestaurantIntent
-import com.user.tayari.MenuActivity.Companion.createMenuIntent
 import com.user.tayari.MenuOfferActivity.Companion.createMenuOfferIntent
 import com.user.tayari.RestaurantActivity.Companion.createRestaurantIntent
 import com.user.tayari.RestaurantNearActivity.Companion.createRestaurantNearIntent
@@ -37,13 +30,12 @@ import com.user.tayari.adapter.*
 import com.user.tayari.constants.APIURLs
 import com.user.tayari.constants.Constants
 import com.user.tayari.data.QrRestaurantResponse
-import com.user.tayari.databinding.ActivityMainBinding
-import com.user.tayari.firebase.ui.auth.AuthUiActivity
 import com.user.tayari.model.*
 import com.user.tayari.ui.SearchRestaurantsActivity
 import com.user.tayari.viewModels.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import user.tayari.databinding.ActivityMainBinding
 
 class MainActivity : BaseActivity() {
 

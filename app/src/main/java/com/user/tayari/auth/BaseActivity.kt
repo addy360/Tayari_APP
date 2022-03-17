@@ -11,8 +11,8 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.user.tayari.R
 import com.user.tayari.Tools
+import user.tayari.R
 
 
 abstract class BaseActivity : AppCompatActivity() {

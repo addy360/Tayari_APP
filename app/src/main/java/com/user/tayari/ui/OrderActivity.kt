@@ -3,7 +3,6 @@ package com.user.tayari.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -13,25 +12,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.androidnetworking.AndroidNetworking
-import com.androidnetworking.common.Priority
-import com.androidnetworking.error.ANError
-import com.androidnetworking.interfaces.ParsedRequestListener
-import com.google.gson.reflect.TypeToken
 import com.user.tayari.*
 import com.user.tayari.adapter.OrderItemsAdapter
 import com.user.tayari.adapter.ReposLoadStateAdapter
-import com.user.tayari.constants.APIURLs
-import com.user.tayari.constants.Constants
 import com.user.tayari.constants.Constants.Companion.INTENT_PARAM_1
-import com.user.tayari.databinding.ActivityOrderBinding
 import com.user.tayari.model.Order
-import com.user.tayari.responses.Response
 import com.user.tayari.viewModels.OrderItemViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import user.tayari.databinding.ActivityOrderBinding
 
 
 class OrderActivity : BaseActivity() {

@@ -7,21 +7,18 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.user.tayari.App
-import com.user.tayari.MenuActivity
 import com.user.tayari.MenuActivity.Companion.createMenuIntent
-import com.user.tayari.R
 import com.user.tayari.Tools
 import com.user.tayari.model.CartMenu
 import com.user.tayari.model.Menu
 import com.user.tayari.utils.ItemAnimation
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import user.tayari.R
 
 class CartMenuAdapter(context: Context) :
     ListAdapter<CartMenu, CartMenuAdapter.CartMenuViewHolder>(CartMenuDiffCallback) {

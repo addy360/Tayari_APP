@@ -9,5 +9,5 @@
     android:id="@+id/profile_edit_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    class="com.lockminds.tayari.fragments.ProfileEditFragment" />
+    class="user.tayari.fragments.ProfileEditFragment" />
 </androidx.constraintlayout.widget.ConstraintLayout>

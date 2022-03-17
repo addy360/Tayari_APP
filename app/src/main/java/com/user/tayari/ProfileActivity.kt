@@ -1,7 +1,6 @@
 package com.user.tayari
 
 import android.Manifest
-import android.app.ActivityManager
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -23,7 +22,6 @@ import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.ParsedRequestListener
 import com.bumptech.glide.Glide
-import com.firebase.ui.auth.AuthUI
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.reflect.TypeToken
 import com.karumi.dexter.Dexter
@@ -33,13 +31,13 @@ import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.user.tayari.constants.APIURLs
 import com.user.tayari.constants.Constants
-import com.user.tayari.databinding.ActivityProfileBinding
-import com.user.tayari.firebase.ui.auth.AuthUiActivity
 import com.user.tayari.responses.Response
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import user.tayari.R
+import user.tayari.databinding.ActivityProfileBinding
 import java.io.File
 
 

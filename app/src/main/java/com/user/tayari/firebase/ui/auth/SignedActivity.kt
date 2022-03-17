@@ -18,17 +18,14 @@ import com.androidnetworking.interfaces.ParsedRequestListener
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.firebase.ui.auth.util.ExtraConstants
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.gson.reflect.TypeToken
 import com.user.tayari.MainActivity
-import com.user.tayari.R
 import com.user.tayari.SessionManager
 import com.user.tayari.constants.APIURLs
 import com.user.tayari.constants.Constants.Companion.EMAIL
-import com.user.tayari.constants.Constants.Companion.FCM_TOKEN
 import com.user.tayari.constants.Constants.Companion.LOGIN_STATUS
 import com.user.tayari.constants.Constants.Companion.LOGIN_TOKEN
 import com.user.tayari.constants.Constants.Companion.NAME
@@ -36,8 +33,8 @@ import com.user.tayari.constants.Constants.Companion.PHONE_NUMBER
 import com.user.tayari.constants.Constants.Companion.PHOTO_URL
 import com.user.tayari.constants.Constants.Companion.PREFERENCE_KEY
 import com.user.tayari.constants.Constants.Companion.USER_ID
-import com.user.tayari.databinding.ActivitySignedBinding
 import com.user.tayari.responses.LoginResponse
+import user.tayari.databinding.ActivitySignedBinding
 
 class SignedActivity : AppCompatActivity() {
 
@@ -51,6 +48,7 @@ class SignedActivity : AppCompatActivity() {
         initComponents()
     }
 
+    @SuppressLint("RestrictedApi")
     private fun initComponents(){
         val currentUser = FirebaseAuth.getInstance().currentUser
         if (currentUser == null) {
@@ -223,6 +221,7 @@ class SignedActivity : AppCompatActivity() {
     }
 
     companion object {
+        @SuppressLint("RestrictedApi")
         @JvmStatic
         fun createIntent(context: Context, response: IdpResponse?): Intent {
             return Intent().setClass(context, SignedActivity::class.java)

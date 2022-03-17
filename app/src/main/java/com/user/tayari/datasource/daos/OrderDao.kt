@@ -23,7 +23,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.user.tayari.model.Order
 import com.user.tayari.model.OrderItem
-import com.user.tayari.model.RemoteKeys
 import com.user.tayari.model.keys.OrderItemRemoteKeys
 import com.user.tayari.model.keys.OrderRemoteKeys
 

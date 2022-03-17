@@ -17,11 +17,12 @@ import com.user.tayari.adapter.SectionPagerAdapter
 import com.user.tayari.constants.APIURLs
 import com.user.tayari.constants.Constants
 import com.user.tayari.constants.Constants.Companion.INTENT_PARAM_1
-import com.user.tayari.databinding.ActivityRestaurantBinding
 import com.user.tayari.fragments.RestaurantTabsFragment
 import com.user.tayari.model.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import user.tayari.R
+import user.tayari.databinding.ActivityRestaurantBinding
 
 class RestaurantNearActivity : BaseActivity() {
 

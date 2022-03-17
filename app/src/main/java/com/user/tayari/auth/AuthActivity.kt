@@ -9,6 +9,7 @@ import android.provider.Settings
 import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
@@ -23,8 +24,6 @@ import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
-import com.fasterxml.jackson.module.kotlin.jsonMapper
-import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -37,17 +36,15 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.gson.reflect.TypeToken
 import com.user.tayari.MainActivity
-import com.user.tayari.R
 import com.user.tayari.SessionManager
 import com.user.tayari.Tools
 import com.user.tayari.constants.APIURLs
 import com.user.tayari.constants.Constants
-import com.user.tayari.databinding.ActivityAuthBinding
-import com.user.tayari.databinding.AddUserDataBinding
-import com.user.tayari.firebase.ui.auth.AuthUiActivity
 import com.user.tayari.responses.LoginResponse
-import com.user.tayari.responses.UserVerifyResponse
 import org.json.JSONObject
+import user.tayari.R
+import user.tayari.databinding.ActivityAuthBinding
+import user.tayari.databinding.AddUserDataBinding
 
 open class AuthActivity : AppCompatActivity() {
 
@@ -58,32 +55,35 @@ open class AuthActivity : AppCompatActivity() {
 
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var callbackManager: CallbackManager
-    private lateinit var buttonFacebookLogin: LoginButton
+  //  private lateinit var buttonFacebookLogin: LoginButton
     private lateinit var alertDialog: AlertDialog;
-    private val tools = Tools()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAuthBinding.inflate(layoutInflater)
         val view:View = binding.root
         setContentView(view)
-        binding.policy.text = tools.fromHtml("By continuing you are indicating that you accept our <a href='https://tayari.co.tz/policy'>Terms of Service</a> and <a href='https://tayari.co.tz/policy'>Privacy policy</a>")
-        binding.policy.movementMethod= LinkMovementMethod()
-        tools.setSystemBarLight(this)
-        tools.setNavigationBarColor(this)
+       // binding.policy.text = Tools().fromHtml("By continuing you are indicating that you accept our <a href='https://tayari.co.tz/policy'>Terms of Service</a> and <a href='https://tayari.co.tz/policy'>Privacy policy</a>")
+       // binding.policy.movementMethod= LinkMovementMethod()
+        Tools().setSystemBarLight(this)
+        Tools().setNavigationBarColor(this)
+        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN)
+
         initComponents()
         initSigning()
     }
 
 
     private fun initComponents(){
-        binding.phone.isVisible = false
-        binding.email.isVisible = false
+        //binding.phone.isVisible = false
+        //binding.email.isVisible = false
         binding.google.setOnClickListener {
             Log.e("Kelly","google signin")
             signInGoogle()
             //addData()
         }
-
+        Tools().clearSystemBarLight(this);
+/*
         binding.phone.setOnClickListener {
             val intent = Intent(this@AuthActivity, PhoneAuthActivity::class.java)
             startActivity(intent)
@@ -91,7 +91,7 @@ open class AuthActivity : AppCompatActivity() {
         binding.email.setOnClickListener {
             val intent = Intent(this@AuthActivity, EmailPasswordActivity::class.java)
             startActivity(intent)
-        }
+        }*/
 //        binding.facebook.setOnClickListener {
 //            val intent = Intent(this@AuthActivity, FacebookLoginActivity::class.java)
 //            startActivity(intent)
@@ -119,8 +119,8 @@ open class AuthActivity : AppCompatActivity() {
         // Initialize Facebook Login button
         callbackManager = CallbackManager.Factory.create()
 
-        buttonFacebookLogin = binding.facebook as LoginButton
-        buttonFacebookLogin.setReadPermissions("email", "public_profile")
+      //  buttonFacebookLogin = binding.facebook as LoginButton
+       /* buttonFacebookLogin.setReadPermissions("email", "public_profile")
         buttonFacebookLogin.registerCallback(callbackManager, object :
             FacebookCallback<LoginResult> {
             override fun onSuccess(loginResult: LoginResult) {
@@ -135,7 +135,7 @@ open class AuthActivity : AppCompatActivity() {
             override fun onError(error: FacebookException) {
                 Log.d(TAG, "facebook:onError", error)
             }
-        })
+        })*/
         // [END initialize_fblogin]
 
         // [START config_signin]
@@ -243,9 +243,10 @@ open class AuthActivity : AppCompatActivity() {
     private fun checkUser(){
         binding.overlay.isVisible = true
         val mUser = FirebaseAuth.getInstance().currentUser
+        Log.d(TAG, "checkUser: "+ mUser?.email)
         mUser?.getIdToken(true)?.addOnCompleteListener{ task ->
             val idToken: String? = task.result?.token
-            AndroidNetworking.get(APIURLs.BASE_URL + "login/userverify/${idToken}")
+            AndroidNetworking.get(APIURLs.BASE_URL + "login/userverify/${mUser.email}")
                 .setPriority(Priority.HIGH)
                 .build()
                 .getAsJSONObject(
